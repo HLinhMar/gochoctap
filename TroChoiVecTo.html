@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học liệu: Hải trình an toàn (Vectơ)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Khóa cứng toàn bộ trang web, xóa cuộn (scroll) */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #020617; /* Đen biển sâu */
+            color: #f8fafc; 
+            margin: 0; padding: 0;
+            height: 100vh; width: 100vw;
+            overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        /* Container ép tỉ lệ chuẩn 16:9, luôn nằm trọn trong màn hình */
+        #app-container {
+            width: 100vw;
+            height: 56.25vw; /* 100 * 9/16 */
+            max-height: 100vh;
+            max-width: 177.78vh; /* 100 * 16/9 */
+            background-color: #0f172a;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+            border: 1px solid #1e293b;
+            display: flex; flex-direction: row;
+        }
+        
+        /* Box chứa Canvas tự động cân bằng 1:1 */
+        #canvas-wrapper {
+            position: relative; height: 100%; aspect-ratio: 1 / 1;
+            margin: 0 auto; touch-action: none; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 0 40px rgba(2, 132, 199, 0.3); border: 2px solid #38bdf8;
+            background: linear-gradient(to bottom, #0284c7, #0369a1);
+        }
+        
+        canvas { width: 100%; height: 100%; display: block; }
+        
+        /* Scrollbar mini cho vùng text (nếu màn hình quá nhỏ) */
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+
+        /* Toasts & Modals */
+        .toast {
+            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.95); padding: 8px 16px; border-radius: 20px;
+            font-size: 0.85rem; font-weight: bold; text-align: center; border: 1px solid;
+            pointer-events: none; opacity: 0; transition: all 0.3s ease; z-index: 10; white-space: nowrap;
+        }
+        .toast-error { border-color: #ef4444; color: #ef4444; box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+        .toast-success { border-color: #10b981; color: #10b981; box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+        .toast-info { border-color: #f59e0b; color: #f59e0b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.4); }
+
+        #modal-overlay {
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(4px);
+            display: none; align-items: center; justify-content: center; z-index: 100;
+        }
+        .modal-box {
+            background: linear-gradient(145deg, #1e293b, #0f172a); border: 2px solid;
+            border-radius: 16px; padding: 25px; text-align: center; width: 320px;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-victory { border-color: #34d399; box-shadow: 0 0 30px rgba(52, 211, 153, 0.3); }
+        .modal-defeat { border-color: #ef4444; box-shadow: 0 0 30px rgba(239, 68, 68, 0.3); }
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+    <div id="app-container">
+        
+        <div class="w-[35%] h-full flex flex-col p-4 md:p-6 bg-slate-800/80 border-r border-slate-700">
+            <h1 class="text-xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400 uppercase tracking-widest mb-3 text-center md:text-left flex-shrink-0">
+                Hải Trình An Toàn
+            </h1>
+            
+            <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 mb-4 flex-1 overflow-y-auto custom-scroll">
+                <h2 class="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-widest border-b border-slate-700 pb-2 mb-3">Nhiệm vụ & Quy tắc</h2>
+                <ul class="text-xs md:text-sm text-slate-300 space-y-2.5 list-disc pl-4 leading-relaxed">
+                    <li>Kéo thả chuột từ ⛵ để tạo <b>Vectơ Động cơ</b> (màu Cam).</li>
+                    <li>Quan sát mũi tên Xanh lam để đoán <b>Vectơ Dòng chảy</b> đang ép vào tàu. Dòng hải lưu sẽ <span class="text-fuchsia-400 font-bold">đổi hướng</span> sau mỗi 2 lượt!</li>
+                    <li><span class="text-amber-400 font-bold">Công suất có hạn:</span> Vectơ Động cơ chỉ được vươn xa tối đa <b>3 ô lưới</b> cho mỗi trục dọc/ngang.</li>
+                    <li>Sử dụng nhẩm <span class="text-emerald-400 font-bold">Quy tắc hình bình hành</span> để điều hướng tàu về cảng 🏰, tránh va vào đá ngầm 🪨.</li>
+                </ul>
+            </div>
+
+            <div class="flex flex-col gap-2 md:gap-3 flex-shrink-0">
+                <button onclick="undoMove()" class="w-full bg-fuchsia-600 hover:bg-fuchsia-500 py-2.5 md:py-3.5 rounded-xl font-bold transition-colors text-xs md:text-sm border border-fuchsia-400 flex items-center justify-center gap-2 shadow-lg">
+                    <span>↩️</span> Thu lại bước đi trước
+                </button>
+                <button onclick="initGame()" class="w-full bg-rose-700 hover:bg-rose-600 py-2.5 md:py-3.5 rounded-xl font-bold transition-colors text-xs md:text-sm border border-rose-500 flex items-center justify-center gap-2 shadow-lg">
+                    <span>🔄</span> Tạo bản đồ hải trình mới
+                </button>
+            </div>
+        </div>
+
+        <div class="w-[65%] h-full flex items-center justify-center p-3 md:p-5 bg-gradient-to-br from-slate-800 to-slate-900 relative">
+            <div id="canvas-wrapper">
+                <canvas id="gameCanvas" width="900" height="900"></canvas>
+                <div id="msg-toast" class="toast"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="modal-overlay">
+        <div id="modal-box" class="modal-box">
+            <div id="modal-icon" class="text-5xl mb-3"></div>
+            <h2 id="modal-title" class="text-xl font-black uppercase tracking-widest mb-2"></h2>
+            <p id="modal-desc" class="text-slate-300 text-sm mb-5 leading-relaxed"></p>
+            <button onclick="initGame()" class="w-full bg-slate-700 hover:bg-slate-600 text-white py-3 rounded-lg font-bold text-sm shadow-lg transition-transform hover:scale-105 border border-slate-500 uppercase tracking-wider">
+                Chơi Ván Mới
+            </button>
+        </div>
+    </div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const msgToast = document.getElementById('msg-toast');
+    const modalOverlay = document.getElementById('modal-overlay');
+    
+    // Cấu hình Lưới (Bản đồ rộng hơn để vẽ tiểu cảnh)
+    const GRID_SIZE = 12; 
+    const TILE_W = 42; 
+    const TILE_H = 21; 
+    const ORIGIN_X = 450; 
+    const ORIGIN_Y = 130; 
+
+    // Các biến trạng thái
+    let boat = { x: 0, y: 0 };
+    let port = { x: 0, y: 0 };
+    let waterVec = { x: 0, y: 0 };
+    let obstacles = [];
+    let boundaries = [];
+    let history = [];
+    let turnCount = 0;
+    
+    let isDrawing = false;
+    let dragEnd = { x: 0, y: 0 }; 
+    let animState = null;
+
+    // --- HÀM TOÁN HỌC & TỌA ĐỘ ---
+    function toScreen(gx, gy) {
+        return {
+            x: ORIGIN_X + (gx - gy) * TILE_W,
+            y: ORIGIN_Y + (gx + gy) * TILE_H
+        };
+    }
+
+    function toGrid(px, py) {
+        let x = px - ORIGIN_X;
+        let y = py - ORIGIN_Y;
+        let gx = (x / TILE_W + y / TILE_H) / 2;
+        let gy = (y / TILE_H - x / TILE_W) / 2;
+        return { x: Math.round(gx), y: Math.round(gy) };
+    }
+
+    function pointToSegmentDistSq(px, py, ax, ay, bx, by) {
+        let l2 = (bx - ax)*(bx - ax) + (by - ay)*(by - ay);
+        if (l2 === 0) return (px - ax)*(px - ax) + (py - ay)*(py - ay);
+        let t = ((px - ax) * (bx - ax) + (py - ay) * (by - ay)) / l2;
+        t = Math.max(0, Math.min(1, t));
+        let projX = ax + t * (bx - ax);
+        let projY = ay + t * (by - ay);
+        return (px - projX)*(px - projX) + (py - projY)*(py - projY);
+    }
+
+    // --- KHỞI TẠO ---
+    function initGame() {
+        modalOverlay.style.display = 'none';
+        history = [];
+        animState = null;
+        isDrawing = false;
+        turnCount = 0;
+
+        boat = { x: 10, y: 2 }; 
+        port = { x: 2, y: 10 }; 
+
+        randomizeWater();
+        generateDecorations();
+        generateObstacles();
+        draw();
+        showMessage("Hải trình bắt đầu! Hãy vẽ Vectơ Động cơ.", "info");
+    }
+
+    function randomizeWater() {
+        // Hướng tây/tây nam nhẹ nhàng
+        const flows = [ {x: -1, y: 1}, {x: 0, y: 1}, {x: -1, y: 0}, {x: -1, y: 2} ];
+        let oldFlow = waterVec;
+        do {
+            waterVec = flows[Math.floor(Math.random() * flows.length)];
+        } while (waterVec.x === oldFlow.x && waterVec.y === oldFlow.y);
+    }
+
+    function generateDecorations() {
+        boundaries = [];
+        const decos = ['🌴', '🏕️', '⛰️', '🏖️', '🌲'];
+        for(let i = -2; i <= GRID_SIZE + 1; i++) {
+            for(let j = -2; j <= GRID_SIZE + 1; j++) {
+                if(i < 0 || i >= GRID_SIZE || j < 0 || j >= GRID_SIZE) {
+                    boundaries.push({
+                        x: i, y: j,
+                        type: decos[Math.floor(Math.random() * decos.length)]
+                    });
+                }
+            }
+        }
+    }
+
+    function generateObstacles() {
+        let maxTries = 50;
+        while (maxTries > 0) {
+            obstacles = [];
+            for(let i=0; i<14; i++) {
+                let ox = Math.floor(Math.random() * GRID_SIZE);
+                let oy = Math.floor(Math.random() * GRID_SIZE);
+                if ((ox === boat.x && oy === boat.y) || (Math.abs(ox - port.x) <= 1 && Math.abs(oy - port.y) <= 1)) continue;
+                obstacles.push({x: ox, y: oy});
+            }
+            if (obstacles.length > 0) break;
+            maxTries--;
+        }
+    }
+
+    // --- ĐỒ HỌA ---
+    function drawIsoTile(gx, gy, fillColor, strokeColor) {
+        let p1 = toScreen(gx, gy);
+        let p2 = toScreen(gx+1, gy);
+        let p3 = toScreen(gx+1, gy+1);
+        let p4 = toScreen(gx, gy+1);
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y);
+        ctx.lineTo(p3.x, p3.y); ctx.lineTo(p4.x, p4.y);
+        ctx.closePath();
+        if(fillColor) { ctx.fillStyle = fillColor; ctx.fill(); }
+        if(strokeColor) { ctx.strokeStyle = strokeColor; ctx.lineWidth = 1; ctx.stroke(); }
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 1. Vẽ Vùng Đất Trang Trí
+        ctx.font = '28px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        boundaries.forEach(b => {
+            drawIsoTile(b.x, b.y, '#d97706', '#b45309'); 
+            let p = toScreen(b.x + 0.5, b.y + 0.5);
+            ctx.fillText(b.type, p.x, p.y - 15);
+        });
+
+        // 2. Vẽ Lưới Nước Biển
+        for (let i = 0; i < GRID_SIZE; i++) {
+            for (let j = 0; j < GRID_SIZE; j++) {
+                drawIsoTile(i, j, null, 'rgba(255, 255, 255, 0.15)');
+            }
+        }
+
+        // 3. Vẽ Bến Cảng
+        drawIsoTile(port.x, port.y, '#8b5cf6', '#6d28d9'); 
+        let pPort = toScreen(port.x + 0.5, port.y + 0.5);
+        ctx.font = '40px Arial';
+        ctx.fillText('🏰', pPort.x, pPort.y - 25);
+
+        // 4. Vẽ Đá Ngầm
+        ctx.font = '30px Arial';
+        obstacles.forEach(o => {
+            let p = toScreen(o.x + 0.5, o.y + 0.5);
+            ctx.fillText('🪨', p.x, p.y - 10);
+        });
+
+        // 5. Logic Hiển Thị Vectơ
+        let currentBoat = animState ? {x: animState.startX, y: animState.startY} : boat;
+        let bp = toScreen(currentBoat.x, currentBoat.y);
+
+        if (isDrawing && !animState) {
+            let thrustVec = { x: dragEnd.x - boat.x, y: dragEnd.y - boat.y };
+            let pT = toScreen(boat.x + thrustVec.x, boat.y + thrustVec.y);
+            let pW = toScreen(boat.x + waterVec.x, boat.y + waterVec.y);
+
+            drawArrow(bp, pW, 'rgba(56, 189, 248, 0.8)', 5); // Nước
+            drawArrow(bp, pT, '#f59e0b', 5); // Động cơ
+            
+        } else if (animState) {
+            let pW = toScreen(animState.startX + waterVec.x, animState.startY + waterVec.y);
+            let pT = toScreen(animState.startX + animState.thrustVec.x, animState.startY + animState.thrustVec.y);
+            let pR = toScreen(animState.endX, animState.endY);
+
+            drawArrow(bp, pW, '#38bdf8', 4);
+            drawArrow(bp, pT, '#f59e0b', 4);
+            drawDashedLine(pW, pR, '#f59e0b');
+            drawDashedLine(pT, pR, '#38bdf8');
+            drawArrow(bp, pR, '#ef4444', 6); // Vectơ Tổng
+        } else {
+            let pW = toScreen(boat.x + waterVec.x, boat.y + waterVec.y);
+            drawArrow(bp, pW, 'rgba(56, 189, 248, 0.7)', 5);
+        }
+
+        // 6. Vẽ Thuyền
+        ctx.font = '35px Arial';
+        if (animState) {
+            let cx = animState.startX + (animState.endX - animState.startX) * animState.progress;
+            let cy = animState.startY + (animState.endY - animState.startY) * animState.progress;
+            let cp = toScreen(cx, cy);
+            ctx.fillText('⛵', cp.x, cp.y - 15);
+        } else {
+            ctx.fillText('⛵', bp.x, bp.y - 15);
+        }
+    }
+
+    function drawArrow(p1, p2, color, width) {
+        let dx = p2.x - p1.x; let dy = p2.y - p1.y;
+        let angle = Math.atan2(dy, dx);
+        let len = Math.sqrt(dx*dx + dy*dy);
+        if(len === 0) return;
+
+        ctx.strokeStyle = color; ctx.lineWidth = width; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.moveTo(p2.x, p2.y);
+        ctx.lineTo(p2.x - 18 * Math.cos(angle - Math.PI/6), p2.y - 18 * Math.sin(angle - Math.PI/6));
+        ctx.lineTo(p2.x - 18 * Math.cos(angle + Math.PI/6), p2.y - 18 * Math.sin(angle + Math.PI/6));
+        ctx.closePath();
+        ctx.fillStyle = color; ctx.fill();
+    }
+
+    function drawDashedLine(p1, p2, color) {
+        ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.setLineDash([8, 8]);
+        ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+        ctx.setLineDash([]); 
+    }
+
+    // --- TƯƠNG TÁC ---
+    function getMousePos(e) {
+        const rect = canvas.getBoundingClientRect();
+        let cx = e.clientX, cy = e.clientY;
+        if(e.touches && e.touches.length > 0) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
+        return {
+            x: (cx - rect.left) * (canvas.width / rect.width),
+            y: (cy - rect.top) * (canvas.height / rect.height)
+        };
+    }
+
+    canvas.addEventListener('pointerdown', e => {
+        if(animState) return;
+        isDrawing = true;
+        let pos = getMousePos(e);
+        dragEnd = toGrid(pos.x, pos.y);
+        draw();
+    });
+
+    window.addEventListener('pointermove', e => {
+        if (!isDrawing) return;
+        let pos = getMousePos(e);
+        let gridPos = toGrid(pos.x, pos.y);
+        
+        // Quản lý lực đẩy tối đa 3 ô
+        let dx = gridPos.x - boat.x; let dy = gridPos.y - boat.y;
+        if (Math.abs(dx) > 3) dx = 3 * Math.sign(dx);
+        if (Math.abs(dy) > 3) dy = 3 * Math.sign(dy);
+        
+        dragEnd = { x: boat.x + dx, y: boat.y + dy };
+        draw();
+    });
+
+    window.addEventListener('pointerup', () => {
+        if (!isDrawing) return;
+        isDrawing = false;
+
+        let thrustVec = { x: dragEnd.x - boat.x, y: dragEnd.y - boat.y };
+        if (thrustVec.x === 0 && thrustVec.y === 0) { draw(); return; } 
+
+        executeMove(thrustVec);
+    });
+
+    // --- LOGIC DI CHUYỂN ---
+    function executeMove(thrustVec) {
+        history.push({ x: boat.x, y: boat.y, wVec: {x: waterVec.x, y: waterVec.y} }); 
+        turnCount++;
+
+        let resultantVec = { x: thrustVec.x + waterVec.x, y: thrustVec.y + waterVec.y };
+        let targetX = boat.x + resultantVec.x;
+        let targetY = boat.y + resultantVec.y;
+
+        animState = { progress: 0, startX: boat.x, startY: boat.y, endX: targetX, endY: targetY, thrustVec: thrustVec };
+        animateMove();
+    }
+
+    function animateMove() {
+        if (!animState) return;
+        animState.progress += 0.02; 
+        
+        if (animState.progress >= 1) {
+            boat.x = animState.endX;
+            boat.y = animState.endY;
+            
+            if (boat.x < 0 || boat.x >= GRID_SIZE || boat.y < 0 || boat.y >= GRID_SIZE) {
+                showModal("Lạc Trôi!", "Thuyền của bạn đã đi chệch khỏi vùng biển an toàn.", false);
+                return;
+            }
+
+            for (let obs of obstacles) {
+                if (pointToSegmentDistSq(obs.x, obs.y, animState.startX, animState.startY, boat.x, boat.y) < 0.3) {
+                    showModal("Tàu Chìm!", "Bùm! Bạn tính toán sai hướng và tông thẳng vào rạn san hô.", false);
+                    return;
+                }
+            }
+
+            if (boat.x === port.x && boat.y === port.y) {
+                showModal("Tuyệt Vời!", "Cập bến thành công! Khả năng tính toán Vectơ của bạn cực đỉnh.", true);
+                return;
+            }
+
+            if (turnCount % 2 === 0) {
+                randomizeWater();
+                showMessage("🌊 CẢNH BÁO: Dòng hải lưu đã đổi hướng!", "info");
+            }
+
+            animState = null;
+            draw();
+        } else {
+            draw();
+            requestAnimationFrame(animateMove);
+        }
+    }
+
+    function undoMove() {
+        if (animState || history.length === 0) {
+            showMessage("Không có bước đi nào để lùi lại!", "error");
+            return;
+        }
+        let lastState = history.pop();
+        boat.x = lastState.x;
+        boat.y = lastState.y;
+        waterVec.x = lastState.wVec.x;
+        waterVec.y = lastState.wVec.y;
+        turnCount--;
+        
+        draw();
+        showMessage("Đã lùi lại 1 bước.", "info");
+    }
+
+    function showModal(title, desc, isWin) {
+        animState = null; draw(); 
+        document.getElementById('modal-title').innerText = title;
+        document.getElementById('modal-desc').innerText = desc;
+        document.getElementById('modal-icon').innerText = isWin ? '🏆' : '💥';
+        
+        let box = document.getElementById('modal-box');
+        box.className = `modal-box ${isWin ? 'modal-victory' : 'modal-defeat'}`;
+        modalOverlay.style.display = 'flex';
+    }
+
+    function showMessage(msg, type) {
+        msgToast.innerText = msg;
+        msgToast.className = `toast toast-${type}`;
+        msgToast.style.opacity = 1; msgToast.style.top = '15px';
+        setTimeout(() => { msgToast.style.opacity = 0; msgToast.style.top = '10px'; }, 2500);
+    }
+
+    initGame();
+</script>
+
+</body>
+</html>
