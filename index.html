@@ -3,24 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Góc Học Tập của ôti</title>
-    <!-- Tích hợp MathJax để hiển thị LaTeX -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <title>Trang chủ - ôti</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.6; }
-        h1 { color: #2c3e50; text-align: center; }
-        .content-box { background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #ddd; }
+        /* Thiết lập nền và căn giữa khung chứa */
+        body { 
+            font-family: Arial, sans-serif; 
+            background-color: #f4f7f6; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        /* Định dạng khung chứa link */
+        .link-container { 
+            background: #ffffff; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+            width: 100%; 
+            max-width: 400px; 
+            text-align: center; 
+        }
+        .link-container h1 { 
+            color: #2c3e50; 
+            margin-top: 0;
+            margin-bottom: 25px; 
+            font-size: 24px;
+        }
+        /* Định dạng danh sách nút bấm */
+        .link-list { 
+            list-style-type: none; 
+            padding: 0; 
+            margin: 0;
+        }
+        .link-list li { 
+            margin-bottom: 15px; 
+        }
+        .link-list a { 
+            display: block; 
+            padding: 12px; 
+            background: #3498db; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 6px; 
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .link-list a:hover { 
+            background: #2980b9; 
+        }
     </style>
 </head>
 <body>
-    <h1>Chào mừng đến với trang web của ôti!</h1>
-    <p>Nơi lưu trữ và chia sẻ các tài liệu học tập.</p>
-    
-    <div class="content-box">
-        <h2>Kiểm tra hiển thị công thức:</h2>
-        <p>Định lý hàm số cosin trong tam giác $ABC$:</p>
-        <p>$$a^2 = b^2 + c^2 - 2bc \cos(A)$$</p>
+
+    <div class="link-container">
+        <h1>Danh mục tài liệu</h1>
+        
+        <ul class="link-list">
+            <!-- Cứ mỗi lần muốn thêm trang mới, bạn chỉ cần copy một dòng <li>...</li> và dán xuống dưới -->
+            
+            <li><a href="bai-tap.html">Bài tập luyện tập</a></li>
+            <li><a href="#">Đề kiểm tra giữa kì (Đang cập nhật)</a></li>
+            <li><a href="#">Tài liệu chuyên đề (Đang cập nhật)</a></li>
+            <li><a href="#">Hồ sơ chuyên môn (Đang cập nhật)</a></li>
+            
+        </ul>
     </div>
+
 </body>
 </html>
