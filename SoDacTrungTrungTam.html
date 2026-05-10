@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học Liệu: Các số đặc trưng đo xu thế trung tâm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; color: #334155; line-height: 1.6; }
+        
+        /* Toán học Font */
+        .math { font-family: "Times New Roman", Times, serif; font-style: italic; font-size: 1.15em; }
+        .math-normal { font-family: "Times New Roman", Times, serif; font-style: normal; font-size: 1.15em; }
+        .frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; margin: 0 4px; font-size: 0.9em; }
+        /* Sửa lỗi gạch chân bằng cách thêm dấu > để chỉ tác động đến thẻ span con trực tiếp */
+.frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; margin: 0 4px; font-size: 0.9em; }
+.frac > span:first-child { border-bottom: 1px solid currentColor; padding: 0 4px; }
+.frac > span:last-child { padding: 0 4px; }
+        .frac span:last-child { padding: 0 4px; }
+
+        /* Custom Table */
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; background-color: white; }
+        th, td { border: 1px solid #cbd5e1; padding: 8px 12px; text-align: center; }
+        th { background-color: #f1f5f9; font-weight: bold; }
+
+        /* Quiz Option Animations */
+        .option-btn { transition: all 0.2s ease; }
+        .option-btn:hover:not(:disabled) { background-color: #e2e8f0; border-color: #94a3b8; }
+        .option-correct { background-color: #d1fae5 !important; border-color: #10b981 !important; color: #065f46 !important; font-weight: bold; }
+        .option-wrong { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+        .option-disabled { opacity: 0.6; cursor: not-allowed; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-blue-800 text-white py-8 shadow-md">
+        <div class="max-w-4xl mx-auto px-4">
+            <h1 class="text-3xl font-bold uppercase tracking-wide">Bài 3: Các số đặc trưng đo xu thế trung tâm của mẫu số liệu</h1>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        
+        <section class="mb-12 bg-white p-6 md:p-8 rounded-xl shadow-sm border border-slate-200">
+    <h2 class="text-2xl font-bold text-blue-800 border-b-2 border-blue-200 pb-2 mb-6 uppercase tracking-wide">
+        Phần 1: Lí thuyết trọng tâm
+    </h2>
+    <p class="text-slate-600 mb-6 italic">
+        Để nhanh chóng nắm bắt được những đặc điểm, những thông tin quan trọng trong một mẫu số liệu người ta thường hay tính các số đặc trưng của mẫu số liệu đó. Những số đặc trưng đó là gì? Cùng tìm hiểu nào!
+    </p>
+
+    <div class="space-y-8">
+        <div class="bg-slate-50 p-5 rounded-lg border border-slate-100">
+            <h3 class="text-xl font-bold text-blue-700 mb-3 flex items-center">
+                <span class="bg-blue-100 text-blue-700 w-8 h-8 rounded-full inline-flex items-center justify-center mr-3">1</span>
+                Số trung bình (Số trung bình cộng)
+            </h3>
+            
+            <p class="mb-2"><strong>Định nghĩa:</strong> Cho mẫu số liệu <span class="math">x<sub>1</sub>, x<sub>2</sub>, ..., x<sub>n</sub></span>. Số trung bình của mẫu số liệu này, kí hiệu là <span class="math-normal">x&#772;</span>, được tính bởi công thức:</p>
+            
+            <div class="flex justify-center my-4 text-lg">
+                <span class="math-normal">x&#772;</span> = 
+                <span class="frac mx-2">
+                    <span><span class="math">x<sub>1</sub> + x<sub>2</sub> + ... + x<sub>n</sub></span></span>
+                    <span><span class="math">n</span></span>
+                </span>
+            </div>
+<div class="flex justify-center my-6">
+    <table class="border-collapse border-2 border-sky-500 bg-white text-lg shadow-sm">
+        <tbody>
+            <tr>
+                <td class="border-2 border-sky-500 bg-orange-100 font-bold px-6 py-4 text-center text-slate-800">
+                    Giá trị
+                </td>
+                <td class="border-2 border-sky-500 px-6 py-4 text-center">
+                    <span class="math">x<sub>1</sub></span>
+                </td>
+                <td class="border-2 border-sky-500 px-6 py-4 text-center">
+                    <span class="math">x<sub>2</sub></span>
+                </td>
+                <td class="border-2 border-sky-500 px-6 py-4 text-center tracking-widest text-slate-500">
+                    ...
+                </td>
+                <td class="border-2 border-sky-500 px-6 py-4 text-center">
+                    <span class="math">x<sub>k</sub></span>
+                </td>
+            </tr>
+            
+            <tr>
+                <td class="border-2 border-sky-500 bg-orange-100 font-bold px-6 py-4 text-center text-slate-800">
+                    Tần số
+                </td>
+                <td class="border-2 border-sky-500 px-6 py-4 text-center">
+                    <span class="math">n<sub>1</sub></span>
+                </td>
+                <td class="border-2 border-sky-500 px-6 py-4 text-center">
+                    <span class="math">n<sub>2</sub></span>
+                </td>
+                <td class="border-2 border-sky-500 px-6 py-4 text-center tracking-widest text-slate-500">
+                    ...
+                </td>
+                <td class="border-2 border-sky-500 px-6 py-4 text-center">
+                    <span class="math">n<sub>k</sub></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+            <p class="mb-2"><strong>Mở rộng:</strong> Nếu mẫu số liệu được cho dưới dạng bảng tần số, trong đó giá trị <span class="math">x<sub>i</sub></span> có tần số <span class="math">n<sub>i</sub></span> (với <span class="math">i = 1, 2, ..., k</span> và <span class="math">n = n<sub>1</sub> + n<sub>2</sub> + ... + n<sub>k</sub></span>) thì:</p>
+            
+            <div class="flex justify-center my-4 text-lg">
+                <span class="math-normal">x&#772;</span> = 
+                <span class="frac mx-2">
+                    <span><span class="math">n<sub>1</sub>x<sub>1</sub> + n<sub>2</sub>x<sub>2</sub> + ... + n<sub>k</sub>x<sub>k</sub></span></span>
+                    <span><span class="math">n</span></span>
+                </span>
+            </div>
+
+            <div class="mt-4 pl-4 border-l-4 border-blue-400 bg-white p-3 rounded shadow-sm">
+                <p class="text-sm"><strong>💡 Ý nghĩa & Ứng dụng:</strong> Số trung bình là giá trị đại diện phổ biến nhất cho mẫu số liệu. Tuy nhiên, <strong>điểm yếu</strong> của số trung bình là dễ bị ảnh hưởng bởi các <em>giá trị bất thường</em> (outliers - các số quá lớn hoặc quá nhỏ so với phần lớn dữ liệu còn lại).</p>
+            </div>
+        </div>
+
+        <div class="bg-slate-50 p-5 rounded-lg border border-slate-100">
+            <h3 class="text-xl font-bold text-emerald-700 mb-3 flex items-center">
+                <span class="bg-emerald-100 text-emerald-700 w-8 h-8 rounded-full inline-flex items-center justify-center mr-3">2</span>
+                Trung vị (Median)
+            </h3>
+            
+            <p class="mb-2"><strong>Định nghĩa:</strong> Trung vị là giá trị đứng ở vị trí <strong>chính giữa</strong> của mẫu số liệu sau khi đã được <strong>sắp xếp theo thứ tự không giảm</strong>. Kí hiệu là <span class="math">M<sub>e</sub></span>.</p>
+		            
+            <p class="font-semibold text-slate-700 mt-3 mb-1">Cách tìm trung vị của mẫu số liệu có kích thước <span class="math">n</span>:</p>
+            <ul class="list-disc ml-8 space-y-2 mb-4">
+                <li><strong>Bước 1:</strong> Sắp xếp các số liệu theo thứ tự từ bé đến lớn (không giảm): <span class="math">x<sub>1</sub> &le; x<sub>2</sub> &le; ... &le; x<sub>n</sub></span>.</li>
+                <li><strong>Bước 2:</strong> 
+                    <ul class="list-[circle] ml-6 mt-1 space-y-1">
+                        <li>Nếu <span class="math">n</span> là số <strong>lẻ</strong>: Trung vị là giá trị ở chính giữa dãy, tức là <span class="math">M<sub>e</sub> = x<sub>(n+1)/2</sub></span>.</li>
+                        <li>Nếu <span class="math">n</span> là số <strong>chẵn</strong>: Trung vị là trung bình cộng của hai giá trị ở chính giữa dãy, tức là <span class="math">M<sub>e</sub></span> = <span class="frac"><span>1</span><span>2</span></span><span class="math-normal">(x<sub>n/2</sub> + x<sub>n/2 + 1</sub>)</span>.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="mt-4 pl-4 border-l-4 border-emerald-400 bg-white p-3 rounded shadow-sm">
+                <p class="text-sm"><strong>💡 Ý nghĩa & Ứng dụng:</strong> Trung vị chia mẫu số liệu thành hai nửa bằng nhau (50% số liệu nhỏ hơn hoặc bằng <span class="math">M<sub>e</sub></span> và 50% lớn hơn hoặc bằng <span class="math">M<sub>e</sub></span>). Khác với số trung bình, trung vị <strong>không bị ảnh hưởng bởi các giá trị bất thường</strong>. Do đó, khi mẫu có các số liệu quá lệch, ta ưu tiên dùng trung vị làm đại diện thay cho số trung bình.</p>
+            </div>
+        </div>
+
+        <div class="bg-slate-50 p-5 rounded-lg border border-slate-100">
+            <h3 class="text-xl font-bold text-purple-700 mb-3 flex items-center">
+                <span class="bg-purple-100 text-purple-700 w-8 h-8 rounded-full inline-flex items-center justify-center mr-3">3</span>
+                Tứ phân vị (Quartiles)
+            </h3>
+            
+            <p class="mb-2"><strong>Định nghĩa:</strong> Tứ phân vị gồm 3 giá trị, lần lượt kí hiệu là <span class="math">Q<sub>1</sub>, Q<sub>2</sub>, Q<sub>3</sub></span>, chia mẫu số liệu (đã sắp xếp) thành <strong>4 phần bằng nhau</strong>, mỗi phần chứa 25% dữ liệu.</p>
+            <div class="my-4 flex justify-center">
+    <img src="https://cdnv2.tgdd.vn/mwg-static/common/News/0/tu-phan-vi-la-gi-01.jpg" 
+         alt="Minh họa Tứ phân vị" 
+         class="w-full max-w-lg rounded-lg shadow-md border border-slate-200">
+</div>
+			
+            <p class="font-semibold text-slate-700 mt-3 mb-1">Quy tắc tìm các tứ phân vị:</p>
+            <ul class="list-decimal ml-8 space-y-2 mb-4">
+                <li>Sắp xếp mẫu số liệu theo thứ tự không giảm.</li>
+                <li>Tìm <strong><span class="math">Q<sub>2</sub></span></strong>: Chính là trung vị <span class="math">M<sub>e</sub></span> của toàn bộ mẫu số liệu.</li>
+                <li>Tìm <strong><span class="math">Q<sub>1</sub></span></strong> (tứ phân vị thứ nhất): Là trung vị của <em>nửa số liệu bên trái</em> <span class="math">Q<sub>2</sub></span> (<strong>Không bao gồm</strong> <span class="math">Q<sub>2</sub></span> nếu cỡ mẫu <span class="math">n</span> là số lẻ).</li>
+                <li>Tìm <strong><span class="math">Q<sub>3</sub></span></strong> (tứ phân vị thứ ba): Là trung vị của <em>nửa số liệu bên phải</em> <span class="math">Q<sub>2</sub></span> (<strong>Không bao gồm</strong> <span class="math">Q<sub>2</sub></span> nếu cỡ mẫu <span class="math">n</span> là số lẻ).</li>
+            </ul>
+
+            <div class="mt-4 pl-4 border-l-4 border-purple-400 bg-white p-3 rounded shadow-sm">
+                <p class="text-sm"><strong>💡 Ý nghĩa & Ứng dụng:</strong> Các điểm tứ phân vị cho ta một bức tranh chi tiết hơn về sự phân bố của số liệu. Đặc biệt, khoảng cách giữa <span class="math">Q<sub>3</sub></span> và <span class="math">Q<sub>1</sub></span> (gọi là khoảng tứ phân vị <span class="math">&Delta;<sub>Q</sub> = Q<sub>3</sub> - Q<sub>1</sub></span>) chứa 50% số liệu ở trung tâm và rất hữu ích để phát hiện các giá trị ngoại lai.</p>
+            </div>
+        </div>
+
+        <div class="bg-slate-50 p-5 rounded-lg border border-slate-100">
+            <h3 class="text-xl font-bold text-amber-600 mb-3 flex items-center">
+                <span class="bg-amber-100 text-amber-700 w-8 h-8 rounded-full inline-flex items-center justify-center mr-3">4</span>
+                Mốt (Mode)
+            </h3>
+            
+            <p class="mb-2"><strong>Định nghĩa:</strong> Mốt của mẫu số liệu là giá trị có <strong>tần số lớn nhất</strong> (xuất hiện nhiều lần nhất) trong mẫu. Kí hiệu là <span class="math">M<sub>o</sub></span>.</p>
+            
+            <p class="mb-2 mt-2"><strong>Chú ý quan trọng:</strong></p>
+            <ul class="list-disc ml-8 space-y-1 mb-4">
+                <li>Một mẫu số liệu có thể <strong>không có mốt</strong> (nếu mọi giá trị đều có tần số xuất hiện bằng nhau).</li>
+                <li>Một mẫu số liệu có thể <strong>có nhiều mốt</strong> (nếu có hai hay nhiều giá trị cùng có tần số lớn nhất).</li>
+            </ul>
+
+            <div class="mt-4 pl-4 border-l-4 border-amber-400 bg-white p-3 rounded shadow-sm">
+                <p class="text-sm"><strong>💡 Ý nghĩa & Ứng dụng:</strong> Mốt đặc trưng cho giá trị phổ biến nhất, đại trà nhất. Trong thực tế, mốt rất được quan tâm trong kinh doanh (ví dụ: cỡ giày bán chạy nhất, màu áo được ưa chuộng nhất,...).</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <section class="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-slate-200">
+            <h2 class="text-2xl font-bold text-sky-600 border-b-2 border-sky-200 pb-2 mb-2">PHẦN 2: THỰC HÀNH TRẮC NGHIỆM</h2>
+            <p class="text-slate-500 mb-6 italic">Hãy chọn đáp án đúng nhất. Kết quả sẽ hiển thị ngay sau khi bạn chọn.</p>
+            
+            <div id="quiz-container" class="space-y-8">
+                </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-6 text-slate-500 text-sm">
+        <p>Học liệu Số tương tác - Toán 10</p>
+    </footer>
+
+    <script>
+        const quizData = [
+            {
+                q: "Giá trị có tần số lớn nhất trong mẫu số liệu được gọi là gì?",
+                options: ["Số trung bình", "Trung vị", "Mốt", "Tứ phân vị"],
+                correct: 2,
+                explain: "Mốt là giá trị có tần số lớn nhất (xuất hiện nhiều nhất) trong mẫu."
+            },
+            {
+                q: "Kí hiệu của số trung vị là gì?",
+                options: ["<span class='math'>M<sub>o</sub></span>", "<span class='math'>M<sub>e</sub></span>", "<span class='math-normal'>x&#772;</span>", "<span class='math'>Q<sub>1</sub></span>"],
+                correct: 1,
+                explain: "<span class='math'>M<sub>e</sub></span> là kí hiệu của trung vị (Median)."
+            },
+            {
+                q: "Kí hiệu của Mốt là gì?",
+                options: ["<span class='math'>M<sub>o</sub></span>", "<span class='math'>M<sub>e</sub></span>", "<span class='math-normal'>x&#772;</span>", "<span class='math'>Q<sub>2</sub></span>"],
+                correct: 0,
+                explain: "<span class='math'>M<sub>o</sub></span> là kí hiệu của Mốt (Mode)."
+            },
+            {
+                q: "Để tìm trung vị của mẫu số liệu, bước ĐẦU TIÊN bắt buộc ta phải làm là gì?",
+                options: ["Tính tổng các số liệu", "Tìm giá trị xuất hiện nhiều nhất", "Sắp xếp số liệu theo thứ tự không giảm", "Chia mẫu thành 4 phần"],
+                correct: 2,
+                explain: "Luôn phải sắp xếp số liệu (từ nhỏ đến lớn) trước khi tìm trung vị."
+            },
+            {
+                q: "Tứ phân vị của một mẫu số liệu gồm bao nhiêu giá trị?",
+                options: ["1 giá trị", "2 giá trị", "3 giá trị", "4 giá trị"],
+                correct: 2,
+                explain: "Gồm 3 giá trị là <span class='math'>Q<sub>1</sub>, Q<sub>2</sub>, Q<sub>3</sub></span> để chia mẫu thành 4 phần."
+            },
+            {
+                q: "Tứ phân vị thứ hai (<span class='math'>Q<sub>2</sub></span>) của mẫu số liệu có giá trị bằng với số đặc trưng nào?",
+                options: ["Số trung bình", "Mốt", "Tứ phân vị thứ nhất", "Trung vị"],
+                correct: 3,
+                explain: "<span class='math'>Q<sub>2</sub></span> chia đôi mẫu số liệu nên nó chính là Trung vị (<span class='math'>M<sub>e</sub></span>)."
+            },
+            {
+                q: "Số lần lặp lại của một giá trị trong mẫu số liệu được gọi là:",
+                options: ["Tần số", "Tần suất", "Kích thước mẫu", "Trung vị"],
+                correct: 0,
+                explain: "Theo định nghĩa, số lần lặp lại gọi là tần số."
+            },
+            {
+                q: "Tổng các tần suất trong một bảng phân bố tần suất luôn bằng bao nhiêu?",
+                options: ["10%", "50%", "100%", "Cỡ mẫu n"],
+                correct: 2,
+                explain: "Tổng các tần suất tương đối luôn bằng 100% (hoặc bằng 1)."
+            },
+            {
+                q: "Đại lượng nào sau đây được dùng làm đại diện cho các số liệu của mẫu?",
+                options: ["Tần số", "Số trung bình cộng", "Cỡ mẫu", "Giá trị nhỏ nhất"],
+                correct: 1,
+                explain: "Số trung bình được dùng làm đại diện cho các số liệu, đo xu thế trung tâm."
+            },
+            {
+                q: "Khẳng định nào sau đây là ĐÚNG về số lượng mốt của một mẫu số liệu?",
+                options: ["Luôn chỉ có duy nhất một mốt", "Có thể có một mốt, nhiều mốt hoặc không có mốt", "Luôn có hai mốt", "Không bao giờ có mốt"],
+                correct: 1,
+                explain: "Nếu nhiều giá trị có cùng tần số lớn nhất thì có nhiều mốt. Nếu tất cả tần số bằng nhau thì không có mốt."
+            },
+            {
+                q: "Tứ phân vị thứ nhất (<span class='math'>Q<sub>1</sub></span>) là gì?",
+                options: ["Là trung vị của nửa số liệu đã sắp xếp bên trái <span class='math'>Q<sub>2</sub></span>", "Là trung vị của nửa số liệu đã sắp xếp bên phải <span class='math'>Q<sub>2</sub></span>", "Là số trung bình của toàn mẫu", "Là mốt của mẫu số liệu"],
+                correct: 0,
+                explain: "<span class='math'>Q<sub>1</sub></span> là trung vị của nửa bên trái <span class='math'>Q<sub>2</sub></span>."
+            },
+            {
+                q: "Các điểm tứ phân vị chia mẫu số liệu thành 4 phần. Mỗi phần chứa khoảng bao nhiêu phần trăm tổng số liệu?",
+                options: ["10%", "20%", "25%", "50%"],
+                correct: 2,
+                explain: "Tứ phân vị chia mẫu thành 4 phần bằng nhau, mỗi phần chứa 25%."
+            },
+            {
+                q: "Cho mẫu số liệu đã sắp xếp: 1; 3; 5; 7; 9. Trung vị của mẫu này là giá trị nào?",
+                options: ["3", "5", "7", "9"],
+                correct: 1,
+                explain: "Dãy có 5 số (số lẻ), số ở vị trí chính giữa (vị trí thứ 3) là số 5."
+            },
+            {
+                q: "Cho mẫu số liệu đã sắp xếp: 2; 4; 6; 8. Trung vị của mẫu này được tính như thế nào?",
+                options: ["Bằng 4", "Bằng 6", "Trung bình cộng của 4 và 6", "Bằng 8"],
+                correct: 2,
+                explain: "Dãy có 4 số (chẵn), trung vị là trung bình cộng của 2 số giữa: (4+6)/2 = 5."
+            },
+            {
+                q: "Mẫu số liệu sau có mốt (<span class='math'>M<sub>o</sub></span>) là bao nhiêu: 4; 4; 5; 6; 6; 6; 7?",
+                options: ["4", "5", "6", "7"],
+                correct: 2,
+                explain: "Số 6 xuất hiện nhiều nhất (3 lần)."
+            },
+            {
+                q: "Số trung bình cộng của mẫu số liệu: 3; 4; 5 là:",
+                options: ["3", "4", "5", "12"],
+                correct: 1,
+                explain: "Trung bình cộng = (3 + 4 + 5) / 3 = 12 / 3 = 4."
+            },
+            {
+                q: `Cho bảng tần số sau:<br>
+                    <table>
+                        <tr><th>Giá trị</th><td>10</td><td>15</td><td>20</td></tr>
+                        <tr><th>Tần số</th><td>2</td><td>8</td><td>5</td></tr>
+                    </table>
+                    Mốt của mẫu số liệu này là:`,
+                options: ["8", "15", "20", "10"],
+                correct: 1,
+                explain: "Giá trị 15 có tần số lớn nhất là 8, nên Mốt là 15."
+            },
+            {
+                q: `Cho bảng tần số sau:<br>
+                    <table>
+                        <tr><th>Giá trị</th><td>6</td><td>7</td><td>8</td></tr>
+                        <tr><th>Tần số</th><td>4</td><td>4</td><td>4</td></tr>
+                    </table>
+                    Khẳng định nào sau đây ĐÚNG về mốt của mẫu số liệu trên?`,
+                options: ["Mốt là 8", "Mốt là 4", "Mẫu số liệu có 3 mốt", "Mẫu số liệu không có mốt"],
+                correct: 3,
+                explain: "Do tất cả các giá trị đều có tần số bằng nhau (bằng 4), mẫu không có mốt."
+            },
+            {
+                q: "Khái niệm cỡ mẫu (<span class='math'>n</span>) là gì?",
+                options: ["Tổng các giá trị của mẫu", "Tổng các tần số của mẫu", "Giá trị lớn nhất của mẫu", "Trung bình cộng của mẫu"],
+                correct: 1,
+                explain: "Cỡ mẫu là tổng số các đối tượng được thống kê, bằng tổng các tần số (<span class='math'>n = n<sub>1</sub> + n<sub>2</sub> + ...</span>)."
+            },
+            {
+                q: "Công thức <span class='math'>M<sub>e</sub> = x<sub>k+1</sub></span> dùng để tính số trung vị trong trường hợp nào?",
+                options: ["Cỡ mẫu <span class='math'>n</span> là số chẵn", "Cỡ mẫu <span class='math'>n</span> là số lẻ (<span class='math'>n=2k+1</span>)", "Mẫu không có mốt", "Tính số trung bình"],
+                correct: 1,
+                explain: "Khi <span class='math'>n</span> lẻ thì trung vị lấy đúng phần tử ở vị trí <span class='math'>k+1</span>."
+            }
+        ];
+
+        const container = document.getElementById('quiz-container');
+
+        quizData.forEach((item, index) => {
+            // Container cho mỗi câu hỏi
+            const qDiv = document.createElement('div');
+            qDiv.className = "p-5 border-2 border-slate-100 bg-slate-50 rounded-xl";
+
+            // Tiêu đề câu hỏi
+            const qTitle = document.createElement('h3');
+            qTitle.className = "font-bold text-lg text-slate-800 mb-3";
+            qTitle.innerHTML = `<span class="text-sky-600">Câu ${index + 1}:</span> ${item.q}`;
+            qDiv.appendChild(qTitle);
+
+            // Grid chứa đáp án
+            const optionsGrid = document.createElement('div');
+            optionsGrid.className = "grid grid-cols-1 md:grid-cols-2 gap-3";
+
+            // Div hiển thị giải thích (ẩn ban đầu)
+            const explainDiv = document.createElement('div');
+            explainDiv.className = "mt-4 p-3 rounded bg-blue-50 border border-blue-200 text-blue-800 text-sm hidden";
+            explainDiv.innerHTML = `<strong>💡 Giải thích:</strong> ${item.explain}`;
+
+            // Tạo các nút đáp án
+            item.options.forEach((optText, optIndex) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn text-left p-3 border-2 border-slate-200 rounded-lg bg-white text-slate-700 font-medium";
+                btn.innerHTML = `<span class="inline-block w-6 font-bold text-slate-400">${String.fromCharCode(65 + optIndex)}.</span> ${optText}`;
+                
+                // Sự kiện click
+                btn.addEventListener('click', function() {
+                    // Disable tất cả các nút trong câu này
+                    const allBtns = optionsGrid.querySelectorAll('button');
+                    allBtns.forEach(b => {
+                        b.disabled = true;
+                        b.classList.add('option-disabled');
+                    });
+
+                    // Kiểm tra đúng sai
+                    if (optIndex === item.correct) {
+                        this.classList.remove('option-disabled');
+                        this.classList.add('option-correct');
+                    } else {
+                        this.classList.remove('option-disabled');
+                        this.classList.add('option-wrong');
+                        
+                        // Đánh dấu câu đúng
+                        allBtns[item.correct].classList.remove('option-disabled');
+                        allBtns[item.correct].classList.add('option-correct');
+                    }
+
+                    // Hiển thị giải thích
+                    explainDiv.classList.remove('hidden');
+                });
+
+                optionsGrid.appendChild(btn);
+            });
+
+            qDiv.appendChild(optionsGrid);
+            qDiv.appendChild(explainDiv);
+            container.appendChild(qDiv);
+        });
+    </script>
+</body>
+</html>
