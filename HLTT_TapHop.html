@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học liệu 10: Phép toán Tập hợp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Khóa cứng màn hình, tỷ lệ 16:9, không cuộn */
+        body, html { 
+            margin: 0; padding: 0; width: 100vw; height: 100vh; 
+            background-color: #0f172a; display: flex; justify-content: center; align-items: center; 
+            overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        }
+        
+        .aspect-container {
+            width: 100vw; height: 56.25vw; max-height: 100vh; max-width: 177.78vh;
+            background-color: #f8fafc; box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            display: flex; position: relative; border-radius: 12px; overflow: hidden;
+        }
+
+        /* Giả lập Font Toán Học */
+        .math { font-family: 'Times New Roman', Times, serif; font-style: italic; font-size: 1.15em; }
+        .math-op { font-family: 'Times New Roman', Times, serif; font-style: normal; margin: 0 2px; }
+        
+        /* Bảng điều khiển Trái (35%) */
+        #left-panel { 
+            width: 35%; background: #ffffff; border-right: 2px solid #e2e8f0; 
+            display: flex; flex-direction: column; padding: 1.5vw; z-index: 10; 
+        }
+        
+        .mode-btn { 
+            border: 2px solid #cbd5e1; color: #475569; padding: 0.5vw; border-radius: 8px; 
+            font-weight: bold; font-size: 0.9vw; transition: all 0.2s; cursor: pointer; text-align: center; 
+        }
+        .mode-btn.active { background: #3b82f6; border-color: #2563eb; color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+
+        #answer-display {
+            width: 100%; height: 3vw; border: 2px solid #93c5fd; border-radius: 8px;
+            background: #eff6ff; display: flex; align-items: center; justify-content: center;
+            font-family: 'Times New Roman', Times, serif; font-size: 1.5vw; font-weight: bold; color: #1e3a8a;
+            letter-spacing: 2px; overflow: hidden; white-space: nowrap;
+        }
+
+        .key-btn {
+            background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px;
+            color: #334155; font-weight: bold; font-size: 1.1vw; font-family: 'Times New Roman', Times, serif;
+            display: flex; justify-content: center; align-items: center; cursor: pointer;
+            transition: all 0.1s; user-select: none; padding: 0.5vw 0;
+        }
+        .key-btn:active { background: #e2e8f0; transform: scale(0.95); }
+        .key-btn.action { background: #fee2e2; color: #dc2626; border-color: #fca5a5; font-family: sans-serif; font-size: 0.9vw; }
+        
+        /* Toast Thông báo */
+        #toast { 
+            position: absolute; top: 1vw; left: 50%; transform: translateX(-50%) translateY(-2vw); 
+            background: #10b981; color: white; padding: 0.8vw 1.5vw; border-radius: 30px; 
+            font-weight: bold; font-size: 1vw; opacity: 0; pointer-events: none; 
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 50; box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
+        }
+        #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        #toast.error { background: #ef4444; }
+
+        /* ================= KHU VỰC BÊN PHẢI (65%) ================= */
+        #visual-wrapper { 
+            width: 65%; height: 100%; position: relative; background: #f1f5f9; overflow: hidden;
+        }
+        
+        #simCanvas { 
+            width: 100%; height: 100%; display: block; cursor: crosshair; 
+            touch-action: none; /* Rất quan trọng: Chặn cuộn trang khi vẽ bằng ngón tay */
+        }
+        
+        /* THANH CÔNG CỤ NỔI BÊN PHẢI */
+        #right-tools { 
+            position: absolute; right: 0; top: 0; bottom: 0;
+            width: 5.5vw; background: rgba(241, 245, 249, 0.9); backdrop-filter: blur(4px);
+            border-left: 2px solid #cbd5e1; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; padding: 1vw 0; gap: 1vw; 
+            box-shadow: -5px 0 15px rgba(0,0,0,0.05); z-index: 20;
+        }
+
+        .tool-btn { 
+            border: 2px solid #cbd5e1; background: white; color: #1e293b; 
+            width: 3.5vw; height: 3.5vw; border-radius: 8px; font-weight: bold; font-size: 1.6vw; 
+            cursor: pointer; display: flex; justify-content: center; align-items: center; 
+            transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .tool-btn.active { background: #10b981; border-color: #059669; color: white; transform: scale(1.1); box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4); }
+        .tool-btn-text { font-size: 0.9vw; font-family: sans-serif; text-align: center; line-height: 1.2; width: 4vw; height: auto; padding: 0.5vw 0; }
+        
+        .tool-indicator { font-size: 0.8vw; color: #0284c7; font-weight: bold; text-transform: uppercase; text-align: center; margin-bottom: 0.5vw; }
+    </style>
+</head>
+<body>
+
+    <div class="aspect-container">
+        
+        <div id="left-panel">
+            <h1 class="text-xl lg:text-2xl font-black text-sky-800 mb-3 border-b-2 border-sky-200 pb-2 uppercase tracking-wide">Toán 10: Tập Hợp</h1>
+            
+            <div class="grid grid-cols-3 gap-2 mb-4">
+                <div class="mode-btn active" data-mode="union">A <span class="math-op">∪</span> B</div>
+                <div class="mode-btn" data-mode="inter">A <span class="math-op">∩</span> B</div>
+                <div class="mode-btn" data-mode="diff">A <span class="math-op">\</span> B</div>
+            </div>
+
+            <div class="bg-blue-50 p-3 rounded-xl border border-blue-100 mb-4 flex-shrink-0">
+                <div class="text-xs text-slate-500 font-bold mb-1 uppercase">Đề bài hiện tại:</div>
+                <div class="text-xl lg:text-2xl font-bold text-blue-900 mb-1 math">A = <span id="setA-display"></span></div>
+                <div class="text-xl lg:text-2xl font-bold text-blue-900 mb-3 math">B = <span id="setB-display"></span></div>
+                <div class="text-sm lg:text-base font-semibold text-slate-700">
+                    Tìm <span class="math text-blue-700" id="question-display">A ∪ B</span> = ?
+                </div>
+            </div>
+
+            <div class="flex-1 flex flex-col justify-end">
+                <div id="answer-display" class="mb-3"></div>
+                
+                <div class="grid grid-cols-5 gap-1.5 mb-3">
+                    <button class="key-btn" data-char="1">1</button>
+                    <button class="key-btn" data-char="2">2</button>
+                    <button class="key-btn" data-char="3">3</button>
+                    <button class="key-btn" data-char="(">(</button>
+                    <button class="key-btn" data-char=")">)</button>
+                    
+                    <button class="key-btn" data-char="4">4</button>
+                    <button class="key-btn" data-char="5">5</button>
+                    <button class="key-btn" data-char="6">6</button>
+                    <button class="key-btn" data-char="[">[</button>
+                    <button class="key-btn" data-char="]">]</button>
+                    
+                    <button class="key-btn" data-char="7">7</button>
+                    <button class="key-btn" data-char="8">8</button>
+                    <button class="key-btn" data-char="9">9</button>
+                    <button class="key-btn" data-char="-">-</button>
+                    <button class="key-btn" data-char=";">;</button>
+                    
+                    <button class="key-btn" data-char="0">0</button>
+                    <button class="key-btn" data-char="∞">&infin;</button>
+                    <button class="key-btn" data-char="∪">&cup;</button>
+                    <button class="key-btn" data-char="∅">&empty;</button>
+                    <button class="key-btn action" id="btn-del">XÓA</button>
+                </div>
+
+                <button id="btn-check" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg transition-colors shadow-md text-sm lg:text-base tracking-wide">
+                    KIỂM TRA KẾT QUẢ
+                </button>
+            </div>
+        </div>
+
+        <div id="visual-wrapper">
+            <canvas id="simCanvas"></canvas>
+            
+            <div id="right-tools">
+                <div class="tool-indicator">Công<br>Cụ<br>Nháp</div>
+                <button class="tool-btn math-op" data-tool="[">[</button>
+                <button class="tool-btn math-op" data-tool="]">]</button>
+                <button class="tool-btn math-op" data-tool="(">(</button>
+                <button class="tool-btn math-op" data-tool=")">)</button>
+                <button class="tool-btn tool-btn-text text-red-600" data-tool="cross">Gạch<br>Bỏ</button>
+                <div class="w-full h-px bg-slate-300 my-2"></div>
+                <button class="tool-btn tool-btn-text bg-rose-100 border-rose-300 text-rose-700 hover:bg-rose-200" id="btn-clear">Xóa<br>Hết</button>
+            </div>
+
+            <div id="toast">Chính xác! Cực kỳ xuất sắc 🎉</div>
+        </div>
+    </div>
+
+<script>
+    // --- CORE LOGIC TOÁN HỌC ---
+    let setA = [], setB = [], correctSet = [];
+    let currentMode = 'union'; 
+    let correctStr = "";
+
+    function generateRandomSet() {
+        let a = Math.floor(Math.random() * 15) - 7; 
+        let b = Math.floor(Math.random() * 15) - 7;
+        while(a === b || Math.abs(a - b) < 2) { 
+            b = Math.floor(Math.random() * 15) - 7; 
+        }
+        let low = Math.min(a, b);
+        let high = Math.max(a, b);
+
+        let lowInc = low !== -7 ? Math.random() > 0.5 : false;
+        let highInc = high !== 7 ? Math.random() > 0.5 : false;
+
+        let arr = new Array(27).fill(false);
+        let startIdx = low === -7 ? 0 : (lowInc ? (low+6)*2 + 1 : (low+6)*2 + 2);
+        let endIdx = high === 7 ? 26 : (highInc ? (high+6)*2 + 1 : (high+6)*2);
+
+        for(let i = startIdx; i <= endIdx; i++) arr[i] = true;
+        return arr;
+    }
+
+    function computeResult() {
+        correctSet = new Array(27).fill(false);
+        for(let i=0; i<27; i++) {
+            if(currentMode === 'union') correctSet[i] = setA[i] || setB[i];
+            else if(currentMode === 'inter') correctSet[i] = setA[i] && setB[i];
+            else if(currentMode === 'diff') correctSet[i] = setA[i] && !setB[i];
+        }
+        correctStr = booleansToString(correctSet);
+    }
+
+    function booleansToString(arr) {
+        let segments = [];
+        let inSeg = false;
+        let S = -1;
+        for(let i=0; i<27; i++) {
+            if(arr[i] && !inSeg) { S = i; inSeg = true; }
+            if(!arr[i] && inSeg) { segments.push([S, i-1]); inSeg = false; }
+        }
+        if(inSeg) segments.push([S, 26]);
+
+        if(segments.length === 0) return "∅";
+
+        let strParts = segments.map(seg => {
+            let s = seg[0], e = seg[1];
+            let leftStr = "", rightStr = "";
+
+            if(s === 0) leftStr = "(-∞";
+            else if(s % 2 !== 0) leftStr = "[" + ((s-1)/2 - 6);
+            else leftStr = "(" + ((s-2)/2 - 6);
+
+            if(e === 26) rightStr = "+∞)";
+            else if(e % 2 !== 0) rightStr = ((e-1)/2 - 6) + "]";
+            else rightStr = ((e)/2 - 6) + ")";
+
+            if(s === e && s % 2 !== 0) return "{" + ((s-1)/2 - 6) + "}";
+            return leftStr + ";" + rightStr;
+        });
+        return strParts.join("∪");
+    }
+
+    // --- TƯƠNG TÁC GIAO DIỆN ---
+    const dispA = document.getElementById('setA-display');
+    const dispB = document.getElementById('setB-display');
+    const dispQ = document.getElementById('question-display');
+    const ansDisp = document.getElementById('answer-display');
+    const toast = document.getElementById('toast');
+    let currentAnswer = "";
+
+    function showToast(msg, isError) {
+        toast.innerText = msg;
+        toast.className = isError ? 'error show' : 'show';
+        setTimeout(() => toast.className = '', 3000);
+    }
+
+    function initProblem() {
+        setA = generateRandomSet();
+        setB = generateRandomSet();
+        let overlap = false;
+        for(let i=0; i<27; i++) if(setA[i] && setB[i]) overlap = true;
+        if(!overlap && Math.random() > 0.3) return initProblem();
+
+        dispA.innerText = booleansToString(setA).replace(/∪/g, ' ∪ ');
+        dispB.innerText = booleansToString(setB).replace(/∪/g, ' ∪ ');
+        
+        currentAnswer = "";
+        ansDisp.innerText = "";
+        
+        computeResult();
+        let opSymbol = currentMode === 'union' ? '∪' : (currentMode === 'inter' ? '∩' : '\\');
+        dispQ.innerText = `A ${opSymbol} B`;
+        
+        clearDraft(); 
+    }
+
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            currentMode = e.target.dataset.mode;
+            initProblem();
+        });
+    });
+
+    document.querySelectorAll('.key-btn[data-char]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            currentAnswer += e.target.dataset.char;
+            ansDisp.innerText = currentAnswer;
+        });
+    });
+
+    document.getElementById('btn-del').addEventListener('click', () => {
+        currentAnswer = currentAnswer.slice(0, -1);
+        ansDisp.innerText = currentAnswer;
+    });
+
+    document.getElementById('btn-check').addEventListener('click', () => {
+        let userStr = currentAnswer.replace(/\s+/g, '');
+        userStr = userStr.replace(/-∞/g, 'MININF');
+        userStr = userStr.replace(/∞/g, '+∞').replace(/\+\+∞/g, '+∞'); 
+        userStr = userStr.replace(/MININF/g, '-∞');
+        
+        let expectedStr = correctStr.replace(/\s+/g, '');
+        
+        if(userStr === expectedStr || currentAnswer === expectedStr) {
+            showToast("Chính xác! Cực kỳ xuất sắc 🎉", false);
+            setTimeout(initProblem, 2000); 
+        } else {
+            showToast("Sai rồi! Hãy kiểm tra lại phần nháp.", true);
+        }
+    });
+
+    // --- ĐỒ HỌA CANVAS NHÁP TÍCH HỢP TOUCH ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    let activeTool = null;
+    let draftData = {
+        A: { brackets: [], crosses: [] },
+        B: { brackets: [], crosses: [] },
+        R: { brackets: [], crosses: [] }
+    };
+    let isDragging = false;
+    let dragStart = null; 
+
+    document.querySelectorAll('.tool-btn:not(#btn-clear)').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            let target = e.currentTarget;
+            if(activeTool === target.dataset.tool) {
+                activeTool = null;
+                target.classList.remove('active');
+                canvas.style.cursor = 'crosshair';
+            } else {
+                document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+                target.classList.add('active');
+                activeTool = target.dataset.tool;
+                canvas.style.cursor = activeTool === 'cross' ? 'ew-resize' : 'pointer';
+            }
+        });
+    });
+
+    document.getElementById('btn-clear').addEventListener('click', clearDraft);
+
+    function clearDraft() {
+        draftData = { A: { brackets: [], crosses: [] }, B: { brackets: [], crosses: [] }, R: { brackets: [], crosses: [] } };
+        activeTool = null;
+        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+        canvas.style.cursor = 'crosshair';
+        drawCanvas();
+    }
+
+    let W, H;
+    function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        W = rect.width; H = rect.height;
+        canvas.width = W * dpr;
+        canvas.height = H * dpr;
+        canvas.style.width = `${W}px`;
+        canvas.style.height = `${H}px`;
+        ctx.scale(dpr, dpr);
+        drawCanvas();
+    }
+    window.addEventListener('resize', resize);
+
+    // Tính toán trục tránh Toolbar
+    function getAxesParams() {
+        // Trừ bớt 8% (phần không gian bên phải để không bị thanh công cụ đè lên)
+        const activeW = W - (W * 0.08); 
+        return {
+            A: { y: H * 0.25, label: "Trục A" },
+            B: { y: H * 0.50, label: "Trục B" },
+            R: { y: H * 0.75, label: "Kết quả" },
+            padX: activeW * 0.12,
+            plotW: activeW * 0.8
+        };
+    }
+
+    function valToX(v, p) { return p.padX + ((v + 7) / 14) * p.plotW; }
+    function xToVal(x, p) { return -7 + ((x - p.padX) / p.plotW) * 14; }
+    function getHoveredAxis(y, p) {
+        if(Math.abs(y - p.A.y) < H*0.1) return 'A';
+        if(Math.abs(y - p.B.y) < H*0.1) return 'B';
+        if(Math.abs(y - p.R.y) < H*0.1) return 'R';
+        return null;
+    }
+
+    function getPointerPos(e) {
+        let clientX = e.clientX, clientY = e.clientY;
+        if(e.touches && e.touches.length > 0) {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        } else if(e.changedTouches && e.changedTouches.length > 0) {
+            clientX = e.changedTouches[0].clientX;
+            clientY = e.changedTouches[0].clientY;
+        }
+        const rect = canvas.getBoundingClientRect();
+        return { x: clientX - rect.left, y: clientY - rect.top };
+    }
+
+    function handleStart(e) {
+        if(!activeTool) return;
+        e.preventDefault(); 
+        const pos = getPointerPos(e);
+        const p = getAxesParams();
+        const axis = getHoveredAxis(pos.y, p);
+        
+        if(!axis) return;
+
+        if(['[', ']', '(', ')'].includes(activeTool)) {
+            let val = Math.round(xToVal(pos.x, p));
+            if(val >= -6 && val <= 6) {
+                draftData[axis].brackets.push({ type: activeTool, val: val });
+                drawCanvas();
+            }
+        } else if(activeTool === 'cross') {
+            isDragging = true;
+            dragStart = { axis: axis, startX: pos.x, currentX: pos.x };
+        }
+    }
+
+    function handleMove(e) {
+        if(isDragging && dragStart) {
+            e.preventDefault();
+            const pos = getPointerPos(e);
+            dragStart.currentX = pos.x;
+            drawCanvas(); 
+        }
+    }
+
+    function handleEnd(e) {
+        if(isDragging && dragStart) {
+            e.preventDefault();
+            const pos = getPointerPos(e);
+            let start = Math.min(dragStart.startX, pos.x);
+            let end = Math.max(dragStart.startX, pos.x);
+            if(end - start > 5) { 
+                draftData[dragStart.axis].crosses.push({ startX: start, endX: end });
+            }
+            isDragging = false;
+            dragStart = null;
+            drawCanvas();
+        }
+    }
+
+    canvas.addEventListener('mousedown', handleStart);
+    canvas.addEventListener('touchstart', handleStart, {passive: false});
+    
+    canvas.addEventListener('mousemove', handleMove);
+    canvas.addEventListener('touchmove', handleMove, {passive: false});
+    
+    canvas.addEventListener('mouseup', handleEnd);
+    canvas.addEventListener('touchend', handleEnd, {passive: false});
+    
+    canvas.addEventListener('mouseleave', () => { isDragging = false; dragStart = null; drawCanvas(); });
+
+    // VẼ TRỤC SỐ
+    function drawCanvas() {
+        ctx.clearRect(0, 0, W, H);
+        const p = getAxesParams();
+        const fontSizeNum = Math.max(10, W * 0.015);
+        const fontSizeLabel = Math.max(12, W * 0.018);
+
+        ['A', 'B', 'R'].forEach(axKey => {
+            let info = p[axKey];
+            let y = info.y;
+
+            // Tên trục
+            ctx.fillStyle = axKey === 'R' ? '#ef4444' : '#0284c7';
+            ctx.font = `bold ${fontSizeLabel}px Arial`;
+            ctx.textAlign = 'right';
+            ctx.fillText(info.label, p.padX - 20, y + 5);
+
+            // Đường trục
+            ctx.beginPath();
+            ctx.moveTo(p.padX - 10, y);
+            ctx.lineTo(p.padX + p.plotW + 20, y);
+            ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2; ctx.stroke();
+
+            // Mũi tên
+            ctx.beginPath(); 
+            ctx.moveTo(p.padX + p.plotW + 20, y); 
+            ctx.lineTo(p.padX + p.plotW + 10, y - 5); 
+            ctx.lineTo(p.padX + p.plotW + 10, y + 5); 
+            ctx.fillStyle = '#64748b'; ctx.fill();
+
+            // Số liệu (-6 đến 6)
+            ctx.textAlign = 'center'; ctx.font = `${fontSizeNum}px Arial`; ctx.fillStyle = '#475569';
+            for(let v = -6; v <= 6; v++) {
+                let px = valToX(v, p);
+                ctx.beginPath(); ctx.moveTo(px, y - 5); ctx.lineTo(px, y + 5); ctx.stroke();
+                ctx.fillText(v, px, y + 25);
+            }
+            ctx.font = `${fontSizeNum+2}px "Times New Roman"`;
+            ctx.fillText("-∞", valToX(-7, p), y + 25);
+            ctx.fillText("+∞", valToX(7, p), y + 25);
+
+            // Vẽ nháp Gạch chéo
+            const crossesToDraw = [...draftData[axKey].crosses];
+            if(isDragging && dragStart && dragStart.axis === axKey) {
+                crossesToDraw.push({
+                    startX: Math.min(dragStart.startX, dragStart.currentX),
+                    endX: Math.max(dragStart.startX, dragStart.currentX)
+                });
+            }
+            
+            ctx.beginPath();
+            crossesToDraw.forEach(c => {
+                for(let cx = c.startX; cx <= c.endX; cx += 8) {
+                    ctx.moveTo(cx - 4, y + 15);
+                    ctx.lineTo(cx + 4, y - 15);
+                }
+            });
+            ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 2; ctx.stroke();
+
+            // Vẽ nháp Ngoặc
+            ctx.font = `bold ${fontSizeLabel * 1.8}px "Times New Roman"`;
+            ctx.fillStyle = '#1e293b';
+            draftData[axKey].brackets.forEach(b => {
+                let px = valToX(b.val, p);
+                let offsetX = (b.type === '[' || b.type === '(') ? -W*0.005 : W*0.005;
+                ctx.fillText(b.type, px + offsetX, y + W*0.01);
+            });
+        });
+    }
+
+    setTimeout(() => { resize(); initProblem(); }, 100);
+
+</script>
+</body>
+</html>
