@@ -3,68 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game: Hiệu Hai Xúc Xắc - Neon Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <title>Học liệu 10: Xác Suất Thực Nghiệm</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            font-family: 'Be Vietnam Pro', sans-serif;
-            background-color: #0f172a; /* Nền tối slate-900 */
-            color: #f8fafc;
-            -webkit-font-smoothing: antialiased;
-        }
-        .font-lora {
-            font-family: 'Lora', serif;
-        }
-        .dice-container {
-            perspective: 1200px;
-        }
-        .dice {
-            position: relative;
-            width: 80px;
-            height: 80px;
-            transform-style: preserve-3d;
-            transition: transform 1.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+        /* Khóa trang 16:9, phong cách học thuật */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #e2e8f0; /* Nền xám nhạt */
+            color: #334155; 
+            margin: 0; padding: 0;
+            height: 100vh; width: 100vw;
+            overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
         }
         
-        /* Giao diện xúc xắc Neon */
+        #app-container {
+            width: 100vw; height: 56.25vw; max-height: 100vh; max-width: 177.78vh;
+            background-color: #ffffff; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            display: flex; flex-direction: row; border-radius: 12px; overflow: hidden;
+        }
+
+        /* Font Toán Học */
+        .math-font { font-family: "Times New Roman", Times, serif; font-style: italic; font-weight: bold; }
+        .math-normal { font-family: "Times New Roman", Times, serif; font-style: normal; }
+
+        /* Bố cục 2 cột */
+        #left-panel {
+            width: 40%; height: 100%; display: flex; flex-direction: column; 
+            padding: 24px; background: #f8fafc; border-r: 2px solid #e2e8f0;
+        }
+        #right-panel {
+            width: 60%; height: 100%; display: flex; flex-direction: column;
+            background: #ffffff; position: relative;
+        }
+
+        /* --- XÚC XẮC 3D (Clean Design) --- */
+        .dice-container { perspective: 1000px; margin: 0 20px; }
+        .dice {
+            position: relative; width: 70px; height: 70px;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
         .dice-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border: 2px solid #0ea5e9; /* Viền xanh Neon */
-            border-radius: 12px;
-            background-color: rgba(15, 23, 42, 0.9); 
-            box-shadow: inset 0 0 15px rgba(14, 165, 233, 0.3), 0 0 10px rgba(14, 165, 233, 0.2);
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            box-sizing: border-box;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            place-items: center;
-            padding: 5px;
+            position: absolute; width: 100%; height: 100%;
+            background-color: #ffffff; border: 2px solid #cbd5e1;
+            border-radius: 10px; box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+            backface-visibility: hidden; display: grid;
+            grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
+            place-items: center; padding: 6px; box-sizing: border-box;
         }
-        .dot { 
-            display: block; 
-            width: 18px; 
-            height: 18px; 
-            border-radius: 50%; 
-            background-color: #38bdf8; /* Chấm xanh dạ quang */
-            box-shadow: 0 0 8px #38bdf8;
-        }
+        .dot { display: block; width: 14px; height: 14px; border-radius: 50%; background-color: #334155; }
+        .dice-face.red-dots .dot { background-color: #ef4444; } /* Điểm nhấn con xúc xắc 2 */
 
-        /* Xúc xắc trang trí màn hình chào */
-        #welcome-screen .dice-face {
-            border-color: #db2777;
-            box-shadow: inset 0 0 15px rgba(219, 39, 119, 0.3);
-        }
-        #welcome-screen .dot {
-            background-color: #f472b6;
-            box-shadow: 0 0 8px #f472b6;
-        }
-
-        /* Vị trí các chấm (Giữ nguyên từ bản gốc) */
+        /* Vị trí chấm */
         .face-1 .dot:nth-child(1) { grid-column: 2; grid-row: 2; }
         .face-2 .dot:nth-child(1) { grid-column: 1; grid-row: 1; }
         .face-2 .dot:nth-child(2) { grid-column: 3; grid-row: 3; }
@@ -86,360 +77,306 @@
         .face-6 .dot:nth-child(odd) { grid-row: 1; }
         .face-6 .dot:nth-child(even) { grid-row: 3; }
 
-        /* Khung 3D */
-        .face-1 { transform: rotateY(0deg) translateZ(40px); }
-        .face-6 { transform: rotateY(180deg) translateZ(40px); }
-        .face-2 { transform: rotateX(90deg) translateZ(40px); }
-        .face-5 { transform: rotateX(-90deg) translateZ(40px); }
-        .face-3 { transform: rotateY(90deg) translateZ(40px); }
-        .face-4 { transform: rotateY(-90deg) translateZ(40px); }
-        
-        .bet-btn.selected { 
-            transform: scale(1.05); 
-        }
+        .face-1 { transform: rotateY(0deg) translateZ(35px); }
+        .face-6 { transform: rotateY(180deg) translateZ(35px); }
+        .face-2 { transform: rotateX(90deg) translateZ(35px); }
+        .face-5 { transform: rotateX(-90deg) translateZ(35px); }
+        .face-3 { transform: rotateY(90deg) translateZ(35px); }
+        .face-4 { transform: rotateY(-90deg) translateZ(35px); }
 
-        /* Animations */
-        @keyframes fade-in-up {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in-up {
-            animation: fade-in-up 1s ease-out forwards;
-        }
+        /* Bảng thống kê thanh tiến trình */
+        .progress-bg { background: #e2e8f0; height: 24px; border-radius: 12px; overflow: hidden; position: relative; }
+        .progress-fill { height: 100%; transition: width 0.4s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; color: white; font-weight: bold; font-size: 0.75rem; }
+        .fill-A { background: #0ea5e9; } /* Xanh dương cho Biến cố A */
+        .fill-B { background: #f59e0b; } /* Cam cho Biến cố B */
 
-        @keyframes spin-and-float {
-            0% { transform: translateZ(-40px) translateY(0) rotateX(0) rotateY(0); }
-            50% { transform: translateZ(-40px) translateY(-20px) rotateX(180deg) rotateY(180deg); }
-            100% { transform: translateZ(-40px) translateY(0) rotateX(360deg) rotateY(360deg); }
-        }
-        #deco-dice-1 { animation: spin-and-float 15s ease-in-out infinite; }
-        #deco-dice-2 { animation: spin-and-float 20s ease-in-out infinite reverse; }
-
-        /* Cuộn thanh cuộn Neon */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1e293b; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb { background: #38bdf8; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #0ea5e9; }
+        /* Cuộn bảng dữ liệu */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-200 selection:bg-sky-500 selection:text-white">
+<body>
 
-    <div id="welcome-screen" class="fixed inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 p-6 text-center flex flex-col items-center justify-center z-50 overflow-hidden hidden">
-        <div class="absolute top-10 left-4 sm:top-16 sm:left-24 lg:left-1/4 opacity-40 transform scale-75">
-            <div class="dice-container">
-                <div id="deco-dice-1" class="dice"><div class="dice-face face-1"><span class="dot"></span></div><div class="dice-face face-2"><span class="dot"></span><span class="dot"></span></div><div class="dice-face face-3"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="dice-face face-4"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="dice-face face-5"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="dice-face face-6"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
-            </div>
-        </div>
-        <div class="absolute bottom-10 right-4 sm:bottom-16 sm:right-24 lg:right-1/4 opacity-40 transform scale-75">
-            <div class="dice-container">
-                <div id="deco-dice-2" class="dice"><div class="dice-face face-1"><span class="dot"></span></div><div class="dice-face face-2"><span class="dot"></span><span class="dot"></span></div><div class="dice-face face-3"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="dice-face face-4"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="dice-face face-5"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="dice-face face-6"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
-            </div>
-        </div>
-
-        <div class="relative z-10 animate-fade-in-up bg-slate-900/50 p-8 rounded-3xl backdrop-blur-sm border border-slate-700/50 shadow-[0_0_40px_rgba(79,70,229,0.2)]">
-            <h1 class="mb-8 drop-shadow-[0_0_10px_rgba(168,85,247,0.8)] font-lora">
-                <span class="block text-xl md:text-3xl font-normal text-sky-200">Arcade Casino</span>
-                <span class="block font-bold text-4xl sm:text-5xl md:text-6xl mt-2 text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-fuchsia-400 uppercase tracking-wider">Hiệu Hai Xúc Xắc</span>
+    <div id="app-container">
+        
+        <div id="left-panel">
+            <h1 class="text-xl font-black text-slate-800 uppercase tracking-wide border-b-2 border-slate-200 pb-3 mb-4">
+                Phân tích Xác suất Thực nghiệm
             </h1>
-            <button id="start-game-btn" class="bg-fuchsia-600 text-white font-bold py-4 px-12 rounded-xl text-2xl transition-all duration-300 transform hover:scale-110 shadow-[0_0_20px_rgba(219,39,119,0.6)] hover:shadow-[0_0_30px_rgba(219,39,119,0.9)] hover:bg-fuchsia-500 uppercase tracking-widest">
-                Bắt Đầu
-            </button>
-        </div>
-    </div>
 
-    <div id="game-screen" class="w-full max-w-3xl mx-auto p-6 bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.5)] border border-slate-700 min-h-screen sm:min-h-0 sm:my-8 relative overflow-hidden">
-        
-        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 border-b border-slate-700 pb-4">
-            <div class="text-center sm:text-left w-full order-2 sm:order-1">
-                <h1 class="text-2xl md:text-3xl font-bold text-sky-400 uppercase tracking-wide drop-shadow-[0_0_8px_rgba(56,189,248,0.5)]">Xúc Xắc Điện Tử</h1>
-                <p class="text-slate-400 text-sm mt-1">Dự đoán xác suất</p>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-4 text-sm text-slate-600 leading-relaxed">
+                <p class="mb-2"><strong>Thí nghiệm:</strong> Tung đồng thời 2 viên xúc xắc, ghi nhận hiệu số chấm.</p>
+                <ul class="space-y-1 ml-4 list-disc marker:text-slate-400">
+                    <li><span class="font-bold text-sky-600">Biến cố A:</span> Hiệu số chấm ≤ 2 (0, 1, 2)</li>
+                    <li><span class="font-bold text-amber-500">Biến cố B:</span> Hiệu số chấm ≥ 3 (3, 4, 5)</li>
+                </ul>
             </div>
-            <button id="reset-btn" class="order-1 sm:order-2 self-end sm:self-center bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold py-2 px-5 rounded-lg text-sm transition-colors mb-4 sm:mb-0 border border-slate-600 hover:border-sky-400 hover:text-sky-300">
-                🔄 Chơi lại
-            </button>
-        </div>
-        
-        <div class="grid grid-cols-2 gap-4 text-center mb-6">
-            <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50">
-                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">Điểm của bạn</h2>
-                <p id="player-score" class="text-5xl font-bold text-sky-400 drop-shadow-[0_0_10px_rgba(56,189,248,0.6)]">0</p>
-            </div>
-            <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50">
-                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">Điểm của máy</h2>
-                <p id="computer-score" class="text-5xl font-bold text-fuchsia-500 drop-shadow-[0_0_10px_rgba(217,70,239,0.6)]">0</p>
-            </div>
-        </div>
 
-        <div class="mb-8">
-            <h2 class="text-lg font-bold text-center mb-4 text-slate-300 uppercase tracking-wider">1. Lựa chọn hệ số</h2>
-            <div class="grid grid-cols-2 gap-6">
-                <button id="bet-small-btn" class="bet-btn p-5 bg-sky-600 text-white rounded-xl shadow-[0_0_15px_rgba(2,132,199,0.4)] transition-all duration-300 hover:bg-sky-500 disabled:opacity-30 disabled:cursor-not-allowed border border-sky-400">
-                    <span class="font-black text-2xl tracking-widest">NHỎ</span>
-                    <span class="block text-sm text-sky-100 mt-1">Hiệu: 0, 1, 2</span>
-                </button>
-                <button id="bet-large-btn" class="bet-btn p-5 bg-fuchsia-600 text-white rounded-xl shadow-[0_0_15px_rgba(192,38,211,0.4)] transition-all duration-300 hover:bg-fuchsia-500 disabled:opacity-30 disabled:cursor-not-allowed border border-fuchsia-400">
-                    <span class="font-black text-2xl tracking-widest">LỚN</span>
-                    <span class="block text-sm text-fuchsia-100 mt-1">Hiệu: 3, 4, 5</span>
-                </button>
-            </div>
-        </div>
-        
-        <div class="text-center p-8 bg-slate-900 rounded-2xl mb-6 border border-slate-700 shadow-inner">
-            <div class="flex justify-center items-center gap-16 mb-8 min-h-[120px]">
-                <div class="dice-container">
-                    <div id="dice1" class="dice"><div class="dice-face face-1"><span class="dot"></span></div><div class="dice-face face-2"><span class="dot"></span><span class="dot"></span></div><div class="dice-face face-3"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="dice-face face-4"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="dice-face face-5"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="dice-face face-6"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
-                </div>
-                <div class="dice-container">
-                    <div id="dice2" class="dice"><div class="dice-face face-1"><span class="dot"></span></div><div class="dice-face face-2"><span class="dot"></span><span class="dot"></span></div><div class="dice-face face-3"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="dice-face face-4"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="dice-face face-5"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="dice-face face-6"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
-                </div>
-            </div>
-            <button id="roll-btn" class="w-full sm:w-2/3 mx-auto bg-violet-600 hover:bg-violet-500 text-white font-black py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(124,58,237,0.5)] disabled:bg-slate-700 disabled:shadow-none disabled:text-slate-500 disabled:cursor-not-allowed border border-violet-400 disabled:border-slate-600 uppercase tracking-widest" disabled="">
-                Tung Xúc Xắc
-            </button>
-        </div>
-        
-        <div id="result-area" class="text-center min-h-[90px] p-5 bg-slate-900 border border-slate-700 rounded-xl mb-6 flex items-center justify-center shadow-inner">
-             <p id="result-text" class="text-lg font-bold text-slate-400">Chờ lệnh thao tác...</p>
-        </div>
-
-        <div>
-            <h2 class="text-sm font-bold text-left mb-3 text-slate-400 uppercase tracking-widest">Nhật ký truy xuất</h2>
-            <div id="history-log" class="max-h-52 overflow-y-auto bg-slate-900 border border-slate-700 p-4 rounded-xl space-y-3 shadow-inner">
-                 <p class="text-slate-500 text-center italic text-sm">Chưa có dữ liệu.</p>
-            </div>
-        </div>
-    </div>
-    
-    <div id="rules-popup" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm items-center justify-center p-4 z-50 hidden">
-        <div class="bg-slate-800 border border-slate-600 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.8)] p-8 max-w-md w-full animate-fade-in-up">
-            <h2 class="text-2xl font-black text-center mb-6 text-sky-400 uppercase tracking-widest">Giao thức trò chơi</h2>
-            <ul class="space-y-4 text-base text-slate-300 mb-8">
-                <li class="flex items-start">
-                    <span class="text-sky-400 mr-3">⚡</span>
-                    <span>Bạn sẽ chọn một trong hai hệ số: <strong class="text-sky-400">NHỎ</strong> (hiệu là 0, 1, 2) hoặc <strong class="text-fuchsia-400">LỚN</strong> (hiệu là 3, 4, 5).</span>
-                </li>
-                <li class="flex items-start">
-                    <span class="text-sky-400 mr-3">⚡</span>
-                    <span>Hệ thống sẽ tung 2 viên xúc xắc ngẫu nhiên.</span>
-                </li>
-                <li class="flex items-start">
-                    <span class="text-sky-400 mr-3">⚡</span>
-                    <span>Nếu hiệu số trùng khớp với dự đoán, bạn nhận <strong class="text-green-400">1 Điểm</strong>. Sai, máy sẽ được điểm.</span>
-                </li>
-            </ul>
-            <button id="close-rules-btn" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-8 rounded-xl text-lg transition-colors border border-slate-500 hover:border-sky-400 hover:text-sky-400 uppercase tracking-widest">
-                Đã Hiểu & Kích Hoạt
-            </button>
-        </div>
-    </div>
-
-    <script>
-        // DOM Elements
-        const welcomeScreen = document.getElementById('welcome-screen');
-        const startGameBtn = document.getElementById('start-game-btn');
-        const gameScreen = document.getElementById('game-screen');
-        const rulesPopup = document.getElementById('rules-popup');
-        const closeRulesBtn = document.getElementById('close-rules-btn');
-        const decoDice1 = document.getElementById('deco-dice-1');
-        const decoDice2 = document.getElementById('deco-dice-2');
-
-        const betSmallBtn = document.getElementById('bet-small-btn');
-        const betLargeBtn = document.getElementById('bet-large-btn');
-        const rollBtn = document.getElementById('roll-btn');
-        const resetBtn = document.getElementById('reset-btn');
-        const dice1El = document.getElementById('dice1');
-        const dice2El = document.getElementById('dice2');
-        const resultText = document.getElementById('result-text');
-        const historyLog = document.getElementById('history-log');
-        const playerScoreEl = document.getElementById('player-score');
-        const computerScoreEl = document.getElementById('computer-score');
-
-        let playerBet = null, history = [], playerScore = 0, computerScore = 0, isRolling = false;
-        
-        startGameBtn.addEventListener('click', () => {
-            welcomeScreen.classList.add('hidden');
-            gameScreen.classList.remove('hidden');
-            rulesPopup.classList.remove('hidden');
-            rulesPopup.classList.add('flex');
-        });
-
-        closeRulesBtn.addEventListener('click', () => {
-            rulesPopup.classList.add('hidden');
-            rulesPopup.classList.remove('flex');
-        });
-        
-        function getDiceHTML() {
-            let facesHTML = '';
-            for (let i = 1; i <= 6; i++) {
-                facesHTML += `<div class="dice-face face-${i}">${'<span class="dot"></span>'.repeat(i)}</div>`;
-            }
-            return facesHTML;
-        }
-
-        const diceRotations = {
-            1: 'rotateX(0deg) rotateY(0deg)',
-            2: 'rotateX(-90deg) rotateY(0deg)',
-            3: 'rotateX(0deg) rotateY(-90deg)',
-            4: 'rotateX(0deg) rotateY(90deg)',
-            5: 'rotateX(90deg) rotateY(0deg)',
-            6: 'rotateX(0deg) rotateY(180deg)',
-        };
-
-        function setupDice() {
-            dice1El.innerHTML = getDiceHTML();
-            dice2El.innerHTML = getDiceHTML();
-            dice1El.style.transition = 'transform 0s';
-            dice2El.style.transition = 'transform 0s';
-            dice1El.style.transform = `translateZ(-40px) ${diceRotations[1]}`;
-            dice2El.style.transform = `translateZ(-40px) ${diceRotations[1]}`;
-        }
-        
-        function setupDecoDice() {
-            if (decoDice1 && decoDice2) {
-                decoDice1.innerHTML = getDiceHTML();
-                decoDice2.innerHTML = getDiceHTML();
-            }
-        }
-
-        betSmallBtn.addEventListener('click', () => selectBet('small'));
-        betLargeBtn.addEventListener('click', () => selectBet('large'));
-        rollBtn.addEventListener('click', handleRoll);
-        resetBtn.addEventListener('click', resetGame);
-
-        function selectBet(bet) {
-            if (isRolling) return;
-            playerBet = bet;
-            
-            // Xử lý nút NHỎ (Màu Sky Blue)
-            betSmallBtn.classList.toggle('selected', bet === 'small');
-            betSmallBtn.classList.toggle('ring-2', bet === 'small');
-            betSmallBtn.classList.toggle('ring-sky-300', bet === 'small');
-            betSmallBtn.classList.toggle('ring-offset-2', bet === 'small');
-            betSmallBtn.classList.toggle('ring-offset-slate-800', bet === 'small');
-            
-            // Xử lý nút LỚN (Màu Fuchsia Pink)
-            betLargeBtn.classList.toggle('selected', bet === 'large');
-            betLargeBtn.classList.toggle('ring-2', bet === 'large');
-            betLargeBtn.classList.toggle('ring-fuchsia-300', bet === 'large');
-            betLargeBtn.classList.toggle('ring-offset-2', bet === 'large');
-            betLargeBtn.classList.toggle('ring-offset-slate-800', bet === 'large');
-
-            if (bet) {
-                rollBtn.disabled = false;
-                resultText.innerHTML = `Hệ số mục tiêu: <span class="${bet === 'small' ? 'text-sky-400' : 'text-fuchsia-400'} font-black text-xl">${bet === 'small' ? 'NHỎ' : 'LỚN'}</span>. Đã sẵn sàng tung!`;
-            } else {
-                rollBtn.disabled = true;
-            }
-        }
-
-        function handleRoll() {
-            if (!playerBet || isRolling) return;
-
-            isRolling = true;
-            rollBtn.disabled = true;
-            betSmallBtn.disabled = true;
-            betLargeBtn.disabled = true;
-            resultText.innerHTML = '<span class="text-violet-400 animate-pulse font-bold">Hệ thống đang xoay...</span>';
-            
-            dice1El.style.transition = 'transform 1.5s cubic-bezier(0.4, 0.0, 0.2, 1)';
-            dice2El.style.transition = 'transform 1.5s cubic-bezier(0.4, 0.0, 0.2, 1)';
-
-            const val1 = Math.floor(Math.random() * 6) + 1;
-            const val2 = Math.floor(Math.random() * 6) + 1;
-            
-            const randomX1 = 360 * (Math.floor(Math.random() * 4) + 2);
-            const randomY1 = 360 * (Math.floor(Math.random() * 4) + 2);
-            const randomX2 = 360 * (Math.floor(Math.random() * 4) + 2);
-            const randomY2 = 360 * (Math.floor(Math.random() * 4) + 2);
-
-            dice1El.style.transform = `translateZ(-40px) rotateX(${randomX1}deg) rotateY(${randomY1}deg) ${diceRotations[val1]}`;
-            dice2El.style.transform = `translateZ(-40px) rotateX(${randomX2}deg) rotateY(${randomY2}deg) ${diceRotations[val2]}`;
-
-            setTimeout(() => {
-                showFinalResult(val1, val2);
-            }, 1600);
-        }
-
-        function showFinalResult(val1, val2) {
-            const diff = Math.abs(val1 - val2);
-            const outcome = (diff <= 2) ? 'small' : 'large';
-            const playerWins = (playerBet === outcome);
-            
-            if (playerWins) playerScore++; else computerScore++;
-            playerScoreEl.textContent = playerScore;
-            computerScoreEl.textContent = computerScore;
-
-            const outcomeColor = outcome === 'small' ? 'text-sky-400' : 'text-fuchsia-400';
-            const outcomeLabel = outcome === 'small' ? 'NHỎ' : 'LỚN';
-
-            let resultHTML = `<div class="text-slate-300">Kết quả: (<span class="font-bold text-white">${val1}</span>, <span class="font-bold text-white">${val2}</span>) ➡ Hiệu: <span class="font-bold text-white text-xl">${diff}</span> (<span class="font-bold ${outcomeColor}">${outcomeLabel}</span>)</div>`;
-            resultHTML += playerWins 
-                ? `<div class="text-2xl font-black text-green-400 mt-2 tracking-widest drop-shadow-[0_0_5px_rgba(74,222,128,0.8)]">✔ BẠN THẮNG</div>` 
-                : `<div class="text-2xl font-black text-red-500 mt-2 tracking-widest drop-shadow-[0_0_5px_rgba(239,68,68,0.8)]">✖ MÁY THẮNG</div>`;
-            resultText.innerHTML = resultHTML;
-            
-            addToHistory({ val1, val2, diff, outcome, playerBet, playerWins });
-
-            isRolling = false;
-            betSmallBtn.disabled = false;
-            betLargeBtn.disabled = false;
-            rollBtn.disabled = true; 
-
-            playerBet = null;
-            betSmallBtn.classList.remove('selected', 'ring-2', 'ring-sky-300', 'ring-offset-2', 'ring-offset-slate-800');
-            betLargeBtn.classList.remove('selected', 'ring-2', 'ring-fuchsia-300', 'ring-offset-2', 'ring-offset-slate-800');
-        }
-
-        function addToHistory(logEntry) {
-            history.unshift(logEntry);
-            if (history.length > 20) history.pop();
-            updateHistoryLog();
-        }
-        
-        function updateHistoryLog() {
-            if (history.length === 0) {
-                historyLog.innerHTML = '<p class="text-slate-500 text-center italic text-sm">Chưa có dữ liệu.</p>';
-                return;
-            }
-            historyLog.innerHTML = history.map((log, index) => {
-                const bgClass = log.outcome === 'small' ? 'bg-sky-900/30 border border-sky-800/50' : 'bg-fuchsia-900/30 border border-fuchsia-800/50';
-                const winClass = log.playerWins ? 'text-green-400 bg-green-900/40 px-2 py-0.5 rounded' : 'text-red-400 bg-red-900/40 px-2 py-0.5 rounded';
-                const outcomeText = log.outcome === 'small' ? '<span class="text-sky-400 font-bold">NHỎ</span>' : '<span class="text-fuchsia-400 font-bold">LỚN</span>';
-                const playerBetText = log.playerBet === 'small' ? '<span class="text-sky-400 font-bold">NHỎ</span>' : '<span class="text-fuchsia-400 font-bold">LỚN</span>';
-                
-                return `<div class="p-3 rounded-lg ${bgClass} text-sm flex justify-between items-center text-slate-300">
-                    <div><span class="text-slate-500 mr-2">#${history.length - index}</span> Xúc xắc: <strong>${log.val1}</strong>, <strong>${log.val2}</strong> ➡ Hiệu: <strong>${log.diff}</strong> (${outcomeText})</div>
-                    <div class="flex items-center gap-3">
-                        <span class="text-xs text-slate-500">Dự đoán: ${playerBetText}</span>
-                        <strong class="${winClass} text-xs uppercase">${log.playerWins ? 'Win' : 'Lose'}</strong>
+            <div class="flex-1 bg-slate-100 rounded-xl p-4 border border-slate-200 flex flex-col">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-bold text-slate-700 uppercase text-xs tracking-widest">Bảng Tần Số</h2>
+                    <div class="bg-slate-800 text-white px-3 py-1 rounded-full text-xs font-bold">
+                        Tổng số phép thử <span class="math-font">N</span> = <span id="total-rolls">0</span>
                     </div>
-                </div>`;
-            }).join('');
+                </div>
+
+                <div class="mb-5">
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="font-bold text-sky-700">Biến cố A</span>
+                        <span class="text-slate-500">Tần số <span class="math-font">n(A)</span> = <span id="count-A" class="font-bold text-sky-600">0</span></span>
+                    </div>
+                    <div class="progress-bg">
+                        <div id="bar-A" class="progress-fill fill-A" style="width: 0%">0%</div>
+                    </div>
+                    <div class="flex justify-between text-xs mt-1 text-slate-500">
+                        <span>Thực nghiệm: <span id="prob-A" class="font-bold text-sky-600">0.0%</span></span>
+                        <span>Lý thuyết: 66.7%</span>
+                    </div>
+                </div>
+
+                <div class="mb-2">
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="font-bold text-amber-600">Biến cố B</span>
+                        <span class="text-slate-500">Tần số <span class="math-font">n(B)</span> = <span id="count-B" class="font-bold text-amber-500">0</span></span>
+                    </div>
+                    <div class="progress-bg">
+                        <div id="bar-B" class="progress-fill fill-B" style="width: 0%">0%</div>
+                    </div>
+                    <div class="flex justify-between text-xs mt-1 text-slate-500">
+                        <span>Thực nghiệm: <span id="prob-B" class="font-bold text-amber-500">0.0%</span></span>
+                        <span>Lý thuyết: 33.3%</span>
+                    </div>
+                </div>
+
+                <div class="mt-auto bg-sky-50 border border-sky-100 p-3 rounded-lg text-xs text-sky-800 italic text-center">
+                    Ghi chú: Khi <span class="math-font">N</span> đủ lớn, xác suất thực nghiệm sẽ tiến dần về xác suất lý thuyết.
+                </div>
+            </div>
+
+            <button onclick="resetLab()" class="mt-4 w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 rounded-lg transition-colors border border-slate-300 text-sm">
+                ↺ Làm lại thí nghiệm
+            </button>
+        </div>
+
+        <div id="right-panel">
+            
+            <div class="h-[45%] flex flex-col items-center justify-center bg-slate-50 border-b border-slate-200">
+                <div class="flex justify-center items-center mb-6">
+                    <div class="dice-container">
+                        <div id="dice1" class="dice"></div>
+                    </div>
+                    <div class="text-4xl font-black text-slate-300 mx-4">-</div>
+                    <div class="dice-container">
+                        <div id="dice2" class="dice"></div>
+                    </div>
+                    <div class="text-4xl font-black text-slate-300 mx-4">=</div>
+                    <div id="diff-display" class="w-16 h-16 rounded-xl bg-white border-2 border-slate-200 flex items-center justify-center text-3xl font-black text-slate-800 shadow-sm">
+                        ?
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <button onclick="rollDice(1)" id="btn-roll-1" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-transform hover:scale-105">
+                        ▶ Tiến hành 1 phép thử
+                    </button>
+                    <button onclick="rollDice(10)" id="btn-roll-10" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-transform hover:scale-105">
+                        ▶▶ Tiến hành 10 phép thử
+                    </button>
+                </div>
+            </div>
+
+            <div class="h-[55%] flex flex-col p-4 bg-white">
+                <h3 class="font-bold text-slate-700 uppercase text-xs tracking-widest mb-3">Nhật ký Dữ liệu thô</h3>
+                
+                <div class="grid grid-cols-5 text-center text-xs font-bold text-slate-500 bg-slate-100 py-2 rounded-t-lg border border-slate-200">
+                    <div>Lần thử</div>
+                    <div>Xúc xắc 1</div>
+                    <div>Xúc xắc 2</div>
+                    <div>Hiệu số</div>
+                    <div>Biến cố ghi nhận</div>
+                </div>
+                
+                <div id="data-log" class="flex-1 overflow-y-auto custom-scroll border-x border-b border-slate-200 rounded-b-lg">
+                    <div class="p-6 text-center text-sm text-slate-400 italic">Hệ thống đang chờ dữ liệu...</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+    // --- KHỞI TẠO XÚC XẮC ---
+    const dice1El = document.getElementById('dice1');
+    const dice2El = document.getElementById('dice2');
+    const diffDisplay = document.getElementById('diff-display');
+    const dataLog = document.getElementById('data-log');
+    
+    // DOM Thống kê
+    const elN = document.getElementById('total-rolls');
+    const elCountA = document.getElementById('count-A');
+    const elCountB = document.getElementById('count-B');
+    const elProbA = document.getElementById('prob-A');
+    const elProbB = document.getElementById('prob-B');
+    const barA = document.getElementById('bar-A');
+    const barB = document.getElementById('bar-B');
+
+    // Biến dữ liệu
+    let N = 0;
+    let countA = 0;
+    let countB = 0;
+    let history = [];
+    let isAnimating = false;
+
+    // Sinh HTML 6 mặt xúc xắc
+    function getDiceHTML(isRed = false) {
+        let facesHTML = '';
+        let extraClass = isRed ? 'red-dots' : '';
+        for (let i = 1; i <= 6; i++) {
+            facesHTML += `<div class="dice-face face-${i} ${extraClass}">${'<span class="dot"></span>'.repeat(i)}</div>`;
         }
+        return facesHTML;
+    }
+
+    const diceRotations = {
+        1: 'rotateX(0deg) rotateY(0deg)',
+        2: 'rotateX(-90deg) rotateY(0deg)',
+        3: 'rotateX(0deg) rotateY(-90deg)',
+        4: 'rotateX(0deg) rotateY(90deg)',
+        5: 'rotateX(90deg) rotateY(0deg)',
+        6: 'rotateX(0deg) rotateY(180deg)',
+    };
+
+    function initDice() {
+        dice1El.innerHTML = getDiceHTML();
+        dice2El.innerHTML = getDiceHTML(true); // Cục 2 chấm đỏ cho dễ phân biệt
+        dice1El.style.transform = `translateZ(-35px) ${diceRotations[1]}`;
+        dice2El.style.transform = `translateZ(-35px) ${diceRotations[1]}`;
+    }
+
+    // --- LOGIC TOÁN HỌC & HOẠT ẢNH ---
+    function rollDice(times) {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        // Vô hiệu hóa nút
+        document.getElementById('btn-roll-1').disabled = true;
+        document.getElementById('btn-roll-10').disabled = true;
+        diffDisplay.innerText = "?";
+        diffDisplay.classList.add("text-slate-300");
+
+        let finalV1, finalV2, finalDiff;
+
+        // Tính toán ngầm dữ liệu nếu chọn x10
+        for (let i = 0; i < times; i++) {
+            let v1 = Math.floor(Math.random() * 6) + 1;
+            let v2 = Math.floor(Math.random() * 6) + 1;
+            let diff = Math.abs(v1 - v2);
+            let eventType = (diff <= 2) ? 'A' : 'B';
+            
+            N++;
+            if (eventType === 'A') countA++; else countB++;
+
+            // Lưu log
+            history.unshift({ id: N, v1: v1, v2: v2, diff: diff, event: eventType });
+            
+            // Lưu lại kết quả cuối cùng để vẽ hoạt ảnh
+            if (i === times - 1) { finalV1 = v1; finalV2 = v2; finalDiff = diff; }
+        }
+
+        // Hoạt ảnh đổ xúc xắc (chỉ hiển thị kết quả lần cuối)
+        let rx1 = 360 * (Math.floor(Math.random() * 3) + 1);
+        let ry1 = 360 * (Math.floor(Math.random() * 3) + 1);
+        let rx2 = 360 * (Math.floor(Math.random() * 3) + 1);
+        let ry2 = 360 * (Math.floor(Math.random() * 3) + 1);
+
+        dice1El.style.transform = `translateZ(-35px) rotateX(${rx1}deg) rotateY(${ry1}deg) ${diceRotations[finalV1]}`;
+        dice2El.style.transform = `translateZ(-35px) rotateX(${rx2}deg) rotateY(${ry2}deg) ${diceRotations[finalV2]}`;
+
+        // Chờ kết thúc hoạt ảnh (0.6s)
+        setTimeout(() => {
+            // Cập nhật giao diện
+            diffDisplay.innerText = finalDiff;
+            diffDisplay.className = `w-16 h-16 rounded-xl border-2 flex items-center justify-center text-3xl font-black shadow-sm transition-colors ${finalDiff <= 2 ? 'bg-sky-50 border-sky-300 text-sky-600' : 'bg-amber-50 border-amber-300 text-amber-600'}`;
+            
+            updateStatsUI();
+            updateLogUI();
+
+            isAnimating = false;
+            document.getElementById('btn-roll-1').disabled = false;
+            document.getElementById('btn-roll-10').disabled = false;
+        }, 600);
+    }
+
+    function updateStatsUI() {
+        elN.innerText = N;
+        elCountA.innerText = countA;
+        elCountB.innerText = countB;
+
+        let pA = (countA / N * 100).toFixed(1);
+        let pB = (countB / N * 100).toFixed(1);
+
+        elProbA.innerText = pA + "%";
+        elProbB.innerText = pB + "%";
         
-        function resetForNextRound() {
-            playerBet = null;
-            isRolling = false;
-            betSmallBtn.disabled = false;
-            betLargeBtn.disabled = false;
-            selectBet(null);
-        }
+        barA.style.width = pA + "%";
+        barA.innerText = pA + "%";
+        barB.style.width = pB + "%";
+        barB.innerText = pB + "%";
+    }
 
-        function resetGame() {
-            if (isRolling) return;
-            playerScore = 0;
-            computerScore = 0;
-            history = [];
-            playerScoreEl.textContent = '0';
-            computerScoreEl.textContent = '0';
-            resultText.innerHTML = '<p class="text-lg font-bold text-slate-400">Đã khởi tạo lại. Chờ lệnh thao tác...</p>';
-            updateHistoryLog();
-            resetForNextRound();
-            setupDice();
-        }
+    function updateLogUI() {
+        if (history.length === 0) return;
+        
+        // Chỉ hiển thị tối đa 100 dòng gần nhất để tránh lag
+        let displayData = history.slice(0, 100);
+        
+        dataLog.innerHTML = displayData.map(row => {
+            let isA = row.event === 'A';
+            let eventHtml = isA 
+                ? `<span class="bg-sky-100 text-sky-700 px-2 py-0.5 rounded font-bold text-[11px]">Biến cố A</span>`
+                : `<span class="bg-amber-100 text-amber-700 px-2 py-0.5 rounded font-bold text-[11px]">Biến cố B</span>`;
+            
+            return `
+                <div class="grid grid-cols-5 text-center text-sm py-2 border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                    <div class="text-slate-400">#${row.id}</div>
+                    <div class="font-bold text-slate-700">${row.v1}</div>
+                    <div class="font-bold text-red-500">${row.v2}</div>
+                    <div class="font-black ${isA ? 'text-sky-600' : 'text-amber-500'}">${row.diff}</div>
+                    <div>${eventHtml}</div>
+                </div>
+            `;
+        }).join('');
+    }
 
-        setupDice();
-        setupDecoDice();
-    </script>
+    function resetLab() {
+        if (isAnimating) return;
+        N = 0; countA = 0; countB = 0; history = [];
+        
+        elN.innerText = "0";
+        elCountA.innerText = "0"; elCountB.innerText = "0";
+        elProbA.innerText = "0.0%"; elProbB.innerText = "0.0%";
+        barA.style.width = "0%"; barA.innerText = "0%";
+        barB.style.width = "0%"; barB.innerText = "0%";
+        
+        diffDisplay.innerText = "?";
+        diffDisplay.className = "w-16 h-16 rounded-xl bg-white border-2 border-slate-200 flex items-center justify-center text-3xl font-black text-slate-300 shadow-sm";
+        dataLog.innerHTML = '<div class="p-6 text-center text-sm text-slate-400 italic">Hệ thống đang chờ dữ liệu...</div>';
+        
+        // Reset Xúc xắc về 1
+        dice1El.style.transition = 'transform 0s';
+        dice2El.style.transition = 'transform 0s';
+        dice1El.style.transform = `translateZ(-35px) ${diceRotations[1]}`;
+        dice2El.style.transform = `translateZ(-35px) ${diceRotations[1]}`;
+        // Force reflow
+        void dice1El.offsetWidth;
+        dice1El.style.transition = 'transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        dice2El.style.transition = 'transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+    }
+
+    // Khởi tạo lần đầu
+    initDice();
+
+</script>
 </body>
 </html>
