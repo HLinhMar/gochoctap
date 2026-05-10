@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học liệu: Các số đặc trưng đo mức độ phân tán của mẫu số liệu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['$$', '$$']]
+            }
+        };
+    </script>
+
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f1f5f9; color: #334155; line-height: 1.6; }
+
+        /* Quiz Styles */
+        .option-btn { transition: all 0.2s ease; text-align: left; width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; background: white; margin-bottom: 8px; font-weight: 500; }
+        .option-btn:hover:not(:disabled) { border-color: #818cf8; background-color: #e0e7ff; }
+        .option-correct { background-color: #d1fae5 !important; border-color: #10b981 !important; color: #065f46 !important; }
+        .option-wrong { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+        .explain-box { margin-top: 10px; padding: 12px; border-radius: 8px; background-color: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; font-size: 0.9em; display: none; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <header class="bg-indigo-700 text-white p-8 rounded-t-2xl shadow-lg text-center">
+            <h1 class="text-3xl font-black uppercase tracking-widest">Bài 4: Các số đặc trưng đo mức độ phân tán của mẫu số liệu</h1>
+            <p class="mt-2 text-indigo-100 opacity-90">Học liệu tương tác - Lí thuyết & Bài tập trắc nghiệm</p>
+        </header>
+
+        <section class="mb-8 bg-white p-6 md:p-8 border-x border-slate-200">
+            <h2 class="text-2xl font-bold text-indigo-700 border-b-2 border-indigo-100 pb-2 mb-6 uppercase tracking-wide">
+                Phần 1: Lí thuyết trọng tâm
+            </h2>
+            
+            <div class="space-y-6">
+                <div>
+                    <h4 class="text-lg font-bold text-indigo-600 mb-2">1. Khoảng biến thiên và khoảng tứ phân vị</h4>
+                    
+                    <p>Sắp xếp mẫu số liệu theo thứ tự không giảm, ta được:<br>
+                    \( x_1 \le x_2 \le \dots \le x_n \)</p>
+                    
+                    <p>Khoảng biến thiên của một mẫu số liệu, kí hiệu là \( R \), là hiệu giữa giá trị lớn nhất và giá trị nhỏ nhất của mẫu số liệu đó, tức là:<br>
+                    \( R = x_n - x_1 \)</p>
+                    
+                    <p>Khoảng tứ phân vị, kí hiệu là \( \Delta_Q \), là hiệu giữa \( Q_3 \) và \( Q_1 \) tức là:<br>
+                    \( \Delta_Q = Q_3 - Q_1 \)</p>
+                    
+                    <ul class="list-disc ml-6 mt-2">
+                        <li><strong>Ý nghĩa của khoảng biến thiên:</strong> Đặc trưng cho độ phân tán của toàn bộ mẫu số liệu.</li>
+                        <li><strong>Ý nghĩa của khoảng tứ phân vị:</strong> Đặc trưng cho độ phân tán của một nửa các số liệu từ \( Q_1 \) đến \( Q_3 \). Khoảng tứ phân vị không bị ảnh hưởng bởi các giá trị rất lớn hoặc rất bé trong mẫu.</li>
+                    </ul>
+
+                    <p class="font-bold mt-4 text-rose-600">Giá trị ngoại lệ (Outlier)</p>
+                    <p>Các giá trị bé hơn \( Q_1 - 1,5\Delta_Q \) hoặc lớn hơn \( Q_3 + 1,5\Delta_Q \) được gọi là các giá trị ngoại lệ.</p>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold text-indigo-600 mb-2">2. Phương sai và độ lệch chuẩn</h4>
+                    
+                    <p>Giả sử ta có một mẫu số liệu là \( x_1, x_2, \dots, x_n \).<br>
+                    Phương sai của mẫu số liệu này, kí hiệu là \( S^2 \), được tính bởi công thức:</p>
+                    
+                    <div class="my-4 text-center">
+                        $$ S^2 = \frac{1}{n} \left[ (x_1 - \overline{x})^2 + (x_2 - \overline{x})^2 + \dots + (x_n - \overline{x})^2 \right] $$
+                    </div>
+                    
+                    <p>Trong đó \( \overline{x} \) là số trung bình của mẫu số liệu.</p>
+                    <p>Độ lệch chuẩn là căn bậc hai của phương sai, kí hiệu là \( S \).</p>
+                    
+                    <p class="font-bold mt-2">Ý nghĩa của phương sai và độ lệch chuẩn:</p>
+                    <ul class="list-disc ml-6 mt-2">
+                        <li>Phương sai là trung bình cộng của các bình phương độ lệch từ mỗi giá trị của mẫu số liệu đến số trung bình.</li>
+                        <li>Phương sai và độ lệch chuẩn được dùng để đo mức độ phân tán của các số liệu trong mẫu quanh số trung bình. Phương sai và độ lệch chuẩn càng lớn thì các giá trị của mẫu càng cách xa nhau (có độ phân tán lớn).</li>
+                    </ul>
+
+                    <p class="mt-4 font-semibold">Chú ý: Công thức khác tính phương sai:</p>
+                    <div class="my-4 text-center">
+                        $$ S^2 = \frac{1}{n} (x_1^2 + x_2^2 + \dots + x_n^2) - \overline{x}^2 $$
+                    </div>
+
+                    <p class="font-bold mt-4">Chứng minh:</p>
+                    <div class="my-2 space-y-1   text-sm md:text-base bg-slate-50 p-4 rounded-lg">
+                        $$ S^2 = \frac{1}{n} \left[ (x_1 - \overline{x})^2 + (x_2 - \overline{x})^2 + \dots + (x_n - \overline{x})^2 \right] $$
+                        $$ = \frac{1}{n} (x_1^2 - 2x_1\overline{x} + \overline{x}^2 + x_2^2 - 2x_2\overline{x} + \overline{x}^2 + \dots + x_n^2 - 2x_n\overline{x} + \overline{x}^2) $$
+                        $$ = \frac{1}{n} \left[ (x_1^2 + x_2^2 + \dots + x_n^2) - 2\overline{x}(x_1 + x_2 + \dots + x_n) + n\overline{x}^2 \right] $$
+                        $$ = \frac{1}{n} (x_1^2 + x_2^2 + \dots + x_n^2) - 2\overline{x} \cdot \frac{x_1 + x_2 + \dots + x_n}{n} + \overline{x}^2 $$
+                        $$ = \frac{1}{n} (x_1^2 + x_2^2 + \dots + x_n^2) - 2\overline{x} \cdot \overline{x} + \overline{x}^2 $$
+                        $$ = \frac{1}{n} (x_1^2 + x_2^2 + \dots + x_n^2) - \overline{x}^2 $$
+                    </div>
+
+                    <p class="font-bold mt-6">Phương sai hiệu chỉnh</p>
+                    <p>Vì lí do kĩ thuật, trong thống kê, người ta sử dụng phương sai hiệu chỉnh, kí hiệu là \( \hat{s}^2 \), được tính bởi:</p>
+                    <div class="my-4 text-center">
+                        $$ \hat{s}^2 = \frac{1}{n-1} \left[ (x_1 - \overline{x})^2 + (x_2 - \overline{x})^2 + \dots + (x_n - \overline{x})^2 \right] $$
+                    </div>
+
+                    <p class="font-bold mt-6">Công thức tính phương sai đối với dữ liệu cho bởi bảng tần số</p>
+                    <p>Cho bảng tần số:</p>
+                    
+                    <div class="flex justify-center my-4  ">
+                        <table class="border-collapse border-2 border-indigo-300 bg-white shadow-sm min-w-[300px]">
+                            <tbody>
+                                <tr>
+                                    <td class="border-2 border-indigo-200 bg-indigo-50 font-bold px-4 py-3 text-center text-indigo-900">Giá trị</td>
+                                    <td class="border-2 border-indigo-200 px-4 py-3 text-center">\( x_1 \)</td>
+                                    <td class="border-2 border-indigo-200 px-4 py-3 text-center">\( x_2 \)</td>
+                                    <td class="border-2 border-indigo-200 px-4 py-3 text-center tracking-widest text-slate-400">...</td>
+                                    <td class="border-2 border-indigo-200 px-4 py-3 text-center">\( x_k \)</td>
+                                </tr>
+                                <tr>
+                                    <td class="border-2 border-indigo-200 bg-indigo-50 font-bold px-4 py-3 text-center text-indigo-900">Tần số</td>
+                                    <td class="border-2 border-indigo-200 px-4 py-3 text-center">\( n_1 \)</td>
+                                    <td class="border-2 border-indigo-200 px-4 py-3 text-center">\( n_2 \)</td>
+                                    <td class="border-2 border-indigo-200 px-4 py-3 text-center tracking-widest text-slate-400">...</td>
+                                    <td class="border-2 border-indigo-200 px-4 py-3 text-center">\( n_k \)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>Khi đó công thức tính phương sai trở thành:</p>
+                    <div class="my-4 text-center">
+                        $$ S^2 = \frac{1}{n} \left[ n_1(x_1 - \overline{x})^2 + n_2(x_2 - \overline{x})^2 + \dots + n_k(x_k - \overline{x})^2 \right] $$
+                    </div>
+                    
+                    <p>Hoặc:</p>
+                    <div class="my-4 text-center">
+                        $$ S^2 = \frac{1}{n} (n_1x_1^2 + n_2x_2^2 + \dots + n_kx_k^2) - \overline{x}^2 $$
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white p-6 md:p-8 border-x border-b border-slate-200 rounded-b-2xl shadow-sm">
+            <h2 class="text-2xl font-bold text-indigo-700 border-b-2 border-indigo-100 pb-2 mb-6 uppercase tracking-wide">
+                Phần 2: Bài tập rèn luyện
+            </h2>
+            
+            <div id="quiz-container" class="space-y-10">
+                </div>
+        </section>
+        
+        <footer class="mt-8 text-center text-slate-400 text-sm italic">
+            THPT Phước Kiển
+        </footer>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "Khoảng biến thiên của mẫu số liệu được kí hiệu là \\( R \\), được tính bằng công thức nào?",
+                options: ["\\( R = x_n + x_1 \\)", "\\( R = x_n - x_1 \\)", "\\( R = Q_3 - Q_1 \\)", "\\( R = S^2 \\)"],
+                correct: 1,
+                exp: "Khoảng biến thiên \\( R \\) là hiệu giữa giá trị lớn nhất và giá trị nhỏ nhất: \\( R = x_{\\max} - x_{\\min} \\)."
+            },
+            {
+                q: "Khoảng biến thiên đặc trưng cho điều gì của mẫu số liệu?",
+                options: ["Độ tập trung của các số liệu", "Giá trị trung bình của mẫu", "Độ phân tán của toàn bộ mẫu số liệu", "Giá trị xuất hiện nhiều nhất"],
+                correct: 2,
+                exp: "Khoảng biến thiên dùng để đo độ phân tán của toàn bộ các giá trị trong mẫu số liệu."
+            },
+            {
+                q: "Khoảng tứ phân vị được kí hiệu là \\( \\Delta_Q \\), công thức tính là:",
+                options: ["\\( \\Delta_Q = Q_3 + Q_1 \\)", "\\( \\Delta_Q = Q_3 - Q_1 \\)", "\\( \\Delta_Q = Q_2 - Q_1 \\)", "\\( \\Delta_Q = Q_3 - Q_2 \\)"],
+                correct: 1,
+                exp: "Khoảng tứ phân vị là hiệu giữa tứ phân vị thứ ba và thứ nhất: \\( \\Delta_Q = Q_3 - Q_1 \\)."
+            },
+            {
+                q: "Ưu điểm lớn nhất của khoảng tứ phân vị so với khoảng biến thiên là gì?",
+                options: ["Dễ tính toán hơn", "Sử dụng toàn bộ các giá trị của mẫu", "Không bị ảnh hưởng bởi các giá trị bất thường (outliers)", "Luôn là một số nguyên"],
+                correct: 2,
+                exp: "Khoảng tứ phân vị chỉ đo độ phân tán của 50% số liệu ở giữa, nên nó không bị nhiễu bởi các giá trị quá lớn hoặc quá bé."
+            },
+            {
+                q: "Đại lượng nào dùng để đo mức độ phân tán của các số liệu quanh số trung bình?",
+                options: ["Số trung vị", "Mốt", "Phương sai và độ lệch chuẩn", "Cỡ mẫu"],
+                correct: 2,
+                exp: "Phương sai và độ lệch chuẩn đặc trưng cho độ phân tán của các giá trị so với số trung bình cộng."
+            },
+            {
+                q: "Độ lệch chuẩn (\\( S \\)) liên hệ với phương sai (\\( S^2 \\)) như thế nào?",
+                options: ["\\( S = S^2 / 2 \\)", "\\( S = 2S^2 \\)", "\\( S \\) là căn bậc hai của phương sai", "\\( S \\) là bình phương của phương sai"],
+                correct: 2,
+                exp: "Độ lệch chuẩn là căn bậc hai của phương sai: \\( S = \\sqrt{S^2} \\)."
+            },
+            {
+                q: "Trong các đại lượng sau, đại lượng nào có cùng đơn vị đo với số liệu gốc?",
+                options: ["Phương sai", "Độ lệch chuẩn", "Bình phương độ lệch", "Tần số"],
+                correct: 1,
+                exp: "Vì phương sai có đơn vị là bình phương đơn vị gốc, nên độ lệch chuẩn (căn bậc hai) sẽ trả về cùng đơn vị với số liệu gốc."
+            },
+            {
+                q: "Nếu phương sai của mẫu số liệu A lớn hơn phương sai của mẫu số liệu B thì:",
+                options: ["Số trung bình của A lớn hơn B", "Mẫu A có độ phân tán lớn hơn mẫu B", "Mẫu B có độ phân tán lớn hơn mẫu A", "Hai mẫu có độ phân tán như nhau"],
+                correct: 1,
+                exp: "Phương sai càng lớn thì các giá trị trong mẫu càng rời xa số trung bình, tức là độ phân tán càng lớn."
+            },
+            {
+                q: "Một giá trị \\( x \\) được coi là giá trị ngoại lệ (outlier) nếu nó nằm ngoài khoảng nào?",
+                options: ["\\( (Q_1 ; Q_3) \\)", "\\( (Q_1 - 1,5\\Delta_Q ; Q_3 + 1,5\\Delta_Q) \\)", "\\( (Q_1 - \\Delta_Q ; Q_3 + \\Delta_Q) \\)", "\\( (x_{\\min} ; x_{\\max}) \\)"],
+                correct: 1,
+                exp: "Theo quy tắc hàng rào, giá trị ngoại lệ bé hơn \\( Q_1 - 1,5\\Delta_Q \\) hoặc lớn hơn \\( Q_3 + 1,5\\Delta_Q \\)."
+            },
+            {
+                q: "Cho mẫu số liệu: 2; 5; 8; 10; 15. Khoảng biến thiên \\( R \\) bằng bao nhiêu?",
+                options: ["\\( R = 15 \\)", "\\( R = 13 \\)", "\\( R = 8 \\)", "\\( R = 10 \\)"],
+                correct: 1,
+                exp: "\\( R = x_{\\max} - x_{\\min} = 15 - 2 = 13 \\)."
+            },
+            {
+                q: "Cho mẫu số liệu: 10; 10; 10; 10. Phương sai \\( S^2 \\) của mẫu này là:",
+                options: ["\\( S^2 = 10 \\)", "\\( S^2 = 1 \\)", "\\( S^2 = 0 \\)", "\\( S^2 = 100 \\)"],
+                correct: 2,
+                exp: "Khi tất cả các số liệu bằng nhau, chúng không có sự sai lệch so với số trung bình, nên phương sai bằng 0."
+            },
+            {
+                q: "Khoảng tứ phân vị đặc trưng cho độ phân tán của bao nhiêu % số liệu ở giữa mẫu?",
+                options: ["25%", "50%", "75%", "100%"],
+                correct: 1,
+                exp: "Khoảng tứ phân vị đo độ phân tán của nửa số liệu từ tứ phân vị thứ nhất đến thứ ba (tức 50% ở trung tâm)."
+            },
+            {
+                q: "Nếu đơn vị của số liệu là (cm) thì đơn vị của phương sai là gì?",
+                options: ["cm", "cm²", "\\( \\sqrt{\\text{cm}} \\)", "không có đơn vị"],
+                correct: 1,
+                exp: "Phương sai là trung bình của bình phương các độ lệch, nên đơn vị là bình phương đơn vị gốc."
+            },
+            {
+                q: "Cho mẫu số liệu đã sắp xếp có \\( Q_1 = 12 \\) và \\( Q_3 = 20 \\). Khoảng tứ phân vị là:",
+                options: ["8", "16", "32", "15"],
+                correct: 0,
+                exp: "\\( \\Delta_Q = Q_3 - Q_1 = 20 - 12 = 8 \\)."
+            },
+            {
+                q: "Công thức tính phương sai mẫu hiệu chỉnh thường dùng mẫu số là:",
+                options: ["\\( n \\)", "\\( n + 1 \\)", "\\( n - 1 \\)", "\\( n^2 \\)"],
+                correct: 2,
+                exp: "Trong thống kê, phương sai hiệu chỉnh chia cho \\( n-1 \\) để kết quả ước lượng chính xác hơn cho tổng thể."
+            },
+            {
+                q: "Độ phân tán của mẫu số liệu càng nhỏ thì:",
+                options: ["Các giá trị càng tập trung gần số trung bình", "Các giá trị càng xa số trung bình", "Số trung bình càng lớn", "Số trung bình càng nhỏ"],
+                correct: 0,
+                exp: "Độ phân tán nhỏ nghĩa là các số liệu tập trung sít sao quanh giá trị trung tâm."
+            },
+            {
+                q: "Để tìm khoảng tứ phân vị cho mẫu số liệu liệt kê, bước đầu tiên cần làm là:",
+                options: ["Tính số trung bình", "Sắp xếp mẫu số liệu theo thứ tự không giảm", "Tìm giá trị lớn nhất", "Tính phương sai"],
+                correct: 1,
+                exp: "Tất cả các số đo vị trí (trung vị, tứ phân vị) đều yêu cầu mẫu phải được sắp xếp từ nhỏ đến lớn trước."
+            },
+            {
+                q: "Khi so sánh độ ổn định về kết quả điểm số của hai học sinh, ta nên dùng đại lượng nào?",
+                options: ["Số trung bình", "Khoảng biến thiên", "Độ lệch chuẩn", "Mốt"],
+                correct: 2,
+                exp: "Độ lệch chuẩn cho biết sự ổn định; độ lệch chuẩn càng thấp thì điểm số càng ổn định (ít biến động)."
+            },
+            {
+                q: "Nếu một mẫu số liệu có chứa giá trị ngoại lệ rất lớn, đại lượng nào sau đây sẽ bị tăng mạnh nhất?",
+                options: ["Số trung vị", "Khoảng tứ phân vị", "Khoảng biến thiên", "Tất cả như nhau"],
+                correct: 2,
+                exp: "Khoảng biến thiên phụ thuộc trực tiếp vào giá trị cực đại nên sẽ bị kéo giãn ra mạnh nhất."
+            },
+            {
+                q: "Cho mẫu số liệu dưới dạng bảng tần số, phương sai được tính bằng tổng bình phương độ lệch nhân với gì?",
+                options: ["Tần số tương ứng", "Giá trị tương ứng", "Số trung bình", "Trung vị"],
+                correct: 0,
+                exp: "Công thức phương sai cho bảng tần số là \\( S^2 = \\frac{1}{n} \\sum n_i(x_i - \\overline{x})^2 \\)."
+            }
+        ];
+
+        const container = document.getElementById('quiz-container');
+
+        questions.forEach((item, idx) => {
+            const qBox = document.createElement('div');
+            qBox.className = "quiz-item mb-8";
+            
+            let optionsHTML = '';
+            item.options.forEach((opt, oIdx) => {
+                optionsHTML += `<button class="option-btn" onclick="checkAns(this, ${idx}, ${oIdx})">
+                    <span class="inline-block w-8 font-bold text-slate-400">${String.fromCharCode(65 + oIdx)}.</span> ${opt}
+                </button>`;
+            });
+
+            qBox.innerHTML = `
+                <h3 class="font-bold text-lg mb-4 text-slate-800">
+                    <span class="text-indigo-500 mr-2">Câu ${idx + 1}:</span> ${item.q}
+                </h3>
+                <div class="options-grid grid grid-cols-1 md:grid-cols-2 gap-x-4">
+                    ${optionsHTML}
+                </div>
+                <div id="explain-${idx}" class="explain-box">
+                    <strong>💡 Giải thích:</strong> ${item.exp}
+                </div>
+            `;
+            container.appendChild(qBox);
+        });
+
+        // Hàm kiểm tra đáp án
+        function checkAns(btn, qIdx, oIdx) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            const explain = document.getElementById(`explain-${qIdx}`);
+            
+            // Khóa các nút sau khi chọn
+            buttons.forEach(b => b.disabled = true);
+
+            // Xử lý logic đúng/sai
+            if (oIdx === questions[qIdx].correct) {
+                btn.classList.add('option-correct');
+            } else {
+                btn.classList.add('option-wrong');
+                // Highlight đáp án đúng
+                buttons[questions[qIdx].correct].classList.add('option-correct');
+            }
+            
+            explain.style.display = 'block';
+        }
+
+        // Yêu cầu MathJax render lại các công thức Toán học vừa được tạo động trong Javascript
+        window.onload = function() {
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        };
+    </script>
+</body>
+</html>
