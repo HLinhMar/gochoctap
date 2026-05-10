@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học liệu 3D: Tìm Giao Tuyến Của Hai Mặt Phẳng</title>
+    <style>
+        body { margin: 0; background-color: #f8fafc; font-family: 'Segoe UI', Arial, sans-serif; overflow: hidden; }
+        
+        /* Bảng điều khiển bên trái */
+        #ui-panel {
+            position: absolute; top: 10px; left: 10px; width: 340px;
+            background: rgba(255, 255, 255, 0.98); padding: 15px;
+            border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            z-index: 1000; border: 1px solid #e2e8f0;
+            max-height: 95vh; overflow-y: auto;
+        }
+
+        h2 { margin: 0 0 10px 0; font-size: 16px; color: #1e293b; border-bottom: 2px solid #3b82f6; padding-bottom: 5px; }
+        .problem-text { font-size: 13px; color: #334155; line-height: 1.5; background: #f1f5f9; padding: 10px; border-radius: 6px; margin-bottom: 15px; }
+        
+        .control-group { margin-bottom: 15px; }
+        .group-title { font-size: 12px; font-weight: bold; color: #64748b; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        
+        /* Sliders */
+        .slider-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 13px; font-weight: bold; }
+        input[type="range"] { width: 160px; cursor: pointer; accent-color: #d97706; }
+
+        /* Nút bấm câu hỏi */
+        .btn-list { display: flex; flex-direction: column; gap: 6px; }
+        button {
+            padding: 10px; border: 1px solid #cbd5e1; background: #fff;
+            border-radius: 6px; cursor: pointer; font-weight: bold; color: #475569;
+            text-align: left; transition: 0.2s; font-size: 13px;
+        }
+        button:hover { background: #f8fafc; border-color: #3b82f6; color: #3b82f6; }
+        button.active { background: #3b82f6; color: #fff; border-color: #3b82f6; }
+
+        /* Nhãn đỉnh nổi */
+        .label {
+            position: absolute; pointer-events: none; font-weight: bold;
+            font-size: 16px; color: #000; text-shadow: 0 0 4px white, 0 0 4px white;
+            z-index: 500; transform: translate(-50%, -50%);
+        }
+
+        #loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold; color: #64748b; font-size: 18px; }
+    </style>
+</head>
+<body>
+
+    <div id="loading">Đang tải mô hình 3D...</div>
+
+    <div id="ui-panel">
+        <h2>Xác định giao tuyến hai mặt phẳng</h2>
+        <div class="problem-text">
+            <b>Bài tập:</b> Cho hình chóp S.ABC. Gọi D và E lần lượt thuộc AB và AC sao cho DE không song song với BC. Tìm giao tuyến:
+        </div>
+
+        <div class="control-group">
+            <span class="group-title">Chọn câu hỏi để mô phỏng</span>
+            <div class="btn-list">
+                <button id="btn-default" class="active" onclick="setMode('default')">Hình chóp S.ABC gốc</button>
+                <button id="btn-a" onclick="setMode('a')">Câu a: (SBD) và (SCE)</button>
+                <button id="btn-b" onclick="setMode('b')">Câu b: (SDE) và (ABC)</button>
+                <button id="btn-c" onclick="setMode('c')">Câu c: (SBE) và (SCD)</button>
+                <button id="btn-d" onclick="setMode('d')">Câu d: (SDE) và (SBC)</button>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <span class="group-title">Điều chỉnh vị trí điểm</span>
+            <div class="slider-row">
+                <span style="color: #d97706;">Điểm D (trên AB):</span>
+                <input type="range" id="slideD" min="0.15" max="0.85" step="0.01" value="0.6">
+            </div>
+            <div class="slider-row">
+                <span style="color: #d97706;">Điểm E (trên AC):</span>
+                <input type="range" id="slideE" min="0.15" max="0.85" step="0.01" value="0.3">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <span class="group-title">Tùy chọn hiển thị</span>
+            <label style="font-size: 13px; cursor: pointer; font-weight: bold; color: #334155;">
+                <input type="checkbox" id="showPlanes" checked onchange="updateVisuals()"> Hiển thị mặt phẳng màu
+            </label>
+        </div>
+    </div>
+
+    <div id="lbl-S" class="label">S</div>
+    <div id="lbl-A" class="label">A</div>
+    <div id="lbl-B" class="label">B</div>
+    <div id="lbl-C" class="label">C</div>
+    <div id="lbl-D" class="label" style="color: #d97706;">D</div>
+    <div id="lbl-E" class="label" style="color: #d97706;">E</div>
+    <div id="lbl-I" class="label" style="color: #dc2626; display:none;">I</div>
+    <div id="lbl-K" class="label" style="color: #dc2626; display:none;">K</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <script>
+        let scene, camera, renderer, controls, grid;
+        let dynamicObjects = [];
+        let mode = 'default';
+
+        // Tọa độ đỉnh cố định của hình chóp
+        // Chọn C nằm phía sau để đường AC trở thành nét đứt tự nhiên
+        const V = {
+            S: new THREE.Vector3(0, 5, 0),
+            A: new THREE.Vector3(-3, 0, 1),
+            B: new THREE.Vector3(3, 0, 2),
+            C: new THREE.Vector3(1, 0, -3)
+        };
+
+        // Các điểm thay đổi
+        let P = {
+            D: new THREE.Vector3(),
+            E: new THREE.Vector3(),
+            I: new THREE.Vector3(), // Giao điểm BE và CD
+            K: new THREE.Vector3()  // Giao điểm DE và BC
+        };
+
+        window.onload = function() {
+            try {
+                init();
+                updateVisuals();
+                document.getElementById('loading').style.display = 'none';
+                animate();
+            } catch (e) {
+                console.error(e);
+                document.getElementById('loading').innerText = "Lỗi khởi tạo: " + e.message;
+            }
+        };
+
+        function init() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf1f5f9); // Nền xám nhạt
+
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(10, 8, 10);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            // Ánh sáng
+            scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+            let dLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            dLight.position.set(5, 10, 5);
+            scene.add(dLight);
+
+            // Lưới mặt sàn
+            grid = new THREE.GridHelper(20, 20, 0xcbd5e1, 0xe2e8f0);
+            scene.add(grid);
+
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.target.set(0, 1.5, 0);
+
+            // Gắn sự kiện thanh trượt
+            document.getElementById('slideD').oninput = updateVisuals;
+            document.getElementById('slideE').oninput = updateVisuals;
+
+            window.addEventListener('resize', onResize);
+        }
+
+        // Hàm tính giao điểm của 2 đoạn thẳng trên mặt phẳng xz (y=0)
+        function intersect2D(p1, p2, p3, p4) {
+            const x1 = p1.x, y1 = p1.z;
+            const x2 = p2.x, y2 = p2.z;
+            const x3 = p3.x, y3 = p3.z;
+            const x4 = p4.x, y4 = p4.z;
+
+            const denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+            // Nếu mẫu số quá nhỏ -> Song song
+            if (Math.abs(denom) < 0.001) return null;
+
+            const t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / denom;
+            return new THREE.Vector3(x1 + t * (x2 - x1), 0, y1 + t * (y2 - y1));
+        }
+
+        function updateVisuals() {
+            // Xóa toàn bộ vật thể động cũ
+            dynamicObjects.forEach(obj => scene.remove(obj));
+            dynamicObjects = [];
+            
+            document.getElementById('lbl-I').style.display = 'none';
+            document.getElementById('lbl-K').style.display = 'none';
+
+            // 1. Tính toán vị trí D, E dựa trên Slider
+            const rD = parseFloat(document.getElementById('slideD').value);
+            const rE = parseFloat(document.getElementById('slideE').value);
+
+            P.D.copy(V.A).lerp(V.B, rD);
+            P.E.copy(V.A).lerp(V.C, rE);
+
+            const showPlanes = document.getElementById('showPlanes').checked;
+
+            // 2. Vẽ bộ khung cơ bản của hình chóp
+            edge(V.S, V.A); edge(V.S, V.B); edge(V.S, V.C);
+            edge(V.A, V.B); edge(V.B, V.C); 
+            edge(V.A, V.C, true); // Nét đứt cho AC nằm phía sau
+
+            // 3. Vẽ 2 điểm D, E
+            point(P.D, 0xd97706); // Màu cam
+            point(P.E, 0xd97706);
+
+            // --- XỬ LÝ LOGIC TỪNG CÂU HỎI ---
+            
+            if (mode === 'default') {
+                // Chỉ hiện chóp và D, E
+                edge(P.D, P.E, true);
+            }
+            else if (mode === 'a') {
+                // (SBD) chính là (SAB), (SCE) chính là (SAC)
+                // Giao tuyến là SA
+                if(showPlanes) {
+                    face(V.S, V.A, V.B, 0x3b82f6); // (SAB) xanh lam
+                    face(V.S, V.A, V.C, 0x10b981); // (SAC) xanh lục
+                }
+                tube(V.S, V.A, 0xdc2626); // SA đỏ
+            }
+            else if (mode === 'b') {
+                // (SDE) và (ABC) -> Giao tuyến là DE
+                if(showPlanes) {
+                    face(V.S, P.D, P.E, 0xf59e0b); // (SDE) vàng cam
+                    face(V.A, V.B, V.C, 0x94a3b8); // Mặt đáy
+                }
+                tube(P.D, P.E, 0xdc2626);
+            }
+            else if (mode === 'c') {
+                // (SBE) và (SCD) -> Giao tuyến là SI (với I = BE giao CD)
+                let intersectI = intersect2D(V.B, P.E, V.C, P.D);
+                if(intersectI) {
+                    P.I.copy(intersectI);
+                    document.getElementById('lbl-I').style.display = 'block';
+                    point(P.I, 0xdc2626);
+                    
+                    edge(V.B, P.E, true);
+                    edge(V.C, P.D, true);
+
+                    if(showPlanes) {
+                        face(V.S, V.B, P.E, 0x8b5cf6); // Tím
+                        face(V.S, V.C, P.D, 0x0ea5e9); // Xanh nhạt
+                    }
+                    tube(V.S, P.I, 0xdc2626);
+                }
+            }
+            else if (mode === 'd') {
+                // (SDE) và (SBC) -> Giao tuyến là SK (với K = DE giao BC)
+                let intersectK = intersect2D(P.D, P.E, V.B, V.C);
+                
+                // Nếu K không quá xa (tránh lỗi đồ họa khi gần song song)
+                if(intersectK && intersectK.length() < 30) {
+                    P.K.copy(intersectK);
+                    document.getElementById('lbl-K').style.display = 'block';
+                    point(P.K, 0xdc2626);
+                    
+                    edge(P.E, P.K, true); // Kéo dài DE
+                    edge(V.C, P.K, true); // Kéo dài BC (hoặc ngược lại tùy vị trí)
+                    
+                    if(showPlanes) {
+                        face(V.S, P.D, P.K, 0xf59e0b); // (SDE) mở rộng
+                        face(V.S, V.B, P.K, 0x3b82f6); // (SBC) mở rộng
+                    }
+                    tube(V.S, P.K, 0xdc2626);
+                } else {
+                    // Nếu DE // BC
+                    edge(P.D, P.E, true);
+                    if(showPlanes) {
+                        face(V.S, P.D, P.E, 0xf59e0b);
+                        face(V.S, V.B, V.C, 0x3b82f6);
+                    }
+                }
+            }
+        }
+
+        // --- CÁC HÀM TIỆN ÍCH VẼ 3D ---
+        
+        // Vẽ cạnh (Đoạn thẳng)
+        function edge(p1, p2, dash = false) {
+            const g = new THREE.BufferGeometry().setFromPoints([p1, p2]);
+            const m = dash ? new THREE.LineDashedMaterial({ color: 0x475569, dashSize: 0.3, gapSize: 0.15 })
+                           : new THREE.LineBasicMaterial({ color: 0x475569, linewidth: 2 });
+            const l = new THREE.Line(g, m);
+            if(dash) l.computeLineDistances();
+            scene.add(l);
+            dynamicObjects.push(l);
+        }
+
+        // Vẽ Đỉnh (Hình cầu nhỏ)
+        function point(pos, color) {
+            const m = new THREE.Mesh(new THREE.SphereGeometry(0.12, 16, 16), new THREE.MeshBasicMaterial({ color }));
+            m.position.copy(pos);
+            scene.add(m);
+            dynamicObjects.push(m);
+        }
+
+        // Vẽ Mặt phẳng (Tam giác)
+        function face(p1, p2, p3, color) {
+            const g = new THREE.BufferGeometry();
+            g.setAttribute('position', new THREE.BufferAttribute(new Float32Array([
+                p1.x, p1.y, p1.z, 
+                p2.x, p2.y, p2.z, 
+                p3.x, p3.y, p3.z
+            ]), 3));
+            g.computeVertexNormals();
+            const m = new THREE.MeshBasicMaterial({ 
+                color, transparent: true, opacity: 0.35, 
+                side: THREE.DoubleSide, depthWrite: false 
+            });
+            const mesh = new THREE.Mesh(g, m);
+            scene.add(mesh);
+            dynamicObjects.push(mesh);
+        }
+
+        // Vẽ Giao tuyến (Ống trụ tròn)
+        function tube(p1, p2, color) {
+            const path = new THREE.LineCurve3(p1, p2);
+            const tube = new THREE.Mesh(
+                new THREE.TubeGeometry(path, 1, 0.05, 8, false), 
+                new THREE.MeshBasicMaterial({ color })
+            );
+            scene.add(tube);
+            dynamicObjects.push(tube);
+        }
+
+        // --- ĐIỀU KHIỂN & RENDER ---
+        window.setMode = function(m) {
+            mode = m;
+            document.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + m).classList.add('active');
+            updateVisuals();
+        };
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderLabels();
+            renderer.render(scene, camera);
+        }
+
+        // Gắn nhãn HTML trôi nổi theo tọa độ 3D
+        function renderLabels() {
+            const labels = { S:V.S, A:V.A, B:V.B, C:V.C, D:P.D, E:P.E, I:P.I, K:P.K };
+            for (let id in labels) {
+                const div = document.getElementById('lbl-' + id);
+                if (!div || div.style.display === 'none') continue;
+                
+                // Trích xuất tọa độ 2D từ Camera
+                const pos = labels[id].clone().project(camera);
+                
+                // Ẩn nhãn nếu điểm nằm phía sau camera
+                if(pos.z > 1) {
+                    div.style.display = 'none';
+                    continue;
+                } else if (id !== 'I' && id !== 'K') {
+                    div.style.display = 'block';
+                }
+
+                div.style.left = (pos.x * 0.5 + 0.5) * window.innerWidth + 'px';
+                div.style.top = (pos.y * -0.5 + 0.5) * window.innerHeight + 'px';
+            }
+        }
+
+        function onResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+    </script>
+</body>
+</html>
