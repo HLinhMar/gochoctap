@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học liệu Tương tác: Đường Đi Euler</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #0f172a; 
+            color: #f8fafc; 
+            overflow-x: hidden; 
+            overflow-y: auto; /* Cho phép cuộn trang trên mobile */
+        }
+        
+        /* Giới hạn kích thước khung vẽ để không quá to */
+        #canvas-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 460px; /* Thu nhỏ so với 600px bản cũ */
+            aspect-ratio: 1 / 1;
+            margin: 0 auto;
+            touch-action: none; /* Chỉ cấm cuộn trang khi chạm vào đúng vùng vẽ */
+        }
+        
+        canvas {
+            background: #1e293b;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 100%;
+            height: 100%;
+            display: block;
+            border: 2px solid #334155;
+        }
+        
+        /* Hiệu ứng thông báo nhỏ (Toast) */
+        .toast {
+            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.95); padding: 8px 16px; border-radius: 20px;
+            font-size: 0.85rem; font-weight: bold; text-align: center; border: 1px solid;
+            pointer-events: none; opacity: 0; transition: all 0.3s ease; z-index: 10;
+            white-space: nowrap;
+        }
+        .toast-error { border-color: #ef4444; color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
+        .toast-success { border-color: #10b981; color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
+        
+        /* Custom Modal (Khung chúc mừng) */
+        #victory-modal {
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px);
+            display: none; align-items: center; justify-content: center; z-index: 100;
+        }
+        .modal-content {
+            background: linear-gradient(145deg, #1e293b, #0f172a); border: 2px solid #38bdf8;
+            border-radius: 20px; padding: 30px; text-align: center; max-width: 380px; width: 90%;
+            box-shadow: 0 0 40px rgba(56, 189, 248, 0.4); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Nút chuyển màn dạng nổi bật */
+        #next-btn { display: none; animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-3 md:p-6 flex flex-col items-center justify-center">
+
+    <div class="w-full max-w-5xl flex flex-col md:flex-row gap-6 bg-slate-900 rounded-2xl p-4 md:p-6 shadow-2xl border border-slate-800">
+        
+        <div class="w-full md:w-5/12 flex flex-col p-4 bg-slate-800/50 rounded-xl border border-slate-700">
+            <h1 class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-fuchsia-400 uppercase tracking-widest mb-4 text-center md:text-left">
+                Đường đi Euler
+            </h1>
+            
+            <div class="bg-slate-900 p-3 rounded-lg border border-slate-700 mb-4">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-700 pb-2 mb-2">Luật chơi</h2>
+                <ul class="text-sm text-slate-300 space-y-1.5 list-disc pl-4 leading-snug">
+                    <li>Kéo thả chuột/tay để vẽ đường đi.</li>
+                    <li><span class="text-rose-400 font-bold">Không được nhấc bút</span> giữa chừng.</li>
+                    <li>Phải đi qua <span class="text-emerald-400 font-bold">tất cả</span> các đoạn thẳng đúng 1 lần.</li>
+                </ul>
+            </div>
+
+            <div class="flex items-center justify-between mb-6 bg-slate-800 p-3 rounded-lg border border-slate-600">
+                <span class="text-slate-400 font-bold uppercase text-xs">Tiến độ:</span>
+                <span id="level-title" class="font-black text-xl text-fuchsia-400">Màn 1/5</span>
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <button id="next-btn" onclick="nextLevel()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-white py-3 rounded-xl font-black text-base shadow-lg transition-transform hover:-translate-y-1 uppercase tracking-wider">
+                    Bắt đầu Màn Tiếp Theo ➔
+                </button>
+                
+                <div class="flex gap-2">
+                    <button onclick="resetPath()" class="flex-1 bg-slate-700 hover:bg-slate-600 py-2.5 rounded-xl font-bold transition-colors text-xs md:text-sm border border-slate-600 hover:border-slate-400 flex items-center justify-center gap-1">
+                        <span>🔄</span> Vẽ lại màn này
+                    </button>
+                    <button onclick="restartGame()" class="flex-1 bg-rose-900/50 hover:bg-rose-800/80 text-rose-300 py-2.5 rounded-xl font-bold transition-colors text-xs md:text-sm border border-rose-800/50 hover:border-rose-400 flex items-center justify-center gap-1">
+                        <span>⏮</span> Chơi lại từ đầu
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full md:w-7/12 flex items-center justify-center p-2">
+            <div id="canvas-wrapper">
+                <canvas id="gameCanvas" width="600" height="600"></canvas>
+                <div id="msg-toast" class="toast"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="victory-modal">
+        <div class="modal-content">
+            <div class="text-6xl mb-4">🏆</div>
+            <h2 class="text-2xl font-black text-sky-400 uppercase tracking-widest mb-2">Tuyệt vời!</h2>
+            <p class="text-slate-300 text-sm mb-6 leading-relaxed">
+                Bạn đã giải mã thành công toàn bộ 5 thử thách về <br><span class="font-bold text-fuchsia-400 text-base">Đường đi Euler</span>.
+            </p>
+            <button onclick="closeModalAndRestart()" class="w-full bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 text-white py-3 rounded-xl font-black text-base shadow-[0_0_15px_rgba(56,189,248,0.5)] transition-transform hover:scale-105 uppercase tracking-wider">
+                Chơi Lại Từ Đầu
+            </button>
+        </div>
+    </div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const msgToast = document.getElementById('msg-toast');
+    const nextBtn = document.getElementById('next-btn');
+    const levelTitle = document.getElementById('level-title');
+    const victoryModal = document.getElementById('victory-modal');
+
+    // Cấu hình 5 màn chơi
+    const levels = [
+        {
+            nodes: [ {x:0.2,y:0.8}, {x:0.8,y:0.8}, {x:0.8,y:0.4}, {x:0.2,y:0.4}, {x:0.5,y:0.1} ],
+            edges: [ [0,1], [1,2], [2,3], [3,0], [2,4], [3,4] ]
+        },
+        {
+            nodes: [ {x:0.2,y:0.2}, {x:0.2,y:0.8}, {x:0.5,y:0.5}, {x:0.8,y:0.2}, {x:0.8,y:0.8} ],
+            edges: [ [0,1], [1,2], [2,0], [2,3], [3,4], [4,2] ]
+        },
+        {
+            nodes: [ {x:0.2,y:0.8}, {x:0.8,y:0.8}, {x:0.8,y:0.4}, {x:0.2,y:0.4}, {x:0.5,y:0.1} ],
+            edges: [ [0,1], [1,2], [2,3], [3,0], [0,2], [1,3], [2,4], [3,4] ]
+        },
+        {
+            nodes: [ {x:0.2,y:0.5}, {x:0.35,y:0.2}, {x:0.35,y:0.8}, {x:0.5,y:0.5}, {x:0.65,y:0.2}, {x:0.65,y:0.8}, {x:0.8,y:0.5} ],
+            edges: [ [0,1], [1,3], [3,2], [2,0], [3,4], [4,6], [6,5], [5,3] ]
+        },
+        {
+            nodes: [ {x:0.5,y:0.1}, {x:0.88,y:0.38}, {x:0.73,y:0.82}, {x:0.27,y:0.82}, {x:0.12,y:0.38} ],
+            edges: [ [0,1], [1,2], [2,3], [3,4], [4,0], [0,2], [2,4], [4,1], [1,3], [3,0] ]
+        }
+    ];
+
+    let currentLevel = 0;
+    let mappedNodes = [];
+    let edgesObj = [];
+    let path = [];
+    let isDrawing = false;
+    let pointerPos = { x: 0, y: 0 };
+    let levelCompleted = false;
+
+    // --- CÁC HÀM QUẢN LÝ LUỒNG TRÒ CHƠI ---
+
+    function loadLevel(index) {
+        currentLevel = index;
+        levelTitle.innerText = `Màn ${index + 1}/${levels.length}`;
+        nextBtn.style.display = 'none';
+        levelCompleted = false;
+        
+        const lvl = levels[index];
+        // Kích thước canvas ảo luôn là 600x600
+        mappedNodes = lvl.nodes.map(n => ({ x: n.x * 600, y: n.y * 600 }));
+        edgesObj = lvl.edges.map(e => ({ u: e[0], v: e[1], visited: false }));
+
+        resetPath();
+    }
+
+    function resetPath() {
+        path = [];
+        isDrawing = false;
+        edgesObj.forEach(e => e.visited = false);
+        if(!levelCompleted) draw();
+    }
+
+    function restartGame() {
+        victoryModal.style.display = 'none';
+        loadLevel(0);
+        showMessage("Đã đặt lại từ đầu.", true);
+    }
+
+    function nextLevel() {
+        if (currentLevel < levels.length - 1) {
+            loadLevel(currentLevel + 1);
+        }
+    }
+
+    function closeModalAndRestart() {
+        restartGame();
+    }
+
+    function showMessage(msg, isSuccess) {
+        msgToast.innerText = msg;
+        msgToast.className = `toast ${isSuccess ? 'toast-success' : 'toast-error'}`;
+        msgToast.style.opacity = 1;
+        msgToast.style.top = '20px';
+        
+        setTimeout(() => { 
+            msgToast.style.opacity = 0; 
+            msgToast.style.top = '15px';
+        }, 1500);
+    }
+
+    // --- CÁC HÀM ĐỒ HỌA ---
+
+    function draw() {
+        ctx.clearRect(0, 0, 600, 600);
+
+        // 1. Vẽ cạnh chưa đi qua (Mờ)
+        ctx.lineWidth = 6;
+        ctx.strokeStyle = '#334155';
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        edgesObj.forEach(e => {
+            if (!e.visited) {
+                ctx.beginPath();
+                ctx.moveTo(mappedNodes[e.u].x, mappedNodes[e.u].y);
+                ctx.lineTo(mappedNodes[e.v].x, mappedNodes[e.v].y);
+                ctx.stroke();
+            }
+        });
+
+        // 2. Vẽ đường đang kéo (nếu có)
+        if (isDrawing && path.length > 0 && !levelCompleted) {
+            const lastNode = mappedNodes[path[path.length - 1]];
+            ctx.lineWidth = 8;
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+            ctx.beginPath();
+            ctx.moveTo(lastNode.x, lastNode.y);
+            ctx.lineTo(pointerPos.x, pointerPos.y);
+            ctx.stroke();
+        }
+
+        // 3. Vẽ cạnh đã đi qua (Sáng)
+        ctx.lineWidth = 10;
+        ctx.strokeStyle = '#38bdf8';
+        ctx.beginPath();
+        for (let i = 0; i < path.length - 1; i++) {
+            const n1 = mappedNodes[path[i]];
+            const n2 = mappedNodes[path[i+1]];
+            ctx.moveTo(n1.x, n1.y);
+            ctx.lineTo(n2.x, n2.y);
+        }
+        ctx.stroke();
+
+        // 4. Vẽ các đỉnh (Nodes)
+        mappedNodes.forEach((node, i) => {
+            let isCurrent = path.length > 0 && path[path.length - 1] === i;
+            let isStart = path.length > 0 && path[0] === i;
+            let isVisited = path.includes(i);
+
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, 14, 0, 2 * Math.PI);
+            
+            if (isCurrent) {
+                ctx.fillStyle = '#f472b6'; 
+                ctx.shadowBlur = 20; ctx.shadowColor = '#f472b6';
+            } else if (isStart) {
+                ctx.fillStyle = '#34d399'; 
+                ctx.shadowBlur = 15; ctx.shadowColor = '#34d399';
+            } else if (isVisited) {
+                ctx.fillStyle = '#38bdf8'; ctx.shadowBlur = 0;
+            } else {
+                ctx.fillStyle = '#64748b'; ctx.shadowBlur = 0;
+            }
+            
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        });
+    }
+
+    // --- XỬ LÝ TƯƠNG TÁC ---
+
+    function getEdge(u, v) {
+        return edgesObj.find(e => (e.u === u && e.v === v) || (e.u === v && e.v === u));
+    }
+
+    function getHitNode(x, y) {
+        const hitRadius = 35; // Nới rộng vùng bắt dính để dễ bấm trên điện thoại hơn
+        for (let i = 0; i < mappedNodes.length; i++) {
+            const dx = mappedNodes[i].x - x;
+            const dy = mappedNodes[i].y - y;
+            if (Math.sqrt(dx*dx + dy*dy) < hitRadius) return i;
+        }
+        return -1;
+    }
+
+    // Lấy tọa độ tương đối, xử lý scale
+    function getPointerPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        // Cần lấy touch đầu tiên nếu là thiết bị cảm ứng
+        let clientX = e.clientX;
+        let clientY = e.clientY;
+        if (e.touches && e.touches.length > 0) {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        }
+        const scaleX = 600 / rect.width;
+        const scaleY = 600 / rect.height;
+        return {
+            x: (clientX - rect.left) * scaleX,
+            y: (clientY - rect.top) * scaleY
+        };
+    }
+
+    function handlePointerDown(e) {
+        if(levelCompleted) return;
+        const pos = getPointerPos(e);
+        const hit = getHitNode(pos.x, pos.y);
+        
+        if (hit !== -1) {
+            isDrawing = true;
+            path = [hit];
+            pointerPos = pos;
+            draw();
+        }
+    }
+
+    function handlePointerMove(e) {
+        if (!isDrawing || levelCompleted) return;
+        pointerPos = getPointerPos(e);
+
+        const hit = getHitNode(pointerPos.x, pointerPos.y);
+        const currentNode = path[path.length - 1];
+
+        if (hit !== -1 && hit !== currentNode) {
+            const edge = getEdge(currentNode, hit);
+            if (edge && !edge.visited) {
+                edge.visited = true;
+                path.push(hit);
+                
+                if (edgesObj.every(e => e.visited)) {
+                    levelCompleted = true;
+                    isDrawing = false;
+                    draw(); 
+                    
+                    if(currentLevel < levels.length - 1) {
+                        showMessage("Chính xác!", true);
+                        nextBtn.style.display = 'block';
+                    } else {
+                        setTimeout(() => { victoryModal.style.display = 'flex'; }, 400);
+                    }
+                }
+            }
+        }
+        if(!levelCompleted) draw();
+    }
+
+    function handlePointerUp() {
+        if (!isDrawing || levelCompleted) return;
+        isDrawing = false;
+        
+        if (!edgesObj.every(e => e.visited)) {
+            showMessage("Bạn đã nhấc bút!", false);
+            setTimeout(resetPath, 500); 
+        }
+    }
+
+    // Hỗ trợ cả chuột và màn hình cảm ứng chuẩn xác
+    canvas.addEventListener('mousedown', handlePointerDown);
+    window.addEventListener('mousemove', handlePointerMove);
+    window.addEventListener('mouseup', handlePointerUp);
+
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); handlePointerDown(e); }, {passive: false});
+    window.addEventListener('touchmove', (e) => { if(isDrawing) e.preventDefault(); handlePointerMove(e); }, {passive: false});
+    window.addEventListener('touchend', handlePointerUp);
+
+    loadLevel(0);
+
+</script>
+</body>
+</html>

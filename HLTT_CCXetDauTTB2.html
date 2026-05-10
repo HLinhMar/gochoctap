@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học Liệu: Xét Dấu Tam Thức Bậc 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        /* Math Font Simulation for HTML */
+        .math-font { font-family: "Times New Roman", Times, serif; font-style: italic; }
+        .math-normal { font-family: "Times New Roman", Times, serif; font-style: normal; }
+        
+        /* Compact Sign Table */
+        .sign-table { width: 100%; border-collapse: collapse; text-align: center; background: white; font-size: 0.95rem; }
+        .sign-table th, .sign-table td { border: 1px solid #cbd5e1; padding: 6px; }
+        .sign-table th { background-color: #f8fafc; font-weight: bold; width: 60px; }
+        .root-val { color: #dc2626; font-weight: bold; }
+        .sign-plus { color: #059669; font-weight: bold; font-size: 1.2em; }
+        .sign-minus { color: #e11d48; font-weight: bold; font-size: 1.2em; }
+        
+        /* Sliders Customization */
+        .slider-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .slider-row label { width: 25px; font-weight: bold; font-size: 1rem; color: #4f46e5; }
+        input[type=range] { flex-grow: 1; accent-color: #4f46e5; height: 5px; }
+        input[type=number] { width: 60px; padding: 3px; border: 1px solid #cbd5e1; border-radius: 4px; text-align: center; font-weight: bold; font-size: 0.9rem; }
+        
+        /* Hide scrollbar for exact fit */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-slate-200 h-screen w-screen overflow-hidden flex flex-col p-2 md:p-4">
+
+<div class="flex-1 flex flex-col md:flex-row bg-white rounded-xl shadow-xl overflow-hidden border border-slate-300">
+    
+    <div class="w-full md:w-5/12 lg:w-4/12 flex flex-col p-4 border-r border-slate-200 overflow-y-auto bg-slate-50">
+        
+        <h1 class="text-xl font-bold text-indigo-700 mb-3 uppercase tracking-wide border-b-2 border-indigo-200 pb-2">
+            Xét Dấu Tam Thức Bậc 2
+        </h1>
+        
+        <div class="bg-white p-3 rounded-lg border border-slate-200 mb-4 shadow-sm">
+            <div class="text-xs font-bold text-slate-400 mb-2 tracking-wider">
+                <span class="uppercase">Hệ số</span> 
+                <span class="math-font text-[14px] text-slate-500 normal-case ml-1">y = ax</span><sup class="math-normal text-[10px] text-slate-500">2</sup><span class="math-font text-[14px] text-slate-500 normal-case"> + bx + c</span>
+            </div>
+            
+            <div class="slider-row">
+                <label class="math-font">a =</label>
+                <input type="range" id="valA" min="-5" max="5" step="0.1" value="1" oninput="updateAll()">
+                <input type="number" id="numA" value="1" step="0.1" onchange="syncSlider('valA', 'numA')">
+            </div>
+            <div class="slider-row">
+                <label class="math-font">b =</label>
+                <input type="range" id="valB" min="-10" max="10" step="0.1" value="-3" oninput="updateAll()">
+                <input type="number" id="numB" value="-3" step="0.1" onchange="syncSlider('valB', 'numB')">
+            </div>
+            <div class="slider-row">
+                <label class="math-font">c =</label>
+                <input type="range" id="valC" min="-10" max="10" step="0.1" value="2" oninput="updateAll()">
+                <input type="number" id="numC" value="2" step="0.1" onchange="syncSlider('valC', 'numC')">
+            </div>
+        </div>
+
+        <div class="text-center mb-4">
+            <div id="equation-display" class="text-xl font-bold text-indigo-900 bg-indigo-100/50 py-2 rounded border border-indigo-200 math-font">
+                </div>
+        </div>
+
+        <div id="roots-info" class="text-slate-700 text-sm mb-4 bg-white p-3 rounded-lg border border-slate-200 shadow-sm leading-relaxed min-h-[70px]">
+            </div>
+
+        <div class="mb-2 text-sm font-bold text-slate-600 uppercase tracking-wider">Bảng xét dấu:</div>
+        <div id="sign-table-container" class="overflow-x-auto bg-white rounded-lg shadow-sm border border-slate-200">
+            </div>
+        
+    </div>
+
+    <div class="w-full md:w-7/12 lg:w-8/12 relative bg-slate-900 flex flex-col">
+        <div class="absolute top-4 right-4 z-10 flex flex-col gap-2">
+            <button onclick="zoomIn()" class="w-8 h-8 bg-white/90 rounded shadow hover:bg-indigo-50 text-slate-800 font-bold flex items-center justify-center text-lg" title="Phóng to">+</button>
+            <button onclick="zoomOut()" class="w-8 h-8 bg-white/90 rounded shadow hover:bg-indigo-50 text-slate-800 font-bold flex items-center justify-center text-lg" title="Thu nhỏ">-</button>
+            <button onclick="centerView()" class="w-8 h-8 bg-white/90 rounded shadow hover:bg-indigo-50 text-slate-800 font-bold flex items-center justify-center text-sm" title="Về trung tâm">⌂</button>
+        </div>
+        
+        <div class="absolute top-4 left-4 z-10 bg-slate-800/80 text-white text-xs px-3 py-2 rounded shadow-lg backdrop-blur pointer-events-none border border-slate-600">
+            <div class="flex items-center gap-2 mb-1"><div class="w-3 h-3 bg-emerald-500 rounded-sm"></div> <span>Phần mang dấu (+)</span></div>
+            <div class="flex items-center gap-2"><div class="w-3 h-3 bg-rose-500 rounded-sm"></div> <span>Phần mang dấu (-)</span></div>
+            <div class="mt-2 text-slate-400 italic text-[10px]">* Cuộn để zoom, Kéo để di chuyển</div>
+        </div>
+
+        <div class="flex-1 w-full relative overflow-hidden" id="canvasWrapper">
+            <canvas id="graphCanvas" class="absolute inset-0 cursor-move"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const canvas = document.getElementById('graphCanvas');
+    const ctx = canvas.getContext('2d');
+    const wrapper = document.getElementById('canvasWrapper');
+
+    // Camera settings (1:1 Aspect ratio maintained)
+    let cam = { x: 0, y: 0, scale: 50 }; // scale: pixels per 1 unit
+    let isDragging = false;
+    let lastMouse = { x: 0, y: 0 };
+    
+    // Core parameters
+    let A = 1, B = -3, C = 2;
+
+    function syncSlider(sliderId, numId) {
+        document.getElementById(sliderId).value = document.getElementById(numId).value;
+        updateAll();
+    }
+
+    function formatCoef(val, isFirst) {
+        if (val === 0) return "";
+        let num = Math.abs(val);
+        let sign = val > 0 ? (isFirst ? "" : "+ ") : "- ";
+        if (num === 1) num = ""; 
+        return sign + num;
+    }
+    
+    function updateAll() {
+        A = parseFloat(document.getElementById('valA').value);
+        B = parseFloat(document.getElementById('valB').value);
+        C = parseFloat(document.getElementById('valC').value);
+
+        document.getElementById('numA').value = A;
+        document.getElementById('numB').value = B;
+        document.getElementById('numC').value = C;
+
+        let eqStr = "";
+        if (A === 0 && B === 0 && C === 0) eqStr = "0";
+        else {
+            if (A !== 0) eqStr += `${formatCoef(A, true)}<span class="math-font">x</span><sup class="math-normal text-sm">2</sup> `;
+            if (B !== 0) eqStr += `${A === 0 ? formatCoef(B, true) : formatCoef(B, false)}<span class="math-font">x</span> `;
+            if (C !== 0 || (A === 0 && B === 0)) eqStr += (C > 0 && (A!==0 || B!==0) ? "+ " : (C < 0 ? "- " : "")) + Math.abs(C);
+        }
+        document.getElementById('equation-display').innerHTML = `<span class="math-font">f(x)</span> = ${eqStr}`;
+
+        const rootsInfo = document.getElementById('roots-info');
+        const tableCont = document.getElementById('sign-table-container');
+
+        if (A === 0) {
+            rootsInfo.innerHTML = `<span class="text-rose-600 font-bold">a = 0</span>: Phương trình không còn là tam thức bậc 2.`;
+            tableCont.innerHTML = `<div class="p-3 text-center text-slate-500 italic">Không áp dụng quy tắc xét dấu tam thức bậc 2.</div>`;
+        } else {
+            let delta = B*B - 4*A*C;
+            let deltaHtml = `<span class="math-normal">Δ</span> = ${B*B} - 4(${A})(${C}) = <b>${delta.toFixed(2)}</b>`;
+            
+            if (delta < 0) {
+                rootsInfo.innerHTML = `${deltaHtml} < 0.<br>Tam thức <b>vô nghiệm</b>. Hàm số cùng dấu với hệ số a = ${A} trên toàn $\\mathbb{R}$.`;
+                tableCont.innerHTML = buildTableNone(A);
+            } else if (delta === 0) {
+                let x0 = -B / (2*A);
+                rootsInfo.innerHTML = `${deltaHtml} = 0.<br>Tam thức có <b>nghiệm kép</b> <span class="math-font">x₀</span> = ${x0.toFixed(2)}.<br>Hàm số cùng dấu với a = ${A} tại mọi điểm khác nghiệm kép.`;
+                tableCont.innerHTML = buildTableSingle(x0, A);
+            } else {
+                let x1 = (-B - Math.sqrt(delta)) / (2*A);
+                let x2 = (-B + Math.sqrt(delta)) / (2*A);
+                if (x1 > x2) [x1, x2] = [x2, x1];
+                rootsInfo.innerHTML = `${deltaHtml} > 0.<br>Có <b>2 nghiệm phân biệt</b>: <span class="math-font">x₁</span> = ${x1.toFixed(2)}, <span class="math-font">x₂</span> = ${x2.toFixed(2)}.<br>Dấu áp dụng quy tắc: <i>"Trong trái, ngoài cùng"</i>.`;
+                tableCont.innerHTML = buildTableDouble(x1, x2, A);
+            }
+        }
+        
+        requestAnimationFrame(drawGraph);
+    }
+
+    function getSignHtml(val) { return val > 0 ? `<span class="sign-plus">+</span>` : `<span class="sign-minus">-</span>`; }
+    function thX() { return `<span class="math-font font-normal">x</span>`; }
+    function thFx() { return `<span class="math-font font-normal">f(x)</span>`; }
+    const infM = `<span class="math-normal">-∞</span>`;
+    const infP = `<span class="math-normal">+∞</span>`;
+
+    function buildTableNone(a) {
+        let sign = getSignHtml(a);
+        return `<table class="sign-table"><tr><th>${thX()}</th><td>${infM}</td><td>${infP}</td></tr><tr><th>${thFx()}</th><td colspan="2">${sign}</td></tr></table>`;
+    }
+    function buildTableSingle(x0, a) {
+        let sign = getSignHtml(a);
+        return `<table class="sign-table"><tr><th>${thX()}</th><td>${infM}</td><td class="root-val">${x0.toFixed(2)}</td><td>${infP}</td></tr><tr><th>${thFx()}</th><td>${sign}</td><td class="root-val">0</td><td>${sign}</td></tr></table>`;
+    }
+    function buildTableDouble(x1, x2, a) {
+        let sOut = getSignHtml(a), sIn = getSignHtml(-a);
+        return `<table class="sign-table"><tr><th>${thX()}</th><td>${infM}</td><td class="root-val">${x1.toFixed(2)}</td><td></td><td class="root-val">${x2.toFixed(2)}</td><td>${infP}</td></tr><tr><th>${thFx()}</th><td>${sOut}</td><td class="root-val">0</td><td>${sIn}</td><td class="root-val">0</td><td>${sOut}</td></tr></table>`;
+    }
+
+    function toPx(mathX) { return canvas.width/(2*window.devicePixelRatio) + (mathX - cam.x) * cam.scale; }
+    function toPy(mathY) { return canvas.height/(2*window.devicePixelRatio) - (mathY - cam.y) * cam.scale; }
+
+    function drawGraph() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = wrapper.getBoundingClientRect();
+        
+        // Fix mờ (Blur fix): Khóa cứng CSS kích thước thực tế
+        canvas.style.width = `${rect.width}px`;
+        canvas.style.height = `${rect.height}px`;
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        
+        ctx.scale(dpr, dpr);
+        
+        const w = rect.width;
+        const h = rect.height;
+
+        ctx.clearRect(0, 0, w, h);
+
+        let step = 1;
+        if (cam.scale < 10) step = 10;
+        else if (cam.scale < 25) step = 5;
+        else if (cam.scale > 150) step = 0.5;
+
+        let startMathX = Math.floor((cam.x - w/2/cam.scale) / step) * step;
+        let endMathX = Math.ceil((cam.x + w/2/cam.scale) / step) * step;
+        let startMathY = Math.floor((cam.y - h/2/cam.scale) / step) * step;
+        let endMathY = Math.ceil((cam.y + h/2/cam.scale) / step) * step;
+
+        ctx.font = '12px "Times New Roman", serif';
+
+        // Lưới (Grid)
+        ctx.strokeStyle = '#334155'; ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        for (let x = startMathX; x <= endMathX; x += step) { let px = toPx(x); ctx.moveTo(px, 0); ctx.lineTo(px, h); }
+        for (let y = startMathY; y <= endMathY; y += step) { let py = toPy(y); ctx.moveTo(0, py); ctx.lineTo(w, py); }
+        ctx.stroke();
+
+        // Trục Ox, Oy
+        ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1.5; // Giảm độ dày của trục
+        let ox = toPy(0), oy = toPx(0);
+        ctx.beginPath();
+        if (ox >= 0 && ox <= h) { ctx.moveTo(0, ox); ctx.lineTo(w, ox); }
+        if (oy >= 0 && oy <= w) { ctx.moveTo(oy, 0); ctx.lineTo(oy, h); }
+        ctx.stroke();
+
+        // Toạ độ
+        ctx.fillStyle = '#cbd5e1'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        for (let x = startMathX; x <= endMathX; x += step) {
+            if(Math.abs(x) < 0.001) continue;
+            let px = toPx(x);
+            ctx.beginPath(); ctx.moveTo(px, ox - 4); ctx.lineTo(px, ox + 4); ctx.stroke();
+            ctx.fillText(Number(x.toFixed(2)), px, ox + 8);
+        }
+        ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+        for (let y = startMathY; y <= endMathY; y += step) {
+            if(Math.abs(y) < 0.001) continue;
+            let py = toPy(y);
+            ctx.beginPath(); ctx.moveTo(oy - 4, py); ctx.lineTo(oy + 4, py); ctx.stroke();
+            ctx.fillText(Number(y.toFixed(2)), oy - 8, py);
+        }
+        ctx.fillText('O', oy - 8, ox + 12);
+
+        if (A === 0 && B === 0 && C === 0) return;
+
+        let pts = [];
+        for (let px = 0; px <= w; px++) {
+            let mathX = cam.x + (px - w/2) / cam.scale;
+            let mathY = A*mathX*mathX + B*mathX + C;
+            pts.push({ px, mathX, mathY, py: toPy(mathY) });
+        }
+
+        ctx.lineWidth = 2; // Giảm độ dày của Parabol từ 3 xuống 2
+        
+        function drawSegment(p1, p2) {
+            ctx.beginPath(); ctx.moveTo(p1.px, p1.py); ctx.lineTo(p2.px, p2.py);
+            
+            let isPositive = ((p1.mathY + p2.mathY) / 2) >= 0;
+            ctx.strokeStyle = isPositive ? '#10b981' : '#f43f5e';
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(p1.px, p1.py); ctx.lineTo(p2.px, p2.py);
+            ctx.lineTo(p2.px, ox); ctx.lineTo(p1.px, ox); ctx.closePath();
+            ctx.fillStyle = isPositive ? 'rgba(16, 185, 129, 0.2)' : 'rgba(244, 63, 94, 0.2)';
+            ctx.fill();
+        }
+
+        for (let i = 0; i < pts.length - 1; i++) {
+            let p1 = pts[i], p2 = pts[i+1];
+            if (p1.mathY * p2.mathY < 0 && A !== 0) {
+                let crossX = p1.mathX - p1.mathY * (p2.mathX - p1.mathX) / (p2.mathY - p1.mathY);
+                let crossPc = { px: toPx(crossX), mathX: crossX, mathY: 0, py: ox };
+                drawSegment(p1, crossPc);
+                drawSegment(crossPc, p2);
+            } else {
+                drawSegment(p1, p2);
+            }
+        }
+
+        ctx.font = 'italic 16px "Times New Roman", serif';
+        let delta = B*B - 4*A*C;
+        if (A !== 0) {
+            let xv = -B / (2*A), yv = -delta / (4*A);
+            drawPoint(xv, yv, '#eab308');
+
+            if (delta > 0) {
+                let x1 = (-B - Math.sqrt(delta)) / (2*A);
+                let x2 = (-B + Math.sqrt(delta)) / (2*A);
+                drawPoint(x1, 0, '#ffffff'); drawLabel('x₁', x1, 0);
+                drawPoint(x2, 0, '#ffffff'); drawLabel('x₂', x2, 0);
+            } else if (delta === 0) {
+                drawPoint(xv, 0, '#ffffff'); drawLabel('x₀', xv, 0);
+            }
+        } else if (B !== 0) {
+            let rx = -C/B;
+            drawPoint(rx, 0, '#ffffff'); drawLabel('x₀', rx, 0);
+        }
+    }
+
+    function drawPoint(mathX, mathY, color) {
+        ctx.beginPath();
+        ctx.arc(toPx(mathX), toPy(mathY), 4, 0, 2*Math.PI);
+        ctx.fillStyle = color; ctx.fill();
+        ctx.lineWidth = 1; ctx.strokeStyle = '#0f172a'; ctx.stroke();
+    }
+
+    function drawLabel(text, mathX, mathY) {
+        ctx.fillStyle = '#ffffff'; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+        ctx.fillText(text, toPx(mathX) + 8, toPy(mathY) - 20);
+    }
+
+    wrapper.addEventListener('mousedown', e => {
+        isDragging = true;
+        lastMouse = { x: e.clientX, y: e.clientY };
+        canvas.style.cursor = 'grabbing';
+    });
+    window.addEventListener('mouseup', () => {
+        isDragging = false;
+        canvas.style.cursor = 'move';
+    });
+    window.addEventListener('mousemove', e => {
+        if (!isDragging) return;
+        let dx = e.clientX - lastMouse.x;
+        let dy = e.clientY - lastMouse.y;
+        cam.x -= dx / cam.scale;
+        cam.y += dy / cam.scale;
+        lastMouse = { x: e.clientX, y: e.clientY };
+        requestAnimationFrame(drawGraph);
+    });
+
+    wrapper.addEventListener('wheel', e => {
+        e.preventDefault();
+        let zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+        let rect = wrapper.getBoundingClientRect();
+        let mousePx = e.clientX - rect.left;
+        let mousePy = e.clientY - rect.top;
+
+        let mathX = cam.x + (mousePx - rect.width/2) / cam.scale;
+        let mathY = cam.y - (mousePy - rect.height/2) / cam.scale;
+
+        cam.scale *= zoomFactor;
+        cam.scale = Math.max(5, Math.min(cam.scale, 300));
+
+        cam.x = mathX - (mousePx - rect.width/2) / cam.scale;
+        cam.y = mathY + (mousePy - rect.height/2) / cam.scale;
+
+        requestAnimationFrame(drawGraph);
+    }, { passive: false });
+
+    function zoomIn() { cam.scale *= 1.2; requestAnimationFrame(drawGraph); }
+    function zoomOut() { cam.scale *= 0.8; requestAnimationFrame(drawGraph); }
+    function centerView() {
+        if (A !== 0) {
+            cam.x = -B / (2*A);
+            cam.y = 0; 
+        } else { cam.x = 0; cam.y = 0; }
+        cam.scale = 50;
+        requestAnimationFrame(drawGraph);
+    }
+
+    window.addEventListener('resize', drawGraph);
+    updateAll();
+    centerView();
+
+</script>
+
+</body>
+</html>

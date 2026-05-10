@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Tập Trắc Nghiệm Đạo Hàm</title>
+    <!-- Tích hợp MathJax để hiển thị công thức Toán -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --bg-color: #f8f9fa;
+            --correct-color: #d4edda;
+            --wrong-color: #f8d7da;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .question-block {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            transition: background-color 0.3s;
+        }
+        .question-text {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        @media (max-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f1f3f5;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .option-label:hover {
+            background: #e2e6ea;
+        }
+        .option-label input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        .btn-submit:hover {
+            background-color: #004494;
+        }
+        #result-display {
+            margin-top: 20px;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            border-radius: 5px;
+            display: none;
+        }
+        .correct-ans { background-color: var(--correct-color) !important; border: 1px solid #c3e6cb; }
+        .wrong-ans { background-color: var(--wrong-color) !important; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h2>Bài Tập Trắc Nghiệm Đạo Hàm</h2>
+    <form id="quizForm">
+        
+        <!-- Câu 1 -->
+        <div class="question-block" id="block-q1">
+            <div class="question-text">Câu 1. Mệnh đề nào dưới đây là sai? (Giả sử $u, v$ là các hàm số có đạo hàm)</div>
+            <div class="options-grid">
+                <label class="option-label" id="label-q1-A"><input type="radio" name="q1" value="A"> A. $(u + v)' = u' + v'$</label>
+                <label class="option-label" id="label-q1-B"><input type="radio" name="q1" value="B"> B. $(uv)' = u'v'$</label>
+                <label class="option-label" id="label-q1-C"><input type="radio" name="q1" value="C"> C. $(ku)' = k \cdot u'$ (với $k$ là hằng số)</label>
+                <label class="option-label" id="label-q1-D"><input type="radio" name="q1" value="D"> D. $\left(\dfrac{u}{v}\right)' = \dfrac{u'v - uv'}{v^2}$ (với $v \neq 0$)</label>
+            </div>
+        </div>
+
+        <!-- Câu 2 -->
+        <div class="question-block" id="block-q2">
+            <div class="question-text">Câu 2. Trong các công thức sau, công thức nào đúng?</div>
+            <div class="options-grid">
+                <label class="option-label" id="label-q2-A"><input type="radio" name="q2" value="A"> A. $(\sin x)' = -\cos x$</label>
+                <label class="option-label" id="label-q2-B"><input type="radio" name="q2" value="B"> B. $(\cos x)' = \sin x$</label>
+                <label class="option-label" id="label-q2-C"><input type="radio" name="q2" value="C"> C. $(\tan x)' = \dfrac{1}{\cos^2 x}$</label>
+                <label class="option-label" id="label-q2-D"><input type="radio" name="q2" value="D"> D. $(\cot x)' = \dfrac{1}{\sin^2 x}$</label>
+            </div>
+        </div>
+
+        <!-- Câu 3 -->
+        <div class="question-block" id="block-q3">
+            <div class="question-text">Câu 3. Chọn mệnh đề sai:</div>
+            <div class="options-grid">
+                <label class="option-label" id="label-q3-A"><input type="radio" name="q3" value="A"> A. $(e^x)' = e^x$</label>
+                <label class="option-label" id="label-q3-B"><input type="radio" name="q3" value="B"> B. $(a^x)' = a^x \ln a$ (với $0 < a \neq 1$)</label>
+                <label class="option-label" id="label-q3-C"><input type="radio" name="q3" value="C"> C. $(\ln x)' = \dfrac{1}{x}$ (với $x > 0$)</label>
+                <label class="option-label" id="label-q3-D"><input type="radio" name="q3" value="D"> D. $(\log_a x)' = \dfrac{\ln a}{x}$ (với $x > 0, 0 < a \neq 1$)</label>
+            </div>
+        </div>
+
+        <!-- Câu 4 -->
+        <div class="question-block" id="block-q4">
+            <div class="question-text">Câu 4. Công thức nào dưới đây đúng? (Giả sử các biểu thức đều có nghĩa)</div>
+            <div class="options-grid">
+                <label class="option-label" id="label-q4-A"><input type="radio" name="q4" value="A"> A. $(\sqrt{x})' = \dfrac{1}{\sqrt{x}}$</label>
+                <label class="option-label" id="label-q4-B"><input type="radio" name="q4" value="B"> B. $\left(\dfrac{1}{x}\right)' = \dfrac{1}{x^2}$</label>
+                <label class="option-label" id="label-q4-C"><input type="radio" name="q4" value="C"> C. $(x^\alpha)' = \alpha x^{\alpha - 1}$ (với $\alpha \in \mathbb{R}$)</label>
+                <label class="option-label" id="label-q4-D"><input type="radio" name="q4" value="D"> D. $(C)' = C$ (với $C$ là hằng số)</label>
+            </div>
+        </div>
+
+        <!-- Câu 5 -->
+        <div class="question-block" id="block-q5">
+            <div class="question-text">Câu 5. Chọn phát biểu sai về công thức đạo hàm của hàm hợp (với $u = u(x)$ là hàm số có đạo hàm):</div>
+            <div class="options-grid">
+                <label class="option-label" id="label-q5-A"><input type="radio" name="q5" value="A"> A. $(u^n)' = n u^{n-1} \cdot u'$</label>
+                <label class="option-label" id="label-q5-B"><input type="radio" name="q5" value="B"> B. $(\sqrt{u})' = \dfrac{1}{2\sqrt{u}}$</label>
+                <label class="option-label" id="label-q5-C"><input type="radio" name="q5" value="C"> C. $(\sin u)' = u' \cdot \cos u$</label>
+                <label class="option-label" id="label-q5-D"><input type="radio" name="q5" value="D"> D. $(e^u)' = u' \cdot e^u$</label>
+            </div>
+        </div>
+
+        <!-- Câu 6 -->
+        <div class="question-block" id="block-q6">
+            <div class="question-text">Câu 6. Công thức đạo hàm hàm hợp nào dưới đây đúng?</div>
+            <div class="options-grid">
+                <label class="option-label" id="label-q6-A"><input type="radio" name="q6" value="A"> A. $(\cos u)' = u' \sin u$</label>
+                <label class="option-label" id="label-q6-B"><input type="radio" name="q6" value="B"> B. $(\tan u)' = -\dfrac{u'}{\cos^2 u}$</label>
+                <label class="option-label" id="label-q6-C"><input type="radio" name="q6" value="C"> C. $(\cot u)' = -\dfrac{u'}{\sin^2 u}$</label>
+                <label class="option-label" id="label-q6-D"><input type="radio" name="q6" value="D"> D. $(\sin u)' = \cos u$</label>
+            </div>
+        </div>
+
+        <!-- Câu 7 -->
+        <div class="question-block" id="block-q7">
+            <div class="question-text">Câu 7. Chọn mệnh đề sai đối với hàm hợp $u = u(x)$:</div>
+            <div class="options-grid">
+                <label class="option-label" id="label-q7-A"><input type="radio" name="q7" value="A"> A. $(a^u)' = u' \cdot a^u \cdot \ln a$</label>
+                <label class="option-label" id="label-q7-B"><input type="radio" name="q7" value="B"> B. $(\ln u)' = \dfrac{u'}{u}$</label>
+                <label class="option-label" id="label-q7-C"><input type="radio" name="q7" value="C"> C. $(\log_a u)' = \dfrac{u'}{u \ln a}$</label>
+                <label class="option-label" id="label-q7-D"><input type="radio" name="q7" value="D"> D. $(e^u)' = e^u$</label>
+            </div>
+        </div>
+
+        <!-- Câu 8 -->
+        <div class="question-block" id="block-q8">
+            <div class="question-text">Câu 8. Công thức nào dưới đây sai?</div>
+            <div class="options-grid">
+                <label class="option-label" id="label-q8-A"><input type="radio" name="q8" value="A"> A. $\left(\dfrac{1}{v}\right)' = -\dfrac{v'}{v^2}$</label>
+                <label class="option-label" id="label-q8-B"><input type="radio" name="q8" value="B"> B. $\left(\dfrac{u}{v}\right)' = \dfrac{u'v + uv'}{v^2}$</label>
+                <label class="option-label" id="label-q8-C"><input type="radio" name="q8" value="C"> C. $(uv)' = u'v + uv'$</label>
+                <label class="option-label" id="label-q8-D"><input type="radio" name="q8" value="D"> D. $(u - v)' = u' - v'$</label>
+            </div>
+        </div>
+
+        <!-- Câu 9 -->
+        <div class="question-block" id="block-q9">
+            <div class="question-text">Câu 9. Phát biểu nào sau đây đúng?</div>
+            <div class="options-grid">
+                <label class="option-label" id="label-q9-A"><input type="radio" name="q9" value="A"> A. $(x)' = 0$</label>
+                <label class="option-label" id="label-q9-B"><input type="radio" name="q9" value="B"> B. $(\sin x)' = \cos x$</label>
+                <label class="option-label" id="label-q9-C"><input type="radio" name="q9" value="C"> C. $(e^x)' = x e^{x-1}$</label>
+                <label class="option-label" id="label-q9-D"><input type="radio" name="q9" value="D"> D. $(\ln x)' = -\dfrac{1}{x}$</label>
+            </div>
+        </div>
+
+        <!-- Câu 10 -->
+        <div class="question-block" id="block-q10">
+            <div class="question-text">Câu 10. Chọn công thức sai:</div>
+            <div class="options-grid">
+                <label class="option-label" id="label-q10-A"><input type="radio" name="q10" value="A"> A. $(\sqrt{x}))' = \dfrac{1}{2\sqrt{x}}$</label>
+                <label class="option-label" id="label-q10-B"><input type="radio" name="q10" value="B"> B. $(\cos x)' = -\sin x$</label>
+                <label class="option-label" id="label-q10-C"><input type="radio" name="q10" value="C"> C. $(\tan x)' = 1 + \tan^2 x$</label>
+                <label class="option-label" id="label-q10-D"><input type="radio" name="q10" value="D"> D. $(\cot x)' = 1 + \cot^2 x$</label>
+            </div>
+        </div>
+
+        <button type="button" class="btn-submit" onclick="gradeQuiz()">Nộp bài</button>
+        <div id="result-display"></div>
+    </form>
+</div>
+
+<script>
+    // Đáp án đúng cho 10 câu hỏi
+    const correctAnswers = {
+        q1: 'B',
+        q2: 'C',
+        q3: 'D',
+        q4: 'C',
+        q5: 'B',
+        q6: 'C',
+        q7: 'D',
+        q8: 'B',
+        q9: 'B',
+        q10: 'D'
+    };
+
+    function gradeQuiz() {
+        let score = 0;
+        let totalQuestions = Object.keys(correctAnswers).length;
+
+        // Reset màu sắc trước khi chấm
+        const allLabels = document.querySelectorAll('.option-label');
+        allLabels.forEach(label => {
+            label.classList.remove('correct-ans', 'wrong-ans');
+        });
+
+        // Chấm điểm
+        for (let i = 1; i <= totalQuestions; i++) {
+            const questionName = 'q' + i;
+            const selectedOption = document.querySelector(`input[name="${questionName}"]:checked`);
+            const correctAnswer = correctAnswers[questionName];
+
+            // Highlight đáp án đúng
+            const correctLabel = document.getElementById(`label-${questionName}-${correctAnswer}`);
+            if (correctLabel) {
+                correctLabel.classList.add('correct-ans');
+            }
+
+            if (selectedOption) {
+                if (selectedOption.value === correctAnswer) {
+                    score++;
+                } else {
+                    // Highlight đáp án sai mà người dùng đã chọn
+                    const wrongLabel = document.getElementById(`label-${questionName}-${selectedOption.value}`);
+                    wrongLabel.classList.add('wrong-ans');
+                }
+            }
+        }
+
+        // Hiển thị kết quả
+        const resultDisplay = document.getElementById('result-display');
+        resultDisplay.style.display = 'block';
+        
+        let message = `Bạn làm đúng ${score}/${totalQuestions} câu. `;
+        if (score === totalQuestions) {
+            message += "Tuyệt vời! 🎉";
+            resultDisplay.style.backgroundColor = "var(--correct-color)";
+            resultDisplay.style.color = "#155724";
+        } else if (score >= totalQuestions / 2) {
+            message += "Khá tốt! 👍";
+            resultDisplay.style.backgroundColor = "#fff3cd";
+            resultDisplay.style.color = "#856404";
+        } else {
+            message += "Hãy ôn tập lại lý thuyết nhé! 📚";
+            resultDisplay.style.backgroundColor = "var(--wrong-color)";
+            resultDisplay.style.color = "#721c24";
+        }
+        
+        resultDisplay.innerHTML = message;
+    }
+</script>
+
+</body>
+</html>

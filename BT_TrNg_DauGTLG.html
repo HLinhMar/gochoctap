@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyện tập nhanh: Xác định dấu của giá trị lượng giác của một góc cho trước</title>
+    <!-- Tích hợp MathJax để hiển thị công thức Toán -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --bg-color: #f8f9fa;
+            --correct-color: #d4edda;
+            --wrong-color: #f8d7da;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .question-block {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            transition: background-color 0.3s;
+        }
+        .question-text {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        @media (max-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f1f3f5;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .option-label:hover {
+            background: #e2e6ea;
+        }
+        .option-label input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        .btn-submit:hover {
+            background-color: #004494;
+        }
+        #result-display {
+            margin-top: 20px;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            border-radius: 5px;
+            display: none;
+        }
+        .correct-ans { background-color: var(--correct-color) !important; border: 1px solid #c3e6cb; }
+        .wrong-ans { background-color: var(--wrong-color) !important; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h2>Luyện tập nhanh: Xác định dấu của giá trị lượng giác của một góc cho trước</h2>
+    <form id="quizForm">
+        
+        <!-- Câu 1 -->
+        <div class="question-block">
+            <div class="question-text">Câu 1. Với góc $ \alpha \in \left( -180^\circ ; -90^\circ \right) $, nhận xét nào dưới đây là sai?</div>
+            <div class="options-grid">
+                <label class="option-label"><input type="radio" name="q1"> <span> $ \sin \alpha < 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q1"> <span> $ \cos \alpha < 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q1"> <span> $ \tan \alpha > 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q1" data-correct="true"> <span> $ \cot \alpha < 0 $ </span></label>
+            </div>
+        </div>
+
+        <!-- Câu 2 -->
+        <div class="question-block">
+            <div class="question-text">Câu 2. Với góc $ \alpha \in \left( 90^\circ ; 180^\circ \right) $, nhận xét nào dưới đây là đúng?</div>
+            <div class="options-grid">
+                <label class="option-label"><input type="radio" name="q2"> <span> $ \sin \alpha < 0, \cos \alpha > 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q2"> <span> $ \tan \alpha < 0, \sin \alpha < 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q2" data-correct="true"> <span> $ \cot \alpha < 0, \cos \alpha < 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q2"> <span> $ \tan \alpha < 0, \cot \alpha > 0 $ </span></label>
+            </div>
+        </div>
+
+        <!-- Câu 3 -->
+        <div class="question-block">
+            <div class="question-text">Câu 3. Với góc $ \alpha \in \left( 0 ; \frac{\pi}{2} \right) $, nhận xét nào dưới đây là đúng?</div>
+            <div class="options-grid">
+                <label class="option-label"><input type="radio" name="q3"> <span> $ \sin \alpha < 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q3"> <span> $ \cos \alpha < 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q3" data-correct="true"> <span> $ \tan \alpha > 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q3"> <span> $ \cot \alpha < 0 $ </span></label>
+            </div>
+        </div>
+
+        <!-- Câu 4 -->
+        <div class="question-block">
+            <div class="question-text">Câu 4. Với góc $ \alpha \in \left( -\pi ; \frac{-\pi}{2} \right) $, nhận xét nào dưới đây là sai?</div>
+            <div class="options-grid">
+                <label class="option-label"><input type="radio" name="q4"> <span> $ \sin \alpha < 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q4"> <span> $ \cos \alpha < 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q4"> <span> $ \tan \alpha > 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q4" data-correct="true"> <span> $ \cot \alpha < 0 $ </span></label>
+            </div>
+        </div>
+
+        <!-- Câu 5 -->
+        <div class="question-block">
+            <div class="question-text">Câu 5. Với góc $ \alpha \in \left( \frac{-\pi}{2} ; 0 \right) $, nhận xét nào dưới đây là đúng?</div>
+            <div class="options-grid">
+                <label class="option-label"><input type="radio" name="q5" data-correct="true"> <span> $ \sin \alpha < 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q5"> <span> $ \cos \alpha < 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q5"> <span> $ \tan \alpha > 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q5"> <span> $ \cot \alpha > 0 $ </span></label>
+            </div>
+        </div>
+
+        <!-- Câu 6 -->
+        <div class="question-block">
+            <div class="question-text">Câu 6. Cho $ \frac{\pi}{2} < a < \pi $. Khẳng định nào sau đây đúng?</div>
+            <div class="options-grid">
+                <label class="option-label"><input type="radio" name="q6"> <span> $ \sin a < 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q6"> <span> $ \tan a > 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q6"> <span> $ \cot a > 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q6" data-correct="true"> <span> $ \cos a < 0 $ </span></label>
+            </div>
+        </div>
+
+        <!-- Câu 7 -->
+        <div class="question-block">
+            <div class="question-text">Câu 7. Cho $ \frac{\pi}{2} < a < \pi $. Kết quả đúng là:</div>
+            <div class="options-grid">
+                <label class="option-label"><input type="radio" name="q7"> <span> $ \sin a > 0 $, $ \cos a > 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q7"> <span> $ \sin a < 0 $, $ \cos a < 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q7" data-correct="true"> <span> $ \sin a > 0 $, $ \cos a < 0 $ </span></label>
+                <label class="option-label"><input type="radio" name="q7"> <span> $ \sin a < 0 $, $ \cos a > 0 $ </span></label>
+            </div>
+        </div>
+
+        <!-- Câu 8 -->
+        <div class="question-block">
+            <div class="question-text">Câu 8. Trong các đẳng thức sau, đẳng thức nào đúng?</div>
+            <div class="options-grid">
+                <label class="option-label"><input type="radio" name="q8"> <span> $ \sin \left( 180^\circ - a \right) = \cos a $ </span></label>
+                <label class="option-label"><input type="radio" name="q8"> <span> $ \sin \left( 180^\circ - a \right) = -\sin a $ </span></label>
+                <label class="option-label"><input type="radio" name="q8" data-correct="true"> <span> $ \sin \left( 180^\circ - a \right) = \sin a $ </span></label>
+                <label class="option-label"><input type="radio" name="q8"> <span> $ \sin \left( 180^\circ - a \right) = \cos a $ </span></label>
+            </div>
+        </div>
+
+        <!-- Câu 9 -->
+        <div class="question-block">
+            <div class="question-text">Câu 9. Chọn đẳng thức sai trong các đẳng thức sau:</div>
+            <div class="options-grid">
+                <label class="option-label"><input type="radio" name="q9"> <span> $ \sin \left( \frac{\pi}{2} - x \right) = \cos x $ </span></label>
+                <label class="option-label"><input type="radio" name="q9"> <span> $ \sin \left( \pi - x \right) = \sin x $ </span></label>
+                <label class="option-label"><input type="radio" name="q9"> <span> $ \tan \left( \frac{\pi}{2} - x \right) = \cot x $ </span></label>
+                <label class="option-label"><input type="radio" name="q9" data-correct="true"> <span> $ \tan \left( \pi - x \right) = \tan x $ </span></label>
+            </div>
+        </div>
+
+        <!-- Câu 10 -->
+        <div class="question-block">
+            <div class="question-text">Câu 10. Mệnh đề nào dưới đây là đúng?</div>
+            <div class="options-grid">
+                <label class="option-label"><input type="radio" name="q10"> <span> $ \sin \left( \alpha + \pi \right) = \sin \alpha $ </span></label>
+                <label class="option-label"><input type="radio" name="q10" data-correct="true"> <span> $ \cos \left( \pi - \alpha \right) = -\cos \alpha $ </span></label>
+                <label class="option-label"><input type="radio" name="q10"> <span> $ \sin \left( \frac{\pi}{2} - \alpha \right) = \sin \alpha $ </span></label>
+                <label class="option-label"><input type="radio" name="q10"> <span> $ \cos \left( -\alpha \right) = -\cos \alpha $ </span></label>
+            </div>
+        </div>
+
+        <button type="button" class="btn-submit" onclick="gradeQuiz()">Nộp bài</button>
+        <div id="result-display"></div>
+    </form>
+</div>
+
+<script>
+    // Hàm xáo trộn (Randomize) các đáp án khi tải trang
+    document.addEventListener("DOMContentLoaded", function() {
+        const grids = document.querySelectorAll('.options-grid');
+        grids.forEach(grid => {
+            for (let i = grid.children.length; i >= 0; i--) {
+                grid.appendChild(grid.children[Math.random() * i | 0]);
+            }
+        });
+    });
+
+    function gradeQuiz() {
+        let score = 0;
+        const totalQuestions = 10;
+
+        // Reset màu sắc trước khi chấm
+        const allLabels = document.querySelectorAll('.option-label');
+        allLabels.forEach(label => {
+            label.classList.remove('correct-ans', 'wrong-ans');
+        });
+
+        // Chấm điểm
+        for (let i = 1; i <= totalQuestions; i++) {
+            const questionName = 'q' + i;
+            const selectedOption = document.querySelector(`input[name="${questionName}"]:checked`);
+            const correctOption = document.querySelector(`input[name="${questionName}"][data-correct="true"]`);
+
+            // Luôn highlight đáp án đúng
+            if (correctOption) {
+                correctOption.parentElement.classList.add('correct-ans');
+            }
+
+            if (selectedOption) {
+                if (selectedOption === correctOption) {
+                    score++;
+                } else {
+                    // Highlight đáp án sai mà học sinh chọn
+                    selectedOption.parentElement.classList.add('wrong-ans');
+                }
+            }
+        }
+
+        // Hiển thị kết quả
+        const resultDisplay = document.getElementById('result-display');
+        resultDisplay.style.display = 'block';
+        
+        let message = `Bạn làm đúng ${score}/${totalQuestions} câu. `;
+        if (score === totalQuestions) {
+            message += "Tuyệt vời! 🎉";
+            resultDisplay.style.backgroundColor = "var(--correct-color)";
+            resultDisplay.style.color = "#155724";
+        } else if (score >= totalQuestions / 2) {
+            message += "Khá tốt! 👍";
+            resultDisplay.style.backgroundColor = "#fff3cd";
+            resultDisplay.style.color = "#856404";
+        } else {
+            message += "Hãy ôn tập lại vòng tròn lượng giác nhé! 📚";
+            resultDisplay.style.backgroundColor = "var(--wrong-color)";
+            resultDisplay.style.color = "#721c24";
+        }
+        
+        resultDisplay.innerHTML = message;
+    }
+</script>
+
+</body>
+</html>

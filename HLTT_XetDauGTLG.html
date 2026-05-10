@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khám phá dấu của giá trị lượng giác</title>
+    <style>
+        :root {
+            --cos-color: #2563eb;
+            --sin-color: #dc2626;
+            --tan-color: #059669;
+            --cot-color: #d97706;
+            --primary-color: #1e293b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+            margin: 0;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 410px 1fr;
+            gap: 15px;
+            max-width: 1100px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; }
+        }
+
+        .header-title {
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-left: 4px solid var(--cos-color);
+            padding-left: 10px;
+        }
+
+        .left-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        svg {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            touch-action: none;
+            user-select: none;
+        }
+
+        .axis { stroke: #64748b; stroke-width: 1.5; }
+        .circle-bg { fill: none; stroke: #e2e8f0; stroke-width: 2; }
+        .sweep-arc { fill: rgba(37, 99, 235, 0.1); stroke: var(--cos-color); stroke-width: 1.5; }
+        .point-m { fill: #1e293b; cursor: grab; }
+        .proj-line { stroke-width: 1.5; stroke-dasharray: 4; }
+        .quad-label { fill: #94a3b8; font-weight: bold; font-size: 16px; font-style: italic; opacity: 0.6; }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            width: 100%;
+        }
+
+        .data-card {
+            padding: 8px;
+            border-radius: 6px;
+            background: #f8fafc;
+            text-align: center;
+            border-bottom: 2px solid #ccc;
+        }
+
+        .label { font-size: 0.75em; color: #64748b; font-weight: bold; }
+        .value { font-size: 1em; font-weight: bold; }
+
+        .right-col {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .control-group {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .btn-toggle-group {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 8px;
+        }
+
+        .btn-toggle {
+            flex: 1;
+            padding: 6px;
+            border: 1px solid #cbd5e1;
+            background: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .btn-toggle.active {
+            background: var(--cos-color);
+            color: #fff;
+            border-color: var(--cos-color);
+        }
+
+        .special-angles {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr); /* Tăng số cột để tiết kiệm không gian */
+            gap: 3px;
+        }
+
+        .btn-angle {
+            padding: 4px 2px;
+            font-size: 0.7em; /* Nút nhỏ hơn */
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            border-radius: 3px;
+        }
+
+        .btn-angle:hover { background: #e2e8f0; }
+
+        .sign-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+        }
+
+        .sign-table th, .sign-table td {
+            padding: 6px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .current-quadrant { background: #fef9c3; font-weight: bold; }
+        .sign-pos { color: #059669; }
+        .sign-neg { color: #dc2626; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="left-col">
+        <svg id="canvas" width="400" height="400" viewBox="0 0 400 400">
+            <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b" />
+                </marker>
+            </defs>
+
+            <line class="axis" x1="20" y1="200" x2="385" y2="200" marker-end="url(#arrow)" />
+            <line class="axis" x1="200" y1="380" x2="200" y2="15" marker-end="url(#arrow)" />
+            
+            <text x="375" y="220" font-size="14" font-weight="bold" fill="#2563eb">cos</text>
+            <text x="215" y="25" font-size="14" font-weight="bold" fill="#dc2626">sin</text>
+            <text x="185" y="218" font-size="16" font-weight="bold">O</text>
+
+            <text x="270" y="130" class="quad-label">I</text>
+            <text x="120" y="130" class="quad-label">II</text>
+            <text x="120" y="280" class="quad-label">III</text>
+            <text x="270" y="280" class="quad-label">IV</text>
+
+            <circle class="circle-bg" cx="200" cy="200" r="150" />
+            
+            <path id="sweepArc" class="sweep-arc" d="" />
+
+            <line id="lineCos" class="proj-line" stroke="#2563eb" x1="200" y1="200" x2="200" y2="200" />
+            <line id="lineSin" class="proj-line" stroke="#dc2626" x1="200" y1="200" x2="200" y2="200" />
+
+            <line id="lineOM" stroke="#1e293b" stroke-width="2" x1="200" y1="200" x2="350" y2="200" />
+            <circle id="pointM" class="point-m" cx="350" cy="200" r="8" />
+
+            <text id="angleValueLabel" x="220" y="180" font-size="14" font-weight="bold" fill="#1e293b"></text>
+        </svg>
+
+        <div class="data-grid">
+            <div class="data-card" style="border-color: var(--cos-color);">
+                <div class="label">cos α</div><div id="valCos" class="value">1.000</div>
+            </div>
+            <div class="data-card" style="border-color: var(--sin-color);">
+                <div class="label">sin α</div><div id="valSin" class="value">0.000</div>
+            </div>
+            <div class="data-card" style="border-color: var(--tan-color);">
+                <div class="label">tan α</div><div id="valTan" class="value">0.000</div>
+            </div>
+            <div class="data-card" style="border-color: var(--cot-color);">
+                <div class="label">cot α</div><div id="valCot" class="value">∞</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="right-col">
+        <h1 class="header-title">Khám phá dấu của giá trị lượng giác</h1>
+
+        <div class="control-group">
+            <table class="sign-table">
+                <thead><tr><th>Góc</th><th>sin</th><th>cos</th><th>tan</th><th>cot</th></tr></thead>
+                <tbody id="signBody">
+                    <tr id="quad1"><td>I</td><td>+</td><td>+</td><td>+</td><td>+</td></tr>
+                    <tr id="quad2"><td>II</td><td>+</td><td>-</td><td>-</td><td>-</td></tr>
+                    <tr id="quad3"><td>III</td><td>-</td><td>-</td><td>+</td><td>+</td></tr>
+                    <tr id="quad4"><td>IV</td><td>-</td><td>+</td><td>-</td><td>-</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="control-group">
+            <div class="label" style="margin-bottom: 5px;">Đơn vị:</div>
+            <div class="btn-toggle-group">
+                <button id="unitDeg" class="btn-toggle active" onclick="setUnit('deg')">Độ (°)</button>
+                <button id="unitRad" class="btn-toggle" onclick="setUnit('rad')">Radian (π)</button>
+            </div>
+
+            <div class="label" style="margin-bottom: 5px;">Hướng đo & Góc đặc biệt:</div>
+            <div class="btn-toggle-group">
+                <button id="dirPos" class="btn-toggle active" onclick="setDirection('pos')">Chiều dương (+)</button>
+                <button id="dirNeg" class="btn-toggle" onclick="setDirection('neg')">Chiều âm (-)</button>
+            </div>
+            <div class="special-angles" id="angleButtons"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const pointM = document.getElementById('pointM');
+    const lineOM = document.getElementById('lineOM');
+    const lineCos = document.getElementById('lineCos');
+    const lineSin = document.getElementById('lineSin');
+    const sweepArc = document.getElementById('sweepArc');
+    const angleValueLabel = document.getElementById('angleValueLabel');
+    
+    const centerX = 200, centerY = 200, radius = 150;
+    let currentAngle = 0; 
+    let unit = 'deg';
+    let direction = 'pos';
+
+    // Danh sách góc phong phú hơn
+    const posAngles = [0, 30, 45, 60, 90, 120, 135, 150, 180, 210, 225, 240, 270, 300, 315, 330, 360];
+    const negAngles = [0, -30, -45, -60, -90, -120, -135, -150, -180, -210, -225, -240, -270, -300, -315, -330, -360];
+
+    // Hàm rút gọn phân số để hiển thị Radian
+    function getFractionStr(deg) {
+        if (deg === 0) return "0";
+        let num = Math.abs(deg);
+        let den = 180;
+        const gcd = (a, b) => b ? gcd(b, a % b) : a;
+        let common = gcd(num, den);
+        num /= common;
+        den /= common;
+
+        let sign = deg < 0 ? "-" : "";
+        let nStr = num === 1 ? "π" : num + "π";
+        return den === 1 ? sign + nStr : sign + (num === 1 ? "π/" : nStr + "/") + den;
+    }
+
+    function initButtons() {
+        const container = document.getElementById('angleButtons');
+        container.innerHTML = '';
+        const list = direction === 'pos' ? posAngles : negAngles;
+        
+        list.forEach(degVal => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-angle';
+            btn.innerText = unit === 'deg' ? degVal + '°' : getFractionStr(degVal);
+            btn.onclick = () => {
+                currentAngle = degVal * Math.PI / 180;
+                updateDisplay();
+            };
+            container.appendChild(btn);
+        });
+    }
+
+    function setUnit(u) {
+        unit = u;
+        document.getElementById('unitDeg').classList.toggle('active', u === 'deg');
+        document.getElementById('unitRad').classList.toggle('active', u === 'rad');
+        initButtons();
+        updateDisplay();
+    }
+
+    function setDirection(d) {
+        direction = d;
+        document.getElementById('dirPos').classList.toggle('active', d === 'pos');
+        document.getElementById('dirNeg').classList.toggle('active', d === 'neg');
+        initButtons();
+        updateDisplay();
+    }
+
+    function updateDisplay() {
+        const x = centerX + radius * Math.cos(currentAngle);
+        const y = centerY - radius * Math.sin(currentAngle);
+
+        pointM.setAttribute('cx', x);
+        pointM.setAttribute('cy', y);
+        lineOM.setAttribute('x2', x);
+        lineOM.setAttribute('y2', y);
+
+        // Hình chiếu
+        lineCos.setAttribute('x2', x);
+        lineCos.setAttribute('y1', centerY);
+        lineCos.setAttribute('y2', centerY);
+        lineSin.setAttribute('x1', centerX);
+        lineSin.setAttribute('x2', centerX);
+        lineSin.setAttribute('y1', centerY);
+        lineSin.setAttribute('y2', y);
+
+        // Góc quét
+        const arcRadius = 40;
+        const endX = centerX + arcRadius * Math.cos(currentAngle);
+        const endY = centerY - arcRadius * Math.sin(currentAngle);
+        let dPath = "";
+        
+        if (Math.abs(currentAngle) > 0.001) {
+            let angleForSweep = currentAngle % (2 * Math.PI);
+            let largeArc = Math.abs(angleForSweep) > Math.PI ? 1 : 0;
+            let sweepFlag = currentAngle > 0 ? 0 : 1;
+            dPath = `M ${centerX + arcRadius} ${centerY} A ${arcRadius} ${arcRadius} 0 ${largeArc} ${sweepFlag} ${endX} ${endY} L ${centerX} ${centerY} Z`;
+        }
+        sweepArc.setAttribute('d', dPath);
+
+        // Giá trị số
+        const deg = Math.round(currentAngle * 180 / Math.PI);
+        const s = Math.sin(currentAngle);
+        const c = Math.cos(currentAngle);
+        
+        document.getElementById('valSin').innerText = s.toFixed(3);
+        document.getElementById('valCos').innerText = c.toFixed(3);
+        document.getElementById('valTan').innerText = Math.abs(c) < 0.001 ? "∞" : (s/c).toFixed(3);
+        document.getElementById('valCot').innerText = Math.abs(s) < 0.001 ? "∞" : (c/s).toFixed(3);
+
+        // Nhãn góc hiển thị
+        angleValueLabel.innerText = unit === 'deg' ? deg + "°" : getFractionStr(deg);
+
+        // Highlight bảng dấu (luôn dùng góc dương 0-360 để xác định góc phần tư)
+        let normalizedDeg = deg % 360;
+        if (normalizedDeg < 0) normalizedDeg += 360;
+        
+        document.querySelectorAll('tr').forEach(tr => tr.classList.remove('current-quadrant'));
+        let qId = "";
+        if (normalizedDeg > 0 && normalizedDeg < 90) qId = "quad1";
+        else if (normalizedDeg > 90 && normalizedDeg < 180) qId = "quad2";
+        else if (normalizedDeg > 180 && normalizedDeg < 270) qId = "quad3";
+        else if (normalizedDeg > 270 && normalizedDeg < 360) qId = "quad4";
+        if (qId) document.getElementById(qId).classList.add('current-quadrant');
+    }
+
+    function handleMove(e) {
+        if (e.buttons !== 1 && e.type !== 'touchmove') return;
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+        const x = clientX - rect.left - centerX;
+        const y = clientY - rect.top - centerY;
+        
+        let ang = -Math.atan2(y, x);
+        // Nếu đang ở chế độ góc âm, ta cho phép kéo ra giá trị âm
+        if (direction === 'neg' && ang > 0) ang -= 2 * Math.PI;
+        if (direction === 'pos' && ang < 0) ang += 2 * Math.PI;
+        
+        currentAngle = ang;
+        updateDisplay();
+    }
+
+    canvas.addEventListener('mousemove', handleMove);
+    canvas.addEventListener('touchmove', handleMove);
+    initButtons();
+    updateDisplay();
+</script>
+
+</body>
+</html>
