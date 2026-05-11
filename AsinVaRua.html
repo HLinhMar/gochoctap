@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nghịch lý Zeno: Achilles và Rùa - Bản Cao Cấp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] } };
+    </script>
+
+    <style>
+        body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; background-color: #0f172a; display: flex; justify-content: center; align-items: center; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        .main-container { width: 100vw; height: 100vh; display: flex; flex-direction: column; background-color: #ffffff; }
+
+        #visual-wrapper { width: 100%; height: 75%; position: relative; background: #e0f2fe; overflow: hidden; }
+        
+        #bottom-panel { width: 100%; height: 25%; background: #f8fafc; border-top: 4px solid #e2e8f0; display: flex; flex-direction: row; align-items: center; padding: 0 2vw; }
+
+        canvas#simCanvas { width: 100%; height: 100%; display: block; }
+
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]:focus { outline: none; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 12px; cursor: pointer; background: #cbd5e1; border-radius: 6px; }
+        input[type=range]::-webkit-slider-thumb { height: 30px; width: 30px; border-radius: 50%; background: #0284c7; cursor: pointer; -webkit-appearance: none; margin-top: -9px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+
+        /* Tăng cỡ chữ công thức MathJax */
+        .mjx-chtml { font-size: 130% !important; }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div id="visual-wrapper">
+            <canvas id="simCanvas"></canvas>
+        </div>
+
+        <div id="bottom-panel">
+            <div class="w-1/3 pr-8 border-r border-slate-200">
+                <h1 class="text-3xl font-black text-sky-800 uppercase tracking-widest">Nghịch Lý Zeno</h1>
+                <p class="text-sm text-slate-600 mt-2">Mô phỏng bước chạy của Achilles và Rùa qua dãy số \( u_n = (1/2)^{n-1} \).</p>
+            </div>
+
+            <div class="w-1/3 px-10 flex flex-col justify-center">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-bold text-slate-700 text-lg uppercase">Bước chạy (n):</span>
+                    <span id="n-display" class="font-mono font-bold text-4xl text-sky-600">1</span>
+                </div>
+                <input type="range" id="n-slider" min="1" max="10" step="1" value="1">
+                <div class="flex justify-between text-sm text-slate-400 font-bold mt-1">
+                    <span>BẮT ĐẦU (1)</span>
+                    <span>KẾT THÚC (10)</span>
+                </div>
+            </div>
+
+            <div class="w-1/3 pl-8 flex items-center justify-between">
+                <div class="text-left">
+                    <p class="text-sm font-bold text-slate-500 uppercase">Khoảng cách d:</p>
+                    <p class="font-mono text-rose-600 font-black text-3xl"><span id="dist-display">1.000000</span> km</p>
+                </div>
+                <div class="flex gap-3">
+                    <button id="btn-play" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-all uppercase text-xl">▶</button>
+                    <button id="btn-reset" class="bg-slate-300 hover:bg-slate-400 text-slate-700 font-bold py-3 px-4 rounded-xl shadow-md transition-all text-xl">↺</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    const slider = document.getElementById('n-slider');
+    const nDisp = document.getElementById('n-display');
+    const distDisp = document.getElementById('dist-display');
+    const btnPlay = document.getElementById('btn-play');
+    const btnReset = document.getElementById('btn-reset');
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let W, H;
+    let isPlaying = false;
+    let waitingForNext = false;
+    let targetN = 1;
+    let visualN = 1; 
+
+    function getAchillesPos(n) { return 2 - Math.pow(2, 2 - n); }
+    function getTortoisePos(n) { return 2 - Math.pow(2, 1 - n); }
+    function getDistance(n) { return Math.pow(0.5, n - 1); }
+
+    function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        W = rect.width; H = rect.height;
+        canvas.width = W * dpr; canvas.height = H * dpr;
+        ctx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resize);
+
+    function updateUI() {
+        let n = parseInt(slider.value);
+        nDisp.innerText = n.toString();
+        let dist = getDistance(n);
+        distDisp.innerText = dist.toFixed(6);
+    }
+
+    function draw(renderN) {
+        ctx.clearRect(0, 0, W, H);
+        let posA = getAchillesPos(renderN);
+        let posT = getTortoisePos(renderN);
+        const padX = W * 0.1;
+        const trackW = W * 0.8;
+        const trackY = H * 0.75;
+        function valToPx(val) { return padX + (val / 2.5) * trackW; }
+
+        // --- 1. PHÔNG NỀN VÀ BẦU TRỜI ---
+        ctx.fillStyle = '#e0f2fe'; ctx.fillRect(0, 0, W, H);
+        
+        // Mặt trời rực rỡ
+        let sunGrad = ctx.createRadialGradient(W*0.85, H*0.15, 5, W*0.85, H*0.15, 50);
+        sunGrad.addColorStop(0, '#fef9c3'); sunGrad.addColorStop(1, 'rgba(254, 240, 138, 0)');
+        ctx.fillStyle = sunGrad; ctx.beginPath(); ctx.arc(W*0.85, H*0.15, 60, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = '#fef08a'; ctx.beginPath(); ctx.arc(W*0.85, H*0.15, 30, 0, Math.PI*2); ctx.fill();
+
+        // --- 2. DÃY NÚI CHI TIẾT (Sophisticated Mountains) ---
+        function drawMountain(x, height, width, color, hasSnow) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(x - width/2, trackY);
+            ctx.lineTo(x, trackY - height);
+            ctx.lineTo(x + width/2, trackY);
+            ctx.fill();
+            if(hasSnow) {
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.moveTo(x, trackY - height);
+                ctx.lineTo(x - width*0.1, trackY - height*0.7);
+                ctx.lineTo(x + width*0.1, trackY - height*0.7);
+                ctx.fill();
+            }
+        }
+        drawMountain(W*0.15, H*0.35, W*0.5, '#bae6fd', true);
+        drawMountain(W*0.4, H*0.45, W*0.6, '#7dd3fc', true);
+        drawMountain(W*0.75, H*0.3, W*0.4, '#38bdf8', false);
+
+        // --- 3. THẢM CỎ ---
+        let grassGrad = ctx.createLinearGradient(0, trackY - 40, 0, H);
+        grassGrad.addColorStop(0, '#4ade80'); grassGrad.addColorStop(1, '#166534');
+        ctx.fillStyle = grassGrad; ctx.fillRect(0, trackY - 40, W, H);
+
+        // Vật trang trí cỏ
+        const drawBoulder = (x, y) => {
+            ctx.fillStyle = '#94a3b8'; ctx.beginPath(); ctx.ellipse(x, y, 12, 7, 0.5, 0, Math.PI*2); ctx.fill();
+        };
+        const drawFarTree = (x, y) => {
+            ctx.fillStyle = '#451a03'; ctx.fillRect(x - 2, y, 4, 10);
+            ctx.fillStyle = '#065f46'; ctx.beginPath(); ctx.moveTo(x, y-20); ctx.lineTo(x-10, y); ctx.lineTo(x+10, y); ctx.fill();
+        };
+        for (let i = 0; i < W; i += 150) {
+            drawFarTree(i + 20, trackY - 30);
+            if(i % 300 === 0) drawBoulder(i + 100, trackY + 60);
+        }
+
+        // --- 4. ĐƯỜNG ĐẤT TƯƠI SÁNG (Brighter Road) ---
+        let roadGrad = ctx.createLinearGradient(0, trackY - 15, 0, trackY + 25);
+        roadGrad.addColorStop(0, '#78350f');   
+        roadGrad.addColorStop(0.3, '#b45309'); // Brighter amber-brown
+        roadGrad.addColorStop(0.7, '#d97706'); // Brightest dirt
+        roadGrad.addColorStop(1, '#78350f');   
+        ctx.fillStyle = roadGrad; ctx.fillRect(0, trackY - 15, W, 45);
+
+        // Vệt đất mòn
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)'; ctx.lineWidth = 1;
+        ctx.beginPath();
+        for(let i = 0; i < W; i += 100) {
+            ctx.moveTo(i, trackY); ctx.lineTo(i + 50, trackY);
+            ctx.moveTo(i + 25, trackY + 15); ctx.lineTo(i + 75, trackY + 15);
+        }
+        ctx.stroke();
+
+        // Vạch mốc (Tăng cỡ chữ)
+        ctx.textAlign = 'center'; ctx.font = 'bold 18px Arial'; 
+        [0, 1, 1.5, 1.75, 2].forEach(m => {
+            let px = valToPx(m);
+            ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.beginPath(); ctx.moveTo(px, trackY-15); ctx.lineTo(px, trackY+30); ctx.stroke();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'; ctx.fillRect(px - 25, trackY + 35, 50, 22);
+            ctx.fillStyle = '#1e293b'; ctx.fillText(m + ' km', px, trackY + 52);
+        });
+
+        // --- 5. NHÂN VẬT ---
+        let pxA = valToPx(posA), pxT = valToPx(posT);
+
+        // Rùa
+        ctx.save(); ctx.translate(pxT, trackY + 8);
+        ctx.fillStyle = '#10b981'; ctx.beginPath(); ctx.arc(0, 0, 16, Math.PI, 0); ctx.fill();
+        ctx.fillStyle = '#059669'; ctx.fillRect(12, -10, 10, 10);
+        ctx.fillStyle = 'white'; ctx.fillRect(-25, -45, 50, 24); // Nhãn trắng lớn hơn
+        ctx.fillStyle = '#064e3b'; ctx.font = 'bold 16px Arial'; ctx.fillText('Rùa', 0, -28);
+        ctx.restore();
+
+        // Achilles (Gold Warrior)
+        ctx.save(); ctx.translate(pxA, trackY + 8);
+        ctx.fillStyle = '#eab308'; ctx.fillRect(-8, -35, 16, 25); // Giáp
+        ctx.fillStyle = '#fcd34d'; ctx.beginPath(); ctx.arc(0, -42, 10, 0, Math.PI*2); ctx.fill(); // Mũ
+        ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.arc(0, -52, 9, Math.PI, 0); ctx.fill(); // Chóp mũ
+        ctx.strokeStyle = '#334155'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(2, -20); ctx.lineTo(35, -55); ctx.stroke(); // Giáo
+        ctx.fillStyle = '#ca8a04'; ctx.beginPath(); ctx.arc(-4, -22, 15, 0, Math.PI*2); ctx.fill(); // Khiên
+        ctx.fillStyle = 'white'; ctx.fillRect(-35, -85, 70, 24); // Nhãn trắng lớn hơn
+        ctx.fillStyle = '#0f172a'; ctx.font = 'bold 16px Arial'; ctx.fillText('Achilles', 0, -68);
+        ctx.restore();
+
+        // --- 6. ĐOẠN THẲNG KHOẢNG CÁCH ---
+        if (pxT - pxA > 1) {
+            let dimY = trackY + 85;
+            ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(pxA, dimY); ctx.lineTo(pxT, dimY); ctx.stroke();
+            ctx.fillStyle = 'white'; ctx.fillRect((pxA+pxT)/2 - 40, dimY - 32, 80, 22);
+            ctx.fillStyle = '#0284c7'; ctx.font = 'bold 16px Arial';
+            ctx.fillText('d = ' + getDistance(renderN).toFixed(3), (pxA + pxT)/2, dimY - 15);
+        }
+    }
+
+    function renderLoop() {
+        if (Math.abs(targetN - visualN) > 0.005) { visualN += (targetN - visualN) * 0.06; } 
+        else {
+            visualN = targetN; 
+            if (isPlaying && !waitingForNext) {
+                if (targetN < 10) {
+                    waitingForNext = true;
+                    setTimeout(() => {
+                        if (isPlaying) { targetN++; slider.value = targetN; updateUI(); }
+                        waitingForNext = false;
+                    }, 800);
+                } else { togglePlayState(false); }
+            }
+        }
+        draw(visualN);
+        requestAnimationFrame(renderLoop); 
+    }
+
+    function togglePlayState(playing) {
+        isPlaying = playing;
+        btnPlay.innerHTML = isPlaying ? '⏸' : '▶';
+    }
+
+    slider.addEventListener('input', () => { togglePlayState(false); targetN = parseInt(slider.value); updateUI(); });
+    btnPlay.addEventListener('click', () => {
+        if (!isPlaying) { if (targetN >= 10) { targetN = 1; visualN = 1; slider.value = 1; updateUI(); } togglePlayState(true); } 
+        else { togglePlayState(false); }
+    });
+    btnReset.addEventListener('click', () => { togglePlayState(false); targetN = 1; visualN = 1; slider.value = 1; updateUI(); });
+
+    setTimeout(() => { resize(); updateUI(); requestAnimationFrame(renderLoop); }, 100);
+</script>
+</body>
+</html>
