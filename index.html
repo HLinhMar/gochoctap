@@ -3,84 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang chủ - Linh</title>
+    <title>Kho Học Liệu - ôti</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Thiết lập nền và căn giữa khung chứa */
-        body { 
-            font-family: Arial, sans-serif; 
-            background-color: #f4f7f6; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-        }
-        /* Định dạng khung chứa link */
-        .link-container { 
-            background: #ffffff; 
-            padding: 30px; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
-            width: 100%; 
-            max-width: 400px; 
-            text-align: center; 
-        }
-        .link-container h1 { 
-            color: #2c3e50; 
-            margin-top: 0;
-            margin-bottom: 25px; 
-            font-size: 24px;
-        }
-        /* Định dạng danh sách nút bấm */
-        .link-list { 
-            list-style-type: none; 
-            padding: 0; 
-            margin: 0;
-        }
-        .link-list li { 
-            margin-bottom: 15px; 
-        }
-        .link-list a { 
-            display: block; 
-            padding: 12px; 
-            background: #3498db; 
-            color: white; 
-            text-decoration: none; 
-            border-radius: 6px; 
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-        .link-list a:hover { 
-            background: #2980b9; 
-        }
+        body { background: #f8fafc; font-family: 'Segoe UI', sans-serif; }
+        .card-shadow { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
     </style>
 </head>
-<body>
+<body class="p-6 md:p-12">
 
-    <div class="link-container">
-        <h1>Danh mục tài liệu</h1>
-        
-        <ul class="link-list">
-            <li><a href="bai-tap.html">Bài tập luyện tập</a></li>
-            <li><a href="AsinVaRua.html">Mô phỏng Asin và Rùa</a></li>
-            <li><a href="TroChoiVecTo.html">Trò chơi vectơ</a></li>
-            <li><a href="TuongTacMucNuoc.html">Mô phỏng thủy triều</a></li>
-            <li><a href="BT_TrNg_DaoHam.html">Trắc nghiệm công thức đạo hàm</a></li>
-            <li><a href="BT_TrNg_DauGTLG.html">Trắc nghiệm xét dấu giá trị lượng giác</a></li>
-            <li><a href="Game_ Hiệu Hai Xúc Xắc.html">Trò chơi hiệu hai xúc xắc</a></li>
-            <li><a href="HLTT_CCXetDauTTB2.html">Công cụ xét dấu tam thức bậc hai</a></li>
-            <li><a href="ConicSection.html">Học liệu tương tác Conic Section</a></li>
-            <li><a href="HLTT_DDEuler.html">Trò chơi đường đi Euler</a></li>
-            <li><a href="HLTT_XetDauGTLG.html">Công cụ xét dấu giá trị lượng giác</a></li>
-            <li><a href="HLTT_BT_GiaoTuyen.html">Minh họa bài tập 1 về tìm giao tuyến</a></li>
-            <li><a href="HLTT_BT2_GiaoTuyen.html">Minh họa bài tập 2 về tìm giao tuyến</a></li>
-            <li><a href="HLTT_TapHop.html">Học Liệu Tương Tác Hợp Giao Hiệu Hai Tập Hợp</a></li>
-            <li><a href="SoDacTrungTrungTam.html">Bài giảng số đặc trưng trung tâm</a></li>
-            <li><a href="SoDacTrungPhanTan.html">Bài giảng số đặc trưng phân tán</a></li>
-            <li><a href="#">Tài liệu chuyên đề (Đang cập nhật)</a></li>
-            <li><a href="#">Hồ sơ chuyên môn (Đang cập nhật)</a></li>
-        </ul>
-    </div>
+    <header class="max-w-6xl mx-auto mb-10 text-center">
+        <h1 class="text-4xl font-black text-slate-800 mb-2">DANH MỤC HỌC LIỆU</h1>
+        <p class="text-slate-500">Hệ thống học liệu tương tác trực quan dành cho học sinh</p>
+    </header>
+
+    <main id="main-grid" class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        </main>
+
+    <script>
+        /**
+         * ============================================================
+         * KHU VỰC CHỈNH SỬA DÀNH CHO BẠN (DỄ DÀNG THÊM MỚI TẠI ĐÂY)
+         * ============================================================
+         * Cách thêm: Copy 1 dòng, dán xuống dưới và sửa nội dung bên trong dấu ngoặc { }
+         * icon: Lấy tên tại fontawesome.com (ví dụ: fa-cube, fa-gamepad, fa-pen)
+         */
+        const DANH_SACH_HOC_LIEU = [
+            // NHÓM 1: MÔ PHỎNG & TRỰC QUAN
+            { title: "Nghịch lý Asin và Rùa", url: "AsinVaRua.html", category: "Mô phỏng 3D", icon: "fa-person-running" },
+            { title: "Học liệu Conic Section", url: "ConicSection.html", category: "Mô phỏng 3D", icon: "fa-cube" },
+            { title: "Mô phỏng thủy triều", url: "TuongTacMucNuoc.html", category: "Mô phỏng 3D", icon: "fa-water" },
+            { title: "Tìm giao tuyến (Bài 1)", url: "HLTT_BT_GiaoTuyen.html", category: "Mô phỏng 3D", icon: "fa-shapes" },
+            { title: "Tìm giao tuyến (Bài 2)", url: "HLTT_BT2_GiaoTuyen.html", category: "Mô phỏng 3D", icon: "fa-shapes" },
+
+            // NHÓM 2: CÔNG CỤ TOÁN HỌC
+            { title: "Xét dấu tam thức bậc hai", url: "HLTT_CCXetDauTTB2.html", category: "Công cụ Toán", icon: "fa-calculator" },
+            { title: "Xét dấu giá trị lượng giác", url: "HLTT_XetDauGTLG.html", category: "Công cụ Toán", icon: "fa-wave-square" },
+            { title: "Hợp - Giao hai tập hợp", url: "HLTT_TapHop.html", category: "Công cụ Toán", icon: "fa-circle-nodes" },
+
+            // NHÓM 3: TRÒ CHƠI
+            { title: "Trò chơi Vectơ", url: "TroChoiVecTo.html", category: "Trò chơi học tập", icon: "fa-arrow-up-right-dots" },
+            { title: "Hiệu hai xúc xắc", url: "Game_ Hiệu Hai Xúc Xắc.html", category: "Trò chơi học tập", icon: "fa-dice" },
+            { title: "Đường đi Euler", url: "HLTT_DDEuler.html", category: "Trò chơi học tập", icon: "fa-route" },
+
+            // NHÓM 4: BÀI TẬP & TRẮC NGHIỆM
+            { title: "Bài tập luyện tập", url: "bai-tap.html", category: "Kiểm tra & Đánh giá", icon: "fa-pen-to-square" },
+            { title: "Trắc nghiệm Đạo hàm", url: "BT_TrNg_DaoHam.html", category: "Kiểm tra & Đánh giá", icon: "fa-check-double" },
+            { title: "Trắc nghiệm Dấu GTLG", url: "BT_TrNg_DauGTLG.html", category: "Kiểm tra & Đánh giá", icon: "fa-check-double" },
+
+            // NHÓM 5: BÀI GIẢNG
+            { title: "Số đặc trưng trung tâm", url: "SoDacTrungTrungTam.html", category: "Bài giảng", icon: "fa-chart-simple" },
+            { title: "Số đặc trưng phân tán", url: "SoDacTrungPhanTan.html", category: "Bài giảng", icon: "fa-chart-pie" },
+        ];
+
+        /**
+         * ============================================================
+         * KHU VỰC XỬ LÝ TỰ ĐỘNG (KHÔNG CẦN CHỈNH SỬA)
+         * ============================================================
+         */
+        const mainGrid = document.getElementById('main-grid');
+
+        // 1. Nhóm các học liệu theo category
+        const groups = DANH_SACH_HOC_LIEU.reduce((acc, item) => {
+            if (!acc[item.category]) acc[item.category] = [];
+            acc[item.category].push(item);
+            return acc;
+        }, {});
+
+        // 2. Vẽ giao diện
+        Object.keys(groups).forEach(catName => {
+            const groupData = groups[catName];
+            
+            // Tạo thẻ Card cho danh mục
+            const card = document.createElement('div');
+            card.className = "bg-white rounded-2xl p-6 card-shadow border border-slate-100 flex flex-col";
+            
+            // Tiêu đề danh mục
+            card.innerHTML = `
+                <h2 class="text-lg font-bold text-slate-800 mb-4 pb-2 border-b border-slate-50 flex items-center">
+                    <span class="w-2 h-6 bg-sky-500 rounded-full mr-2"></span>
+                    ${catName}
+                </h2>
+                <ul class="space-y-2 flex-1">
+                    ${groupData.map(item => `
+                        <li>
+                            <a href="${item.url}" class="group flex items-center p-2 rounded-lg hover:bg-sky-50 transition-all">
+                                <i class="fa-solid ${item.icon} w-8 text-slate-400 group-hover:text-sky-500 transition-colors"></i>
+                                <span class="text-slate-600 group-hover:text-sky-700 font-medium">${item.title}</span>
+                            </a>
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+            
+            mainGrid.appendChild(card);
+        });
+    </script>
+
+    <footer class="max-w-6xl mx-auto text-center py-10 text-slate-400 text-sm">
+        <p>© 2026 - Kho học liệu của ôti | Đã tối ưu hóa cho giảng dạy</p>
+    </footer>
 
 </body>
 </html>
