@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học liệu Tương tác: Hoán vị, Chỉnh hợp, Tổ hợp</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #1e1b4b; /* Deep Indigo/Violet */
+            --secondary: #7c3aed; /* Violet 600 */
+            --accent: #f59e0b; /* Amber 500 */
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #334155; 
+            --text-muted: #64748b; 
+            --success: #10b981;
+            --danger: #ef4444;
+            --casio-bg: #374151;
+            --casio-key: #1f2937;
+            --casio-shift: #fbbf24;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Merriweather', serif;
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+       /* --- Header --- */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #4c1d95 100%);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><text x="20" y="40" fill="rgba(255,255,255,0.05)" font-size="24" font-family="Arial">n!</text><text x="60" y="80" fill="rgba(255,255,255,0.05)" font-size="24" font-family="Arial">C</text></svg>') repeat;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .header-badge {
+            display: inline-block;
+            background: rgba(124, 58, 237, 0.3);
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            color: #ddd6fe;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        header h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- Layout --- */
+        .container {
+            max-width: 1100px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background-color: var(--secondary);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 1rem;
+        }
+
+        .section-title i {
+            color: var(--secondary);
+        }
+
+        /* --- Info Boxes --- */
+        .info-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .warning-box {
+            background-color: #fff7ed;
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+        
+        .highlight-text {
+            color: var(--danger);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* --- Comparison Table --- */
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 2rem 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+        .comparison-table th {
+            background-color: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 1.2rem;
+            width: 33.33%;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+        .comparison-table td {
+            background-color: white;
+            padding: 1.5rem;
+            vertical-align: top;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .comparison-table td:last-child, .comparison-table th:last-child {
+            border-right: none;
+        }
+        .comparison-table ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+        .comparison-table li { margin-bottom: 10px; }
+        
+        .formula-box {
+            background: #f8fafc;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--secondary);
+            border: 1px dashed var(--secondary);
+        }
+
+        /* --- Calculator Section --- */
+        .calc-grid {
+            display: flex;
+            gap: 20px;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        .calc-card {
+            flex: 1;
+            min-width: 300px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .calc-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        .keys-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            background: var(--casio-bg);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .key {
+            background: var(--casio-key);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            box-shadow: 0 4px 0 #111827;
+            position: relative;
+        }
+        .key.shift {
+            background: var(--casio-shift);
+            color: #000;
+            box-shadow: 0 4px 0 #b45309;
+        }
+        .key-label {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--accent);
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        /* --- Drag & Drop --- */
+        .drag-activity-container {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 2rem;
+            font-size: 1.15rem;
+            line-height: 2.2;
+        }
+        .drop-zone {
+            display: inline-block;
+            min-width: 140px;
+            height: 38px;
+            background: #e2e8f0;
+            border: 2px dashed var(--secondary);
+            border-radius: 6px;
+            vertical-align: middle;
+            margin: 0 8px;
+            padding: 0 10px;
+            text-align: center;
+            line-height: 34px;
+            font-weight: 600;
+            color: var(--primary);
+            transition: all 0.2s;
+        }
+        .drop-zone.drag-over {
+            background: #ede9fe;
+            border-color: var(--secondary);
+            transform: scale(1.05);
+        }
+        .drag-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .draggable-item {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+            font-weight: 500;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .draggable-item:active { cursor: grabbing; transform: scale(0.95); }
+        .draggable-item.in-zone { background: transparent; color: var(--primary); padding: 0; box-shadow: none; }
+
+        .btn {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 1.5rem;
+        }
+        .btn:hover { background: #6d28d9; }
+        .btn-reset { background: #64748b; margin-left: 10px; }
+        .btn-reset:hover { background: #475569; }
+
+        /* --- Accordion --- */
+        .accordion {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        .accordion-header {
+            background: #f8fafc;
+            padding: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .accordion-header:hover { background: #f1f5f9; }
+        .accordion-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            background: white;
+        }
+        .accordion-content.active {
+            padding: 1.5rem;
+            max-height: 2000px; /* Tăng max-height cho nội dung dài */
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* --- Quiz Section --- */
+        .quiz-question {
+            margin-bottom: 2.5rem;
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .quiz-question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .quiz-option {
+            background: white;
+            border: 2px solid #cbd5e1;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        .quiz-option:hover {
+            border-color: var(--secondary);
+            background: #f5f3ff;
+        }
+        .quiz-option .opt-label {
+            width: 30px;
+            height: 30px;
+            background: var(--bg-body);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: #ecfdf5;
+        }
+        .quiz-option.correct .opt-label { background: var(--success); color: white; }
+        
+        .quiz-option.wrong {
+            border-color: var(--danger);
+            background: #fef2f2;
+        }
+        .quiz-option.wrong .opt-label { background: var(--danger); color: white; }
+
+        .quiz-explanation {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #fff;
+            border-left: 4px solid var(--secondary);
+            border-radius: 0 8px 8px 0;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 3rem;
+            margin-top: 4rem;
+        }
+
+        /* --- Intro Grid --- */
+        .intro-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 1.5rem;
+        }
+        .intro-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .intro-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
+        .intro-img {
+            width: 100%;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: white;
+        }
+        .intro-content { padding: 1.5rem; }
+        .intro-content h3 { margin-top: 0; margin-bottom: 10px; font-size: 1.2rem; color: var(--secondary); }
+
+        @media (max-width: 768px) {
+            .quiz-options { grid-template-columns: 1fr; }
+            .comparison-table th, .comparison-table td { display: block; width: 100%; border-right: none; }
+            .comparison-table tr { margin-bottom: 1rem; display: block; border: 1px solid #e2e8f0; border-radius: 8px;}
+        }
+    </style>
+</head>
+<body>
+
+ <header>
+        <div class="header-badge"><i class="fa-solid fa-layer-group"></i> Toán học 10 - Chương trình 2018</div>
+        <h1>Hoán vị • Chỉnh hợp • Tổ hợp</h1>
+        <p>Phá vỡ sự nhầm lẫn - Nắm vững nghệ thuật "chọn" và "xếp" trong Đại số Tổ hợp</p>
+    </header>
+
+    <div class="container">
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-magnifying-glass"></i> I. Khởi động: Vấn đề của sự lựa chọn</h2>
+            <p>Hầu hết mọi sai lầm trong Tổ hợp đều xuất phát từ việc học sinh không tự đặt câu hỏi: <em>"Đổi chỗ các phần tử thì kết quả có tạo ra sự khác biệt không?"</em>. Hãy xem 3 tình huống sau:</p>
+            
+            <div class="intro-grid">
+                <div class="intro-card">
+                    <div class="intro-img" style="background: #ef4444;"><i class="fa-solid fa-chair"></i></div>
+                    <div class="intro-content">
+                        <h3>Tình huống 1: Rạp chiếu phim</h3>
+                        <p>Bạn có 5 người bạn và vừa mua được đúng 5 chiếc vé xem phim ghế liền kề nhau. Bạn muốn biết có bao nhiêu cách để sắp xếp <strong>tất cả 5 người</strong> ngồi vào 5 chiếc ghế này?</p>
+                        <p style="color: var(--danger); font-weight: bold; font-size: 0.9rem; margin-top: 10px;">➜ Sắp xếp TẤT CẢ phần tử.</p>
+                    </div>
+                </div>
+
+                <div class="intro-card">
+                    <div class="intro-img" style="background: #f59e0b;"><i class="fa-solid fa-medal"></i></div>
+                    <div class="intro-content">
+                        <h3>Tình huống 2: Trao huy chương</h3>
+                        <p>Một giải chạy có 10 vận động viên tham gia. Cần chọn ra <strong>3 người</strong> để trao các Huy chương: Vàng, Bạc, Đồng. Ai nhận giải nào rất quan trọng!</p>
+                        <p style="color: var(--accent); font-weight: bold; font-size: 0.9rem; margin-top: 10px;">➜ Chọn MỘT PHẦN và CÓ THỨ TỰ.</p>
+                    </div>
+                </div>
+
+                <div class="intro-card">
+                    <div class="intro-img" style="background: #10b981;"><i class="fa-solid fa-users"></i></div>
+                    <div class="intro-content">
+                        <h3>Tình huống 3: Lập đội trực nhật</h3>
+                        <p>Lớp có 10 học sinh. Cô giáo cần gọi ngẫu nhiên <strong>3 bạn</strong> đi xuống sân trường trực nhật quét lá. Ai cũng cầm chổi quét như nhau.</p>
+                        <p style="color: var(--success); font-weight: bold; font-size: 0.9rem; margin-top: 10px;">➜ Chọn MỘT PHẦN và KHÔNG THỨ TỰ.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-table-columns"></i> II. Bảng Phân Biệt Thần Thánh</h2>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>HOÁN VỊ <br> <span style="font-size: 0.9rem; font-weight: normal;">(Permutation)</span></th>
+                        <th>CHỈNH HỢP <br> <span style="font-size: 0.9rem; font-weight: normal;">(Arrangement)</span></th>
+                        <th>TỔ HỢP <br> <span style="font-size: 0.9rem; font-weight: normal;">(Combination)</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <ul>
+                                <li>Có bao nhiêu phần tử, mang ra <strong>sắp xếp hết bấy nhiêu</strong>.</li>
+                                <li>Không có việc "chọn" (vì lấy hết rồi). Chỉ có "đảo vị trí".</li>
+                            </ul>
+                            <div class="formula-box">
+                                $P_n = n!$<br>
+                                <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal;">$= n(n-1)... \times 1$</span>
+                            </div>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>Chỉ chọn một nhóm nhỏ (k) từ tập lớn (n).</li>
+                                <li><strong>CÓ SỰ PHÂN BIỆT THỨ TỰ.</strong> Đổi chỗ 2 phần tử được kết quả MỚI.</li>
+                                <li><em>Ví dụ: Chức vụ, chữ số, giải thưởng...</em></li>
+                            </ul>
+                            <div class="formula-box">
+                                $A_n^k = \frac{n!}{(n-k)!}$
+                            </div>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>Chỉ chọn một nhóm nhỏ (k) từ tập lớn (n).</li>
+                                <li><strong>KHÔNG CÓ THỨ TỰ.</strong> Vai trò của các phần tử được chọn là BÌNH ĐẲNG.</li>
+                                <li><em>Ví dụ: Lập đội, bốc bi, chia bài...</em></li>
+                            </ul>
+                            <div class="formula-box">
+                                $C_n^k = \frac{n!}{k!(n-k)!}$
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <strong>Hoạt động Kiểm tra nhanh:</strong> Đọc các tình huống bên dưới, tự nhẩm xem tình huống đó thuộc loại nào, sau đó <strong>kéo thả</strong> thẻ tương ứng vào ô trống.
+            </div>
+
+            <div class="drag-activity-container" id="def-container">
+                <p><strong>1.</strong> Sắp xếp 6 quyển sách khác nhau lên 1 ngăn kệ tủ sách thành một hàng ngang: Đây là bài toán <span class="drop-zone" data-answer="Hoán vị"></span>.</p>
+                
+                <p><strong>2.</strong> Lập một số tự nhiên có 3 chữ số khác nhau từ tập hợp {1, 2, 3, 4, 5} (Bởi vì số 123 khác với số 321): Đây là bài toán <span class="drop-zone" data-answer="Chỉnh hợp"></span>.</p>
+                
+                <p><strong>3.</strong> Từ 15 học sinh, giáo viên chọn ra 4 học sinh để đi thi kéo co (Ai trong 4 bạn cũng chỉ việc kéo dây): Đây là bài toán <span class="drop-zone" data-answer="Tổ hợp"></span>.</p>
+            </div>
+
+            <div class="drag-pool" id="drag-pool">
+                <div class="draggable-item" draggable="true" id="item1">Hoán vị</div>
+                <div class="draggable-item" draggable="true" id="item2">Chỉnh hợp</div>
+                <div class="draggable-item" draggable="true" id="item3">Tổ hợp</div>
+                <div class="draggable-item" draggable="true" id="item4">Quy tắc cộng</div>
+            </div>
+
+            <div style="text-align: center;">
+                <button class="btn" onclick="checkDragAndDrop()">Kiểm tra kết quả</button>
+                <button class="btn btn-reset" onclick="resetDragAndDrop()">Làm lại</button>
+                <p id="drag-feedback" style="margin-top: 1rem; font-weight: bold; font-size: 1.1rem;"></p>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-calculator"></i> III. Hướng dẫn bấm Máy tính (Casio/Vinacal)</h2>
+            <p>Việc tính toán tay các giai thừa rất mất thời gian và dễ sai sót. Máy tính cầm tay đã tích hợp sẵn 3 chức năng này.</p>
+            
+            <div class="calc-grid">
+                <div class="calc-card">
+                    <div class="calc-title">Hoán vị: $P_n = n!$</div>
+                    <p>Ví dụ: Tính $P_5 = 5!$</p>
+                    <div class="keys-container">
+                        <div class="key">5</div>
+                        <div class="key shift">SHIFT</div>
+                        <div class="key">
+                            x⁻¹
+                            <div class="key-label">x!</div>
+                        </div>
+                        <div class="key">=</div>
+                    </div>
+                    <p style="margin-top: 10px; font-weight: bold; color: var(--success);">Màn hình hiện: 5! = 120</p>
+                </div>
+
+                <div class="calc-card">
+                    <div class="calc-title">Chỉnh hợp: $A_n^k$</div>
+                    <p>Ví dụ: Tính $A_{10}^3$</p>
+                    <div class="keys-container">
+                        <div class="key">10</div>
+                        <div class="key shift">SHIFT</div>
+                        <div class="key">
+                            ×
+                            <div class="key-label">nPr</div>
+                        </div>
+                        <div class="key">3</div>
+                        <div class="key">=</div>
+                    </div>
+                    <p style="margin-top: 10px; font-weight: bold; color: var(--success);">Màn hình hiện: 10P3 = 720</p>
+                </div>
+
+                <div class="calc-card">
+                    <div class="calc-title">Tổ hợp: $C_n^k$</div>
+                    <p>Ví dụ: Tính $C_{15}^4$</p>
+                    <div class="keys-container">
+                        <div class="key">15</div>
+                        <div class="key shift">SHIFT</div>
+                        <div class="key">
+                            ÷
+                            <div class="key-label">nCr</div>
+                        </div>
+                        <div class="key">4</div>
+                        <div class="key">=</div>
+                    </div>
+                    <p style="margin-top: 10px; font-weight: bold; color: var(--success);">Màn hình hiện: 15C4 = 1365</p>
+                </div>
+            </div>
+            <div class="info-box">
+                <strong>Mẹo ghi nhớ:</strong> Chữ <strong>P</strong> (Permutation) nằm trên phím <strong>nhân (×)</strong> dùng cho <strong>Chỉnh hợp</strong>. Chữ <strong>C</strong> (Combination) nằm trên phím <strong>chia (÷)</strong> dùng cho <strong>Tổ hợp</strong>. Luôn bấm số LỚN (n) trước, số NHỎ (k) sau!
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-list-check"></i> IV. Ví dụ Phân tích Từng bước</h2>
+            <p>Nhấp vào để xem cách tư duy phá giải các bài toán từ cơ bản đến nâng cao.</p>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Ví dụ 1: Bài toán bốc bi (Sử dụng Tổ hợp & Quy tắc nhân)</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p><strong>Đề bài:</strong> Một hộp chứa 5 viên bi xanh và 4 viên bi đỏ (các viên bi phân biệt). Cần lấy ngẫu nhiên ra 3 viên bi. Có bao nhiêu cách để lấy được 2 viên xanh và 1 viên đỏ?</p>
+                    <p><strong>Phân tích tư duy:</strong></p>
+                    <ul>
+                        <li>Việc lấy 2 viên bi xanh từ 5 viên bi xanh là lấy một nhóm, không phân biệt thứ tự (viên xanh nào bốc ra trước cũng thế). Ta dùng <strong>Tổ hợp</strong> $\Rightarrow C_5^2$.</li>
+                        <li>Việc lấy 1 viên bi đỏ từ 4 viên bi đỏ $\Rightarrow C_4^1$.</li>
+                        <li>Vì công việc yêu cầu phải lấy ĐỦ 3 viên bi, ta phải thực hiện liên tiếp cả 2 công đoạn trên. Áp dụng <strong>Quy tắc nhân</strong>.</li>
+                    </ul>
+                    <p><strong>Lời giải:</strong><br>
+                    Số cách lấy 2 bi xanh là: $C_5^2 = 10$ (cách).<br>
+                    Số cách lấy 1 bi đỏ là: $C_4^1 = 4$ (cách).<br>
+                    Tổng số cách lấy là: $10 \times 4 = 40$ (cách).</p>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Ví dụ 2: Lập số tự nhiên (Sử dụng Chỉnh hợp)</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p><strong>Đề bài:</strong> Từ các chữ số $1, 2, 3, 4, 5, 6, 7$ có thể lập được bao nhiêu số tự nhiên có 4 chữ số khác nhau?</p>
+                    <p><strong>Phân tích tư duy:</strong></p>
+                    <ul>
+                        <li>Ta cần chọn 4 chữ số từ tập hợp có 7 chữ số.</li>
+                        <li>Sự khác biệt cốt lõi: Số $1234$ hoàn toàn khác với số $4321$. Do đó, việc chọn các chữ số ra <strong>CÓ PHÂN BIỆT THỨ TỰ</strong>.</li>
+                        <li>Kết luận: Dùng <strong>Chỉnh hợp</strong>.</li>
+                    </ul>
+                    <p><strong>Lời giải:</strong><br>
+                    Mỗi số có 4 chữ số khác nhau lập từ 7 chữ số trên chính là một chỉnh hợp chập 4 của 7 phần tử.<br>
+                    Số lượng các số lập được là: $A_7^4 = 840$ (số).</p>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Ví dụ 3: Kỹ thuật "Buộc phần tử" trong Hoán vị</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p><strong>Đề bài:</strong> Xếp 4 bạn nam và 3 bạn nữ đứng thành một hàng ngang để chụp ảnh. Hỏi có bao nhiêu cách xếp sao cho 3 bạn nữ luôn đứng cạnh nhau?</p>
+                    <p><strong>Phân tích tư duy (Cực kỳ quan trọng):</strong></p>
+                    <ul>
+                        <li>Khi có điều kiện "đứng cạnh nhau", ta dùng kỹ thuật "Buộc". Hãy tưởng tượng ta buộc 3 bạn nữ lại thành 1 "cụm".</li>
+                        <li><strong>Bước 1:</strong> Hoán vị nội bộ trong cụm. 3 bạn nữ đổi chỗ cho nhau có $3!$ cách.</li>
+                        <li><strong>Bước 2:</strong> Hoán vị toàn cục. Bây giờ ta xem cụm 3 nữ như 1 "người siêu to". Cộng với 4 bạn nam, ta có tổng cộng $4 + 1 = 5$ đối tượng cần xếp thành hàng ngang. Xếp 5 đối tượng này có $5!$ cách.</li>
+                        <li>Áp dụng quy tắc nhân cho 2 bước.</li>
+                    </ul>
+                    <p><strong>Lời giải:</strong><br>
+                    Số cách xếp là: $3! \times 5! = 6 \times 120 = 720$ (cách).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card" id="quiz-section">
+            <h2 class="section-title"><i class="fa-solid fa-graduation-cap"></i> V. Luyện tập Trắc nghiệm Toàn diện</h2>
+            <p>10 câu hỏi sau đây chứa đầy đủ các "cái bẫy" kinh điển nhất của học sinh lớp 10. Hãy đọc thật kỹ đề trước khi click nhé!</p>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 1: Công thức nào sau đây tính số các chỉnh hợp chập $k$ của $n$ phần tử ($1 \le k \le n$)?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Đây là công thức của Chỉnh hợp $A_n^k$.')">
+                        <div class="opt-label">A</div> <span>$A_n^k = \frac{n!}{(n-k)!}$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Có thêm $k!$ dưới mẫu thì đây là công thức của Tổ hợp $C_n^k$.')">
+                        <div class="opt-label">B</div> <span>$A_n^k = \frac{n!}{k!(n-k)!}$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Đây là công thức của Hoán vị $P_n$.')">
+                        <div class="opt-label">C</div> <span>$P_n = n!$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Công thức này bị lộn ngược.')">
+                        <div class="opt-label">D</div> <span>$A_n^k = \frac{(n-k)!}{n!}$</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 2: Để tính $A_{12}^4$ trên máy tính Casio, ta thao tác bấm các phím theo thứ tự nào?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Nút ÷ (nCr) dùng để tính Tổ hợp (C).')">
+                        <div class="opt-label">A</div> <span>12 SHIFT ÷ 4 =</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Phải nhập số n lớn trước, số k nhỏ sau.')">
+                        <div class="opt-label">B</div> <span>4 SHIFT × 12 =</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Chỉnh hợp (A) tương ứng với chữ P (nPr) nằm trên phím nhân (×).')">
+                        <div class="opt-label">C</div> <span>12 SHIFT × 4 =</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Nút x⁻¹ (x!) dùng để tính giai thừa (Hoán vị).')">
+                        <div class="opt-label">D</div> <span>12 SHIFT x⁻¹ 4 =</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 3: Một lớp có 30 học sinh. Cô giáo cần chọn ra một Ban cán sự gồm 1 Lớp trưởng, 1 Lớp phó và 1 Bí thư. Số cách chọn là:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Bạn đã dùng Tổ hợp ($C_{30}^3 = 4060$). Nhưng ở đây 3 bạn có 3 chức vụ khác nhau, đổi vị trí chức vụ là ra cách khác nên phải có thứ tự.')">
+                        <div class="opt-label">A</div> <span>$C_{30}^3 = 4060$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Chọn 3 từ 30 và có phân biệt thứ tự (chức vụ khác nhau), ta dùng Chỉnh hợp $A_{30}^3$.')">
+                        <div class="opt-label">B</div> <span>$A_{30}^3 = 24360$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Bạn không thể mang cả 30 người ra hoán vị cho 3 chức vụ được.')">
+                        <div class="opt-label">C</div> <span>$P_{30}$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Đây là phép tính lấy lũy thừa, không áp dụng trong chọn người không lặp lại.')">
+                        <div class="opt-label">D</div> <span>$30^3$</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 4: Một lớp có 30 học sinh. Cô giáo cần chọn ra 3 học sinh đi bê ghế đá cho trường. Số cách chọn là:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Chọn 3 bạn đi bê ghế thì vai trò của 3 bạn là như nhau, không có sự phân biệt thứ tự. Ta dùng Tổ hợp $C_{30}^3$.')">
+                        <div class="opt-label">A</div> <span>$C_{30}^3 = 4060$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Dùng Chỉnh hợp ($A_{30}^3$) chỉ khi 3 người đó có vai trò/chức vụ khác nhau.')">
+                        <div class="opt-label">B</div> <span>$A_{30}^3 = 24360$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Dùng Quy tắc nhân $30 \times 3$ là sai hoàn toàn về mặt logic.')">
+                        <div class="opt-label">C</div> <span>90</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai.')">
+                        <div class="opt-label">D</div> <span>$3^{30}$</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 5: Có 7 người vào quán nước, có đúng 1 dãy ghế dài gồm 7 chỗ ngồi. Hỏi có bao nhiêu cách sắp xếp 7 người này ngồi vào dãy ghế đó?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Tổ hợp $C_7^7$ luôn bằng 1, nghĩa là chỉ có 1 cách chọn nhóm, nhưng sắp xếp thì có nhiều cách.')">
+                        <div class="opt-label">A</div> <span>$C_7^7$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Lũy thừa không áp dụng khi mỗi người ngồi 1 ghế (không lặp lại).')">
+                        <div class="opt-label">B</div> <span>$7^7$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Có 7 phần tử, mang đi sắp xếp vào đúng 7 vị trí. Đây là bài toán Hoán vị: $P_7 = 7! = 5040$.')">
+                        <div class="opt-label">C</div> <span>$7! = 5040$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Phép nhân đơn thuần không đúng bản chất.')">
+                        <div class="opt-label">D</div> <span>49</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 6: Câu nào sau đây <strong>PHÂN BIỆT ĐÚNG</strong> bản chất giữa bài toán Tổ hợp và Chỉnh hợp?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Đây là đặc điểm của Hoán vị (n=k).')">
+                        <div class="opt-label">A</div> <span>Chỉnh hợp là chọn một phần, Tổ hợp là chọn tất cả.</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Tuyệt vời! Nếu đảo vị trí các phần tử mà tạo ra kết quả mới (như tạo số, xếp chức vụ) -> Chỉnh hợp. Nếu đảo mà vẫn là tập hợp cũ (như lập nhóm) -> Tổ hợp.')">
+                        <div class="opt-label">B</div> <span>Chỉnh hợp CÓ quan tâm đến thứ tự sắp xếp, Tổ hợp KHÔNG quan tâm đến thứ tự.</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Máy tính tính được cả hai rất dễ dàng bằng nPr và nCr.')">
+                        <div class="opt-label">C</div> <span>Chỉnh hợp tính được bằng máy tính, Tổ hợp bắt buộc phải tính tay.</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Hoàn toàn ngược lại.')">
+                        <div class="opt-label">D</div> <span>Chỉnh hợp là KHÔNG quan tâm thứ tự, Tổ hợp là CÓ quan tâm thứ tự.</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 7: Có 10 điểm phân biệt trên mặt phẳng, không có 3 điểm nào thẳng hàng. Số tam giác có thể tạo thành từ các điểm này là:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Cứ chọn 3 điểm bất kỳ từ 10 điểm (không thẳng hàng) sẽ tạo được 1 tam giác. Tam giác ABC, BCA, CAB là như nhau (không có thứ tự). Ta dùng Tổ hợp $C_{10}^3 = 120$.')">
+                        <div class="opt-label">A</div> <span>120</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Nếu dùng Chỉnh hợp $A_{10}^3 = 720$, bạn đang coi tam giác ABC và tam giác BCA là 2 tam giác khác nhau.')">
+                        <div class="opt-label">B</div> <span>720</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Lấy $10 \\times 3$ không liên quan đến quy tắc đếm tổ hợp.')">
+                        <div class="opt-label">C</div> <span>30</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Bạn đã tính số đoạn thẳng (chọn 2 điểm $C_{10}^2$) chứ không phải tam giác.')">
+                        <div class="opt-label">D</div> <span>45</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 8: Từ hộp có 6 bi trắng và 5 bi đen, lấy ngẫu nhiên 4 viên bi. Có bao nhiêu cách lấy được 2 trắng và 2 đen?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Lấy 2 bi thì không quan trọng thứ tự. Dùng Chỉnh hợp $A$ ở đây là sai.')">
+                        <div class="opt-label">A</div> <span>$A_6^2 \times A_5^2$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Lấy 2 trắng từ 6 trắng là $C_6^2$. Lấy 2 đen từ 5 đen là $C_5^2$. Áp dụng quy tắc nhân ta có $C_6^2 \times C_5^2$.')">
+                        <div class="opt-label">B</div> <span>$C_6^2 \times C_5^2$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Bạn lấy 2 công đoạn cộng lại là sai. Phải lấy XONG cả trắng và đen thì mới đủ 4 viên (quy tắc nhân).')">
+                        <div class="opt-label">C</div> <span>$C_6^2 + C_5^2$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Bốc ngẫu nhiên tổng 4 viên từ 11 viên mà không quan tâm màu sắc mới là $C_{11}^4$.')">
+                        <div class="opt-label">D</div> <span>$C_{11}^4$</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 9: BÀI TOÁN BẪY: Cô giáo có 3 quyển sách <strong>toán giống hệt nhau</strong>. Cô muốn đem tặng cho 3 bạn học sinh trong nhóm 10 bạn đạt điểm cao. Hỏi cô có bao nhiêu cách tặng?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai! Bạn bị mắc bẫy rồi. Nếu 3 quyển sách KHÁC NHAU (ví dụ Toán, Lý, Hóa) thì dùng Chỉnh hợp $A_{10}^3$. Nhưng ở đây 3 quyển GIỐNG HỆT NHAU.')">
+                        <div class="opt-label">A</div> <span>$A_{10}^3 = 720$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Quá xuất sắc! Vì 3 quyển sách giống hệt nhau, nên việc bạn A nhận được quyển 1 hay quyển 2 là KHÔNG CÓ SỰ KHÁC BIỆT. Vai trò của 3 bạn nhận quà là như nhau. Do đó ta dùng Tổ hợp $C_{10}^3 = 120$.')">
+                        <div class="opt-label">B</div> <span>$C_{10}^3 = 120$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Không thể dùng lũy thừa.')">
+                        <div class="opt-label">C</div> <span>$10^3 = 1000$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Phép tính này không có cơ sở.')">
+                        <div class="opt-label">D</div> <span>30</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 10: NÂNG CAO: Một đa giác lồi có 12 đỉnh. Hỏi đa giác này có bao nhiêu <strong>đường chéo</strong>?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Bạn vừa tính số ĐOẠN THẲNG ($C_{12}^2$) nối từ 2 đỉnh bất kỳ. Nhưng trong đó bao gồm cả các CẠNH của đa giác. Đường chéo không được tính cạnh.')">
+                        <div class="opt-label">A</div> <span>66</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Chính xác! Lấy 2 đỉnh bất kỳ ($C_{12}^2$) ta được 1 đoạn thẳng (gồm cả đường chéo và cạnh). Đa giác 12 đỉnh thì có 12 cạnh. Vậy số đường chéo là $C_{12}^2 - 12 = 66 - 12 = 54$.')">
+                        <div class="opt-label">B</div> <span>54</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. $A_{12}^2$ là số vecto, không phải đoạn thẳng.')">
+                        <div class="opt-label">C</div> <span>132</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Đây không phải cách tính đường chéo.')">
+                        <div class="opt-label">D</div> <span>144</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer>
+        <h3 style="color: white; margin-bottom: 10px;">Học liệu Toán học Mở</h3>
+        <p>Biên soạn bởi Lê Nguyễn Hồng Linh.</p>
+        <p style="opacity: 0.6; font-size: 0.9rem; margin-top: 20px;">© Đồng hành và hiệu chỉnh mã nguồn: AI trợ lý.</p>
+    </footer>
+
+    <script>
+        // === 1. LOGIC KÉO THẢ (DRAG & DROP) ===
+        const draggables = document.querySelectorAll('.draggable-item');
+        const dropZones = document.querySelectorAll('.drop-zone');
+        const dragPool = document.getElementById('drag-pool');
+        
+        let draggedItem = null;
+        const initialPoolState = dragPool.innerHTML;
+
+        function initializeDragAndDrop() {
+            const currentDraggables = document.querySelectorAll('.draggable-item');
+            currentDraggables.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => this.style.opacity = '0.5', 0);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    setTimeout(() => this.style.opacity = '1', 0);
+                    draggedItem = null;
+                });
+            });
+
+            dropZones.forEach(zone => {
+                const newZone = zone.cloneNode(true);
+                zone.parentNode.replaceChild(newZone, zone);
+                
+                newZone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    newZone.classList.add('drag-over');
+                });
+
+                newZone.addEventListener('dragleave', () => {
+                    newZone.classList.remove('drag-over');
+                });
+
+                newZone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
+                    
+                    if (draggedItem) {
+                        if (this.children.length > 0) {
+                            const existingItem = this.children[0];
+                            existingItem.classList.remove('in-zone');
+                            dragPool.appendChild(existingItem);
+                        }
+                        draggedItem.parentNode.removeChild(draggedItem);
+                        this.appendChild(draggedItem);
+                        draggedItem.classList.add('in-zone');
+                        
+                        this.childNodes.forEach(node => {
+                            if (node.nodeType === 3) node.remove();
+                        });
+                    }
+                });
+            });
+
+            dragPool.addEventListener('dragover', e => e.preventDefault());
+            dragPool.addEventListener('drop', function(e) {
+                e.preventDefault();
+                if (draggedItem) {
+                    draggedItem.parentNode.removeChild(draggedItem);
+                    this.appendChild(draggedItem);
+                    draggedItem.classList.remove('in-zone');
+                }
+            });
+        }
+
+        function checkDragAndDrop() {
+            let correctCount = 0;
+            const currentDropZones = document.querySelectorAll('.drop-zone');
+            
+            currentDropZones.forEach(zone => {
+                const answer = zone.getAttribute('data-answer');
+                if (zone.children.length > 0) {
+                    const studentAnswer = zone.children[0].innerText.trim();
+                    if (studentAnswer === answer) {
+                        zone.style.borderColor = "var(--success)";
+                        zone.style.backgroundColor = "#d1fae5";
+                        correctCount++;
+                    } else {
+                        zone.style.borderColor = "var(--danger)";
+                        zone.style.backgroundColor = "#fee2e2";
+                    }
+                } else {
+                    zone.style.borderColor = "var(--danger)";
+                    zone.style.backgroundColor = "#fee2e2";
+                }
+            });
+
+            const feedback = document.getElementById('drag-feedback');
+            if (correctCount === currentDropZones.length) {
+                feedback.innerText = "🎉 Tuyệt vời! Thầy/cô có thể thấy em đã phân biệt chính xác 3 khái niệm này.";
+                feedback.style.color = "var(--success)";
+            } else {
+                feedback.innerText = `⚠️ Em điền đúng ${correctCount}/${currentDropZones.length} vị trí. Hãy xem lại những ô màu đỏ và thử lại nhé!`;
+                feedback.style.color = "var(--danger)";
+            }
+        }
+
+        function resetDragAndDrop() {
+            dragPool.innerHTML = initialPoolState;
+            const currentDropZones = document.querySelectorAll('.drop-zone');
+            currentDropZones.forEach(zone => {
+                zone.innerHTML = '';
+                zone.style.borderColor = "var(--secondary)";
+                zone.style.backgroundColor = "#e2e8f0";
+            });
+            document.getElementById('drag-feedback').innerText = "";
+            initializeDragAndDrop();
+        }
+
+        initializeDragAndDrop();
+
+        // === 2. LOGIC ACCORDION (Đóng/Mở Ví dụ) ===
+        function toggleAccordion(headerElement) {
+            const content = headerElement.nextElementSibling;
+            const icon = headerElement.querySelector('i');
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('active');
+                icon.style.transform = 'rotate(180deg)';
+                icon.style.transition = 'transform 0.3s';
+            }
+        }
+
+        // === 3. LOGIC TRẮC NGHIỆM ===
+        function checkQuiz(element, isCorrect, explanationText) {
+            const optionsContainer = element.parentElement;
+            const questionContainer = optionsContainer.parentElement;
+            const explanationBox = questionContainer.querySelector('.quiz-explanation');
+            
+            const allOptions = optionsContainer.querySelectorAll('.quiz-option');
+            allOptions.forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+            });
+
+            if (isCorrect) {
+                element.classList.add('correct');
+                explanationBox.style.borderLeftColor = "var(--success)";
+            } else {
+                element.classList.add('wrong');
+                explanationBox.style.borderLeftColor = "var(--danger)";
+            }
+
+            explanationBox.innerHTML = `<strong>Giải thích:</strong> ${explanationText}`;
+            explanationBox.style.display = "block";
+
+            MathJax.typesetPromise([explanationBox]).catch(function (err) {
+                console.log('MathJax typeset failed: ' + err.message);
+            });
+        }
+    </script>
+</body>
+</html>

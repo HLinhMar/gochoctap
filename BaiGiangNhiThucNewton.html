@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học liệu Tương tác: Nhị thức Newton & Tam giác Pascal</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #4c0519; /* Rose 950 */
+            --secondary: #e11d48; /* Rose 600 */
+            --accent: #10b981; /* Emerald 500 */
+            --bg-body: #fff1f2; /* Rose 50 */
+            --bg-card: #ffffff;
+            --text-main: #334155; 
+            --text-muted: #64748b; 
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Merriweather', serif;
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+       /* --- Header --- */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #be123c 100%);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 L90 90 L10 90 Z" stroke="rgba(255,255,255,0.05)" stroke-width="2" fill="none"/></svg>') repeat;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .header-badge {
+            display: inline-block;
+            background: rgba(225, 29, 72, 0.3);
+            border: 1px solid rgba(244, 63, 94, 0.5);
+            color: #ffe4e6;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        header h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            color: #fecdd3;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- Layout --- */
+        .container {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background-color: var(--secondary);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 1rem;
+        }
+
+        .section-title i {
+            color: var(--secondary);
+        }
+
+        /* --- Info Boxes --- */
+        .info-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .warning-box {
+            background-color: #fff7ed;
+            border-left: 4px solid #f59e0b;
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        /* --- Pascal's Triangle CSS --- */
+        .pascal-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 2rem 0;
+            background: #fff1f2;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px dashed #fda4af;
+        }
+        
+        .pascal-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .pascal-cell {
+            width: 50px;
+            height: 50px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 0 10px;
+            box-shadow: 0 4px 6px rgba(225, 29, 72, 0.3);
+            transition: transform 0.3s;
+        }
+        
+        .pascal-cell:hover {
+            transform: scale(1.1);
+        }
+
+        .pascal-row-label {
+            position: absolute;
+            left: 20px;
+            color: var(--text-muted);
+            font-style: italic;
+            line-height: 50px;
+        }
+
+        .pascal-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        /* --- Drag & Drop --- */
+        .drop-zone {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: white;
+            border: 2px dashed var(--secondary);
+            border-radius: 50%;
+            vertical-align: middle;
+            margin: 0 10px;
+            text-align: center;
+            line-height: 46px;
+            font-weight: bold;
+            color: var(--primary);
+            transition: all 0.2s;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .drop-zone.drag-over {
+            background: #ffe4e6;
+            transform: scale(1.1);
+        }
+
+        .drag-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .draggable-item {
+            width: 45px;
+            height: 45px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            user-select: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .draggable-item:active { cursor: grabbing; transform: scale(0.95); }
+        .draggable-item.in-zone { 
+            background: var(--accent); 
+            width: 50px; height: 50px; 
+            margin: -2px 0 0 -2px; /* Center inside circle */
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 1.5rem;
+        }
+        .btn:hover { background: #be123c; }
+        .btn-reset { background: #64748b; margin-left: 10px; }
+        .btn-reset:hover { background: #475569; }
+
+        /* --- Equation Highlight --- */
+        .math-display {
+            display: flex;
+            justify-content: center;
+            padding: 1.5rem;
+            background: #fff1f2;
+            border: 1px solid #fda4af;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            font-size: 1.3rem;
+            overflow-x: auto;
+            color: var(--primary);
+        }
+
+        /* --- Accordion --- */
+        .accordion {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        .accordion-header {
+            background: #f8fafc;
+            padding: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .accordion-header:hover { background: #f1f5f9; }
+        .accordion-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            background: white;
+        }
+        .accordion-content.active {
+            padding: 1.5rem;
+            max-height: 1500px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* --- Quiz Section --- */
+        .quiz-question {
+            margin-bottom: 2.5rem;
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .quiz-question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .quiz-option {
+            background: white;
+            border: 2px solid #cbd5e1;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        .quiz-option:hover {
+            border-color: var(--secondary);
+            background: #fff1f2;
+        }
+        .quiz-option .opt-label {
+            width: 30px;
+            height: 30px;
+            background: var(--bg-body);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: #ecfdf5;
+        }
+        .quiz-option.correct .opt-label { background: var(--success); color: white; }
+        
+        .quiz-option.wrong {
+            border-color: var(--danger);
+            background: #fef2f2;
+        }
+        .quiz-option.wrong .opt-label { background: var(--danger); color: white; }
+
+        .quiz-explanation {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #fff;
+            border-left: 4px solid var(--secondary);
+            border-radius: 0 8px 8px 0;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 3rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .quiz-options { grid-template-columns: 1fr; }
+            .section-card { padding: 1.5rem; }
+            .pascal-cell, .drop-zone { width: 35px; height: 35px; font-size: 0.9rem; margin: 0 5px;}
+            .pascal-row-label { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+ <header>
+        <div class="header-badge"><i class="fa-solid fa-apple-whole"></i> Toán học 10 - Chương trình 2018</div>
+        <h1>Nhị thức Newton</h1>
+        <p>Bí ẩn của Tam giác Pascal & Nghệ thuật khai triển đa thức bậc cao</p>
+    </header>
+
+    <div class="container">
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-rocket"></i> I. Khởi động: Từ hằng đẳng thức quen thuộc</h2>
+            <p>Từ năm lớp 8, chúng ta đã quá quen thuộc với 2 "hằng đẳng thức đáng nhớ" này:</p>
+            <ul>
+                <li>$(a + b)^2 = a^2 + 2ab + b^2$</li>
+                <li>$(a + b)^3 = a^3 + 3a^2b + 3ab^2 + b^3$</li>
+            </ul>
+            <p><strong>Vậy câu hỏi đặt ra là:</strong> Làm thế nào để khai triển nhanh $(a + b)^4$ hay $(a + b)^5$ mà không phải ngồi nhân đa thức thủ công dài dòng và dễ sai? Đó chính là lúc chúng ta cần đến sức mạnh của <strong>Nhị thức Newton</strong> và một công cụ hình học tuyệt đẹp mang tên <strong>Tam giác Pascal</strong>.</p>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-pyramid"></i> II. Khám phá Tam giác Pascal</h2>
+            
+            <p>Nhà toán học Blaise Pascal đã phát hiện ra một quy luật xếp số cực kỳ thú vị. <strong>Quy luật:</strong> Bắt đầu bằng số 1 ở đỉnh và các cạnh bên. Mỗi số ở bên trong tam giác bằng <strong>tổng của hai số nằm ngay phía trên nó</strong>.</p>
+            
+            <div class="warning-box">
+                <strong>Hoạt động Tương tác:</strong> Bằng cách áp dụng quy luật "cộng 2 số phía trên", em hãy <strong>kéo thả</strong> các viên gạch số vào đúng vị trí để hoàn thiện Tam giác Pascal đến dòng thứ 5.
+            </div>
+
+            <div class="pascal-wrapper">
+                <div class="pascal-container">
+                    <div class="pascal-row-label" style="top: 0px;">$n=0$ (Bậc 0)</div>
+                    <div class="pascal-row">
+                        <div class="pascal-cell">1</div>
+                    </div>
+                    
+                    <div class="pascal-row-label" style="top: 60px;">$n=1$ (Bậc 1)</div>
+                    <div class="pascal-row">
+                        <div class="pascal-cell">1</div>
+                        <div class="pascal-cell">1</div>
+                    </div>
+                    
+                    <div class="pascal-row-label" style="top: 120px;">$n=2$ (Bậc 2)</div>
+                    <div class="pascal-row">
+                        <div class="pascal-cell">1</div>
+                        <div class="pascal-cell">2</div>
+                        <div class="pascal-cell">1</div>
+                    </div>
+                    
+                    <div class="pascal-row-label" style="top: 180px;">$n=3$ (Bậc 3)</div>
+                    <div class="pascal-row">
+                        <div class="pascal-cell">1</div>
+                        <div class="pascal-cell">3</div>
+                        <div class="pascal-cell">3</div>
+                        <div class="pascal-cell">1</div>
+                    </div>
+                    
+                    <div class="pascal-row-label" style="top: 240px;">$n=4$ (Bậc 4)</div>
+                    <div class="pascal-row">
+                        <div class="pascal-cell">1</div>
+                        <span class="drop-zone" data-answer="4"></span> <span class="drop-zone" data-answer="6"></span> <span class="drop-zone" data-answer="4"></span> <div class="pascal-cell">1</div>
+                    </div>
+
+                    <div class="pascal-row-label" style="top: 300px;">$n=5$ (Bậc 5)</div>
+                    <div class="pascal-row">
+                        <div class="pascal-cell">1</div>
+                        <span class="drop-zone" data-answer="5"></span> <span class="drop-zone" data-answer="10"></span> <span class="drop-zone" data-answer="10"></span> <span class="drop-zone" data-answer="5"></span> <div class="pascal-cell">1</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="drag-pool" id="drag-pool">
+                <div class="draggable-item" draggable="true" id="item1">4</div>
+                <div class="draggable-item" draggable="true" id="item2">4</div>
+                <div class="draggable-item" draggable="true" id="item3">5</div>
+                <div class="draggable-item" draggable="true" id="item4">5</div>
+                <div class="draggable-item" draggable="true" id="item5">6</div>
+                <div class="draggable-item" draggable="true" id="item6">10</div>
+                <div class="draggable-item" draggable="true" id="item7">10</div>
+            </div>
+
+            <div style="text-align: center;">
+                <button class="btn" onclick="checkDragAndDrop()">Kiểm tra kết quả</button>
+                <button class="btn btn-reset" onclick="resetDragAndDrop()">Làm lại</button>
+                <p id="drag-feedback" style="margin-top: 1rem; font-weight: bold; font-size: 1.1rem;"></p>
+            </div>
+            
+            <p style="margin-top: 2rem;"><strong>Điều kỳ diệu:</strong> Các con số trên mỗi hàng của Tam giác Pascal CHÍNH LÀ <strong>hệ số</strong> tương ứng khi chúng ta khai triển nhị thức $(a+b)^n$. Đồng thời, các con số này cũng bằng đúng giá trị của Tổ hợp $C_n^k$.</p>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-square-root-variable"></i> III. Công thức Nhị thức Newton (Bậc 4 và 5)</h2>
+            
+            <p>Dựa vào các hệ số từ Tam giác Pascal (hoặc dùng $C_n^k$), theo Chương trình GDPT 2018, ta có 2 công thức khai triển trọng tâm sau:</p>
+
+            <h3 style="color: var(--secondary); border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">1. Khai triển bậc 4 ($n=4$)</h3>
+            <div class="math-display">
+                $$(a + b)^4 = C_4^0 a^4 + C_4^1 a^3 b + C_4^2 a^2 b^2 + C_4^3 a b^3 + C_4^4 b^4$$
+            </div>
+            <p style="text-align: center;">Hay viết gọn với các hệ số (1, 4, 6, 4, 1):</p>
+            <div class="math-display" style="background: white;">
+                $$(a + b)^4 = a^4 + 4a^3b + 6a^2b^2 + 4ab^3 + b^4$$
+            </div>
+
+            <h3 style="color: var(--secondary); border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-top: 2rem;">2. Khai triển bậc 5 ($n=5$)</h3>
+            <div class="math-display">
+                $$(a + b)^5 = C_5^0 a^5 + C_5^1 a^4 b + C_5^2 a^3 b^2 + C_5^3 a^2 b^3 + C_5^4 a b^4 + C_5^5 b^5$$
+            </div>
+            <p style="text-align: center;">Hay viết gọn với các hệ số (1, 5, 10, 10, 5, 1):</p>
+            <div class="math-display" style="background: white;">
+                $$(a + b)^5 = a^5 + 5a^4b + 10a^3b^2 + 10a^2b^3 + 5ab^4 + b^5$$
+            </div>
+
+            <div class="info-box">
+                <strong>4 Nhận xét "vàng" cần ghi nhớ:</strong>
+                <ul>
+                    <li>Khai triển bậc $n$ luôn có <strong>$n + 1$</strong> số hạng. (Bậc 4 có 5 số hạng, bậc 5 có 6 số hạng).</li>
+                    <li>Bậc của $a$ <strong>giảm dần</strong> từ $n$ về 0. Bậc của $b$ <strong>tăng dần</strong> từ 0 lên $n$.</li>
+                    <li>Tổng số mũ của $a$ và $b$ trong mỗi số hạng luôn bằng <strong>$n$</strong>.</li>
+                    <li>Các hệ số cách đều 2 đầu thì <strong>bằng nhau</strong> (Tính đối xứng của Tổ hợp: $C_n^k = C_n^{n-k}$).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-list-check"></i> IV. Các Ví dụ Phân tích Từng bước</h2>
+            <p>Nhấp vào để xem cách tư duy phá giải các bài toán khai triển từ cơ bản đến tìm hệ số.</p>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Ví dụ 1: Khai triển cơ bản $(x+2)^4$</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p><strong>Phân tích:</strong> Áp dụng công thức bậc 4. Ở đây $a = x$ và $b = 2$. Các hệ số là: 1, 4, 6, 4, 1.</p>
+                    <p><strong>Giải:</strong></p>
+                    <p>$(x + 2)^4 = x^4 + 4x^3(2) + 6x^2(2)^2 + 4x(2)^3 + 1(2)^4$</p>
+                    <p>$\Rightarrow (x + 2)^4 = x^4 + 8x^3 + 6x^2(4) + 4x(8) + 16$</p>
+                    <p style="color: var(--secondary); font-weight: bold;">$\Rightarrow (x + 2)^4 = x^4 + 8x^3 + 24x^2 + 32x + 16$</p>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Ví dụ 2: Khai triển có dấu trừ $(2x-y)^5$</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p><strong>Phân tích:</strong> Áp dụng công thức bậc 5. Cực kỳ lưu ý: phải mang theo dấu trừ, tức là $a = 2x$ và $b = -y$.</p>
+                    <p><strong>Giải:</strong></p>
+                    <p>$(2x - y)^5 = (2x)^5 + 5(2x)^4(-y) + 10(2x)^3(-y)^2 + 10(2x)^2(-y)^3 + 5(2x)(-y)^4 + (-y)^5$</p>
+                    <p>Nhắc lại kiến thức: Dấu âm mũ chẵn thành cộng (+), mũ lẻ vẫn là trừ (-). Dấu sẽ đan xen: $+ - + - + -$</p>
+                    <p>$\Rightarrow (2x - y)^5 = 32x^5 - 5(16x^4)y + 10(8x^3)y^2 - 10(4x^2)y^3 + 5(2x)y^4 - y^5$</p>
+                    <p style="color: var(--secondary); font-weight: bold;">$\Rightarrow (2x - y)^5 = 32x^5 - 80x^4y + 80x^3y^2 - 40x^2y^3 + 10xy^4 - y^5$</p>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Ví dụ 3: Tìm hệ số của một số hạng</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p><strong>Đề bài:</strong> Tìm hệ số của $x^3$ trong khai triển biểu thức $(x - 3)^5$.</p>
+                    <p><strong>Phân tích:</strong> Ta không cần khai triển hết toàn bộ đa thức. Dựa vào công thức tổng quát của một số hạng là $C_n^k a^{n-k} b^k$.</p>
+                    <p><strong>Giải:</strong></p>
+                    <p>Số hạng chứa $x^3$ trong khai triển bậc 5 sẽ tương ứng với số hạng có $x$ mang mũ 3. Vì tổng số mũ của $a$ và $b$ bằng 5, nên phần tử $b$ (ở đây là $-3$) sẽ mang mũ $5 - 3 = 2$.</p>
+                    <p>Vậy số hạng đó là: $C_5^2 \cdot x^3 \cdot (-3)^2$</p>
+                    <p>Ta có $C_5^2 = 10$, và $(-3)^2 = 9$.</p>
+                    <p>$\Rightarrow$ Số hạng đó là $10 \cdot x^3 \cdot 9 = 90x^3$.</p>
+                    <p style="color: var(--secondary); font-weight: bold;">Kết luận: Hệ số của $x^3$ là $90$.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card" id="quiz-section">
+            <h2 class="section-title"><i class="fa-solid fa-graduation-cap"></i> V. Bài tập rèn luyện Trắc nghiệm</h2>
+            <p>10 câu hỏi dưới đây bám sát cấu trúc của SGK mới. Chúc em hoàn thành xuất sắc!</p>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 1: Khai triển nhị thức Newton của $(a + b)^5$ có tất cả bao nhiêu số hạng?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai rồi! Bậc n thì số số hạng là n+1.')">
+                        <div class="opt-label">A</div> <span>4</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai rồi! Bậc n thì số số hạng là n+1.')">
+                        <div class="opt-label">B</div> <span>5</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Khai triển bậc $n$ luôn có $n + 1$ số hạng. Bậc 5 sẽ có $5 + 1 = 6$ số hạng.')">
+                        <div class="opt-label">C</div> <span>6</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai rồi! Số lượng số hạng lớn hơn bậc là 1.')">
+                        <div class="opt-label">D</div> <span>7</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 2: Tổng các hệ số trong khai triển $(a + b)^4$ là bao nhiêu?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Hãy tính tổng của các số: 1 + 4 + 6 + 4 + 1')">
+                        <div class="opt-label">A</div> <span>15</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Chính xác! Các hệ số là 1, 4, 6, 4, 1. Tổng là 16. Mẹo giải nhanh: Cho $a=1, b=1$ thì $(1+1)^4 = 2^4 = 16$.')">
+                        <div class="opt-label">B</div> <span>16</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Bạn tính nhầm rồi.')">
+                        <div class="opt-label">C</div> <span>12</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. 32 là tổng các hệ số của bậc 5 ($2^5$).')">
+                        <div class="opt-label">D</div> <span>32</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 3: Khai triển của biểu thức $(x + 1)^4$ là:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Đây là khai triển bậc 3.')">
+                        <div class="opt-label">A</div> <span>$x^4 + 3x^3 + 3x + 1$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Áp dụng dãy hệ số của dòng bậc 4: 1, 4, 6, 4, 1 với $a=x$ và $b=1$.')">
+                        <div class="opt-label">B</div> <span>$x^4 + 4x^3 + 6x^2 + 4x + 1$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Đây không phải hệ số chuẩn của Newton.')">
+                        <div class="opt-label">C</div> <span>$x^4 + x^3 + x^2 + x + 1$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Đừng quên quy luật Newton không chỉ là lấy 2 đầu mũ 4 lên.')">
+                        <div class="opt-label">D</div> <span>$x^4 + 1$</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 4: Hệ số của số hạng chứa $x^2$ trong khai triển $(x + 2)^4$ là:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Bạn chỉ lấy hệ số tổ hợp là $C_4^2=6$ mà quên mất nhân với $2^2$.')">
+                        <div class="opt-label">A</div> <span>6</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Tuyệt! Số hạng chứa $x^2$ là: $C_4^2 \\cdot x^2 \\cdot 2^2 = 6 \\cdot x^2 \\cdot 4 = 24x^2$. Hệ số là 24.')">
+                        <div class="opt-label">B</div> <span>24</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Đây là hệ số của $x$ ($C_4^3 \\cdot 2^3 = 4 \\times 8 = 32$).')">
+                        <div class="opt-label">C</div> <span>32</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Bạn tính nhầm phép nhân.')">
+                        <div class="opt-label">D</div> <span>12</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 5: Trong Tam giác Pascal, quy luật để tạo ra con số ở hàng tiếp theo là gì?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Hãy nhìn lại cách bạn kéo thả gạch.')">
+                        <div class="opt-label">A</div> <span>Nhân 2 số ở trên với nhau.</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Mỗi số (trừ số 1 ở rìa) luôn bằng TỔNG của hai số đứng ngay trên nó. Công thức Toán học là: $C_{n-1}^{k-1} + C_{n-1}^k = C_n^k$.')">
+                        <div class="opt-label">B</div> <span>Bằng tổng của hai số nằm kề nhau ở hàng ngay phía trên.</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Nó không liên quan đến hàng chéo.')">
+                        <div class="opt-label">C</div> <span>Bằng hiệu của hai số ở hàng chéo.</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai.')">
+                        <div class="opt-label">D</div> <span>Bằng bình phương số ở trên.</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 6: Hệ số lớn nhất trong khai triển $(x + 1)^5$ là:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Hệ số của bậc 5 là 1, 5, 10, 10, 5, 1.')">
+                        <div class="opt-label">A</div> <span>5</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. 6 không có trong hệ số bậc 5.')">
+                        <div class="opt-label">B</div> <span>6</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Chính xác! Khai triển bậc 5 có các hệ số là 1, 5, 10, 10, 5, 1. Hệ số lớn nhất xuất hiện ở giữa là 10 ($C_5^2$ và $C_5^3$).')">
+                        <div class="opt-label">C</div> <span>10</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Đây là số quá lớn.')">
+                        <div class="opt-label">D</div> <span>15</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 7: Điền dấu thích hợp: Trong khai triển có dấu trừ $(a - b)^5$, các dấu nối giữa các số hạng sẽ...</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Nếu mang dấu trừ toàn bộ thì không đúng công thức $(a + (-b))^n$.')">
+                        <div class="opt-label">A</div> <span>Hoàn toàn mang dấu âm.</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Do lũy thừa của $-b$, số hạng nào $b$ mũ lẻ sẽ mang dấu trừ, $b$ mũ chẵn mang dấu cộng. Dấu sẽ đan xen: $+ - + - + -$.')">
+                        <div class="opt-label">B</div> <span>Đan xen lẫn nhau bắt đầu từ dấu dương.</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Không có quy luật nửa này nửa kia.')">
+                        <div class="opt-label">C</div> <span>Ba số đầu dấu dương, ba số cuối dấu âm.</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Như thế là khai triển $(a+b)^n$.')">
+                        <div class="opt-label">D</div> <span>Hoàn toàn mang dấu dương.</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 8: Tìm hệ số của $x^3$ trong khai triển $(x + 3)^5$.</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Số hạng là $C_5^2 \\cdot x^3 \\cdot 3^2$, hệ số không phải 270.')">
+                        <div class="opt-label">A</div> <span>270</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Số hạng chứa $x^3$ tương ứng $b=3$ sẽ mang mũ $5-3=2$. Ta có $C_5^2 \\cdot x^3 \\cdot 3^2 = 10 \\cdot 9 \\cdot x^3 = 90x^3$.')">
+                        <div class="opt-label">B</div> <span>90</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Bạn nhầm sang số hạng chứa $x^2$ ($C_5^3 \\cdot 3^3 = 10 \\times 27 = 270$).')">
+                        <div class="opt-label">C</div> <span>135</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai.')">
+                        <div class="opt-label">D</div> <span>30</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 9: BÀI TOÁN BẪY: Trong khai triển $(2x - 1)^4$, số hạng không chứa $x$ (hệ số tự do) là:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Nếu $b=-1$ thì $(-1)^4$ bằng 1 chứ không phải -1.')">
+                        <div class="opt-label">A</div> <span>-1</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Chính xác! Số hạng không chứa $x$ chính là số hạng cuối cùng: $C_4^4 \\cdot (2x)^0 \\cdot (-1)^4 = 1 \\cdot 1 \\cdot 1 = 1$.')">
+                        <div class="opt-label">B</div> <span>1</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Đây là số hạng chứa $x^4$ (vì $2^4 = 16$).')">
+                        <div class="opt-label">C</div> <span>16</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Không có số hạng tự do bằng 0.')">
+                        <div class="opt-label">D</div> <span>0</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 10: ỨNG DỤNG THỰC TẾ: Hãy sử dụng 3 số hạng đầu của khai triển $(1 + 0.01)^4$ để tính giá trị gần đúng của $1.01^4$. Kết quả là:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Đặt $x = 0.01$. $(1+x)^4 \\approx 1 + 4x + 6x^2 = 1 + 4(0.01) + 6(0.0001) = 1 + 0.04 + 0.0006 = 1.0406$. Đây là một ứng dụng rất hay của Nhị thức Newton trong tính gần đúng!')">
+                        <div class="opt-label">A</div> <span>1.0406</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Bạn cộng thiếu phần đuôi.')">
+                        <div class="opt-label">B</div> <span>1.04</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai.')">
+                        <div class="opt-label">C</div> <span>1.0604</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Số này tính sai hệ số.')">
+                        <div class="opt-label">D</div> <span>1.0416</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer>
+        <h3 style="color: white; margin-bottom: 10px;">Học liệu Toán học Mở</h3>
+        <p>Biên soạn bởi Lê Nguyễn Hồng Linh.</p>
+        <p style="opacity: 0.6; font-size: 0.9rem; margin-top: 20px;">© Đồng hành và hiệu chỉnh mã nguồn: AI trợ lý.</p>
+    </footer>
+
+    <script>
+        // === 1. LOGIC KÉO THẢ PASCAL ===
+        const draggables = document.querySelectorAll('.draggable-item');
+        const dropZones = document.querySelectorAll('.drop-zone');
+        const dragPool = document.getElementById('drag-pool');
+        
+        let draggedItem = null;
+        const initialPoolState = dragPool.innerHTML;
+
+        function initializeDragAndDrop() {
+            const currentDraggables = document.querySelectorAll('.draggable-item');
+            currentDraggables.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => this.style.opacity = '0.5', 0);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    setTimeout(() => this.style.opacity = '1', 0);
+                    draggedItem = null;
+                });
+            });
+
+            dropZones.forEach(zone => {
+                const newZone = zone.cloneNode(true);
+                zone.parentNode.replaceChild(newZone, zone);
+                
+                newZone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    newZone.classList.add('drag-over');
+                });
+
+                newZone.addEventListener('dragleave', () => {
+                    newZone.classList.remove('drag-over');
+                });
+
+                newZone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
+                    
+                    if (draggedItem) {
+                        if (this.children.length > 0) {
+                            const existingItem = this.children[0];
+                            existingItem.classList.remove('in-zone');
+                            dragPool.appendChild(existingItem);
+                        }
+                        draggedItem.parentNode.removeChild(draggedItem);
+                        this.appendChild(draggedItem);
+                        draggedItem.classList.add('in-zone');
+                        
+                        this.childNodes.forEach(node => {
+                            if (node.nodeType === 3) node.remove();
+                        });
+                    }
+                });
+            });
+
+            dragPool.addEventListener('dragover', e => e.preventDefault());
+            dragPool.addEventListener('drop', function(e) {
+                e.preventDefault();
+                if (draggedItem) {
+                    draggedItem.parentNode.removeChild(draggedItem);
+                    this.appendChild(draggedItem);
+                    draggedItem.classList.remove('in-zone');
+                }
+            });
+        }
+
+        function checkDragAndDrop() {
+            let correctCount = 0;
+            const currentDropZones = document.querySelectorAll('.drop-zone');
+            
+            currentDropZones.forEach(zone => {
+                const answer = zone.getAttribute('data-answer');
+                if (zone.children.length > 0) {
+                    const studentAnswer = zone.children[0].innerText.trim();
+                    if (studentAnswer === answer) {
+                        zone.style.borderColor = "var(--success)";
+                        zone.style.backgroundColor = "var(--success)";
+                        zone.style.color = "white";
+                        correctCount++;
+                    } else {
+                        zone.style.borderColor = "var(--danger)";
+                        zone.style.backgroundColor = "var(--danger)";
+                        zone.style.color = "white";
+                    }
+                } else {
+                    zone.style.borderColor = "var(--danger)";
+                    zone.style.backgroundColor = "#ffe4e6";
+                }
+            });
+
+            const feedback = document.getElementById('drag-feedback');
+            if (correctCount === currentDropZones.length) {
+                feedback.innerText = "🎉 Hoàn hảo! Em đã tìm ra quy luật cộng của Tam giác Pascal.";
+                feedback.style.color = "var(--success)";
+            } else {
+                feedback.innerText = `⚠️ Em ghép đúng ${correctCount}/${currentDropZones.length} vị trí. Hãy cộng 2 số kề nhau ở hàng trên lại xem sao!`;
+                feedback.style.color = "var(--danger)";
+            }
+        }
+
+        function resetDragAndDrop() {
+            dragPool.innerHTML = initialPoolState;
+            const currentDropZones = document.querySelectorAll('.drop-zone');
+            currentDropZones.forEach(zone => {
+                zone.innerHTML = '';
+                zone.style.borderColor = "var(--secondary)";
+                zone.style.backgroundColor = "white";
+                zone.style.color = "var(--primary)";
+            });
+            document.getElementById('drag-feedback').innerText = "";
+            initializeDragAndDrop();
+        }
+
+        initializeDragAndDrop();
+
+        // === 2. LOGIC ACCORDION (Đóng/Mở Ví dụ) ===
+        function toggleAccordion(headerElement) {
+            const content = headerElement.nextElementSibling;
+            const icon = headerElement.querySelector('i');
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('active');
+                icon.style.transform = 'rotate(180deg)';
+                icon.style.transition = 'transform 0.3s';
+            }
+        }
+
+        // === 3. LOGIC TRẮC NGHIỆM ===
+        function checkQuiz(element, isCorrect, explanationText) {
+            const optionsContainer = element.parentElement;
+            const questionContainer = optionsContainer.parentElement;
+            const explanationBox = questionContainer.querySelector('.quiz-explanation');
+            
+            const allOptions = optionsContainer.querySelectorAll('.quiz-option');
+            allOptions.forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+            });
+
+            if (isCorrect) {
+                element.classList.add('correct');
+                explanationBox.style.borderLeftColor = "var(--success)";
+            } else {
+                element.classList.add('wrong');
+                explanationBox.style.borderLeftColor = "var(--danger)";
+            }
+
+            explanationBox.innerHTML = `<strong>Giải thích:</strong> ${explanationText}`;
+            explanationBox.style.display = "block";
+
+            MathJax.typesetPromise([explanationBox]).catch(function (err) {
+                console.log('MathJax typeset failed: ' + err.message);
+            });
+        }
+    </script>
+</body>
+</html>

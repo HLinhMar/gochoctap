@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học liệu Tương tác: Quy tắc cộng và Quy tắc nhân</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #0f172a; /* Slate 900 */
+            --secondary: #0d9488; /* Teal 600 - Tone màu Tổ hợp */
+            --accent: #ea580c; /* Orange 600 */
+            --bg-body: #f8fafc; /* Slate 50 */
+            --bg-card: #ffffff;
+            --text-main: #334155; 
+            --text-muted: #64748b; 
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Merriweather', serif;
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+       /* --- Header Khung Giới Thiệu --- */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #115e59 100%);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="3" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="3" fill="rgba(255,255,255,0.1)"/><line x1="20" y1="20" x2="80" y2="80" stroke="rgba(255,255,255,0.05)" stroke-width="2"/></svg>') repeat;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .header-badge {
+            display: inline-block;
+            background: rgba(13, 148, 136, 0.3);
+            border: 1px solid rgba(20, 184, 166, 0.5);
+            color: #ccfbf1;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        header h1 {
+            color: white;
+            font-size: 3.2rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- Layout --- */
+        .container {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background-color: var(--secondary);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 1rem;
+        }
+
+        .section-title i {
+            color: var(--secondary);
+        }
+
+        /* --- Info Boxes --- */
+        .info-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .warning-box {
+            background-color: #fff7ed;
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        /* --- Mindmap / Conceptual Block --- */
+        .concept-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 2rem 0;
+        }
+        
+        .concept-card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .concept-card.add:hover {
+            border-color: var(--secondary);
+            background: #f0fdfa;
+            transform: translateY(-5px);
+        }
+
+        .concept-card.mult:hover {
+            border-color: var(--accent);
+            background: #fff7ed;
+            transform: translateY(-5px);
+        }
+
+        .concept-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .concept-card.add .concept-icon { color: var(--secondary); }
+        .concept-card.mult .concept-icon { color: var(--accent); }
+
+        .concept-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        /* --- Drag & Drop --- */
+        .drag-activity-container {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 2.5rem;
+            font-size: 1.15rem;
+            line-height: 2.4;
+        }
+
+        .drop-zone {
+            display: inline-block;
+            min-width: 160px;
+            height: 42px;
+            background: #e2e8f0;
+            border: 2px dashed var(--secondary);
+            border-radius: 6px;
+            vertical-align: middle;
+            margin: 0 8px;
+            padding: 0 10px;
+            text-align: center;
+            line-height: 38px;
+            font-weight: 600;
+            color: var(--primary);
+            transition: all 0.2s;
+        }
+
+        .drop-zone.drag-over {
+            background: #ccfbf1;
+            border-color: var(--secondary);
+            transform: scale(1.05);
+        }
+
+        .drag-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .draggable-item {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+            font-weight: 500;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+
+        .draggable-item.in-zone {
+            background: transparent;
+            color: var(--primary);
+            padding: 0;
+            box-shadow: none;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 1.5rem;
+        }
+
+        .btn:hover { background: #0f766e; }
+        .btn-reset { background: #64748b; margin-left: 10px; }
+        .btn-reset:hover { background: #475569; }
+
+        /* --- Accordion --- */
+        .accordion {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        .accordion-header {
+            background: #f8fafc;
+            padding: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .accordion-header:hover { background: #f1f5f9; }
+        .accordion-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            background: white;
+        }
+        .accordion-content.active {
+            padding: 1.5rem;
+            max-height: 1000px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* --- Quiz Section --- */
+        .quiz-question {
+            margin-bottom: 2.5rem;
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .quiz-question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .quiz-option {
+            background: white;
+            border: 2px solid #cbd5e1;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        .quiz-option:hover {
+            border-color: var(--secondary);
+            background: #f0fdfa;
+        }
+        .quiz-option .opt-label {
+            width: 30px;
+            height: 30px;
+            background: var(--bg-body);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: #ecfdf5;
+        }
+        .quiz-option.correct .opt-label { background: var(--success); color: white; }
+        
+        .quiz-option.wrong {
+            border-color: var(--danger);
+            background: #fef2f2;
+        }
+        .quiz-option.wrong .opt-label { background: var(--danger); color: white; }
+
+        .quiz-explanation {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #fff;
+            border-left: 4px solid var(--secondary);
+            border-radius: 0 8px 8px 0;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 3rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .quiz-options { grid-template-columns: 1fr; }
+            .concept-grid { grid-template-columns: 1fr; }
+            .section-card { padding: 1.5rem; }
+        }
+        
+        /* --- Intro Grid --- */
+        .intro-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 1.5rem;
+        }
+
+        .intro-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .intro-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        }
+
+        .intro-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--secondary);
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .intro-content {
+            padding: 1.5rem;
+        }
+
+        .intro-content h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+
+ <header>
+        <div class="header-badge"><i class="fa-solid fa-calculator"></i> Toán học 10 - Chương trình 2018</div>
+        <h1>Đại số Tổ hợp:<br>Quy tắc Cộng & Quy tắc Nhân</h1>
+        <p>Học liệu tương tác • Nắm vững nghệ thuật đếm không bỏ sót, không trùng lặp</p>
+    </header>
+
+    <div class="container">
+
+<div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-lightbulb"></i> I. Khởi động: Cuộc sống là những sự lựa chọn</h2>
+            <p>Mỗi ngày, chúng ta đều phải đưa ra những quyết định. Đại số tổ hợp sinh ra để trả lời câu hỏi: <em>"Bạn có bao nhiêu cách để làm một việc?"</em></p>
+            
+            <div class="intro-grid">
+                <div class="intro-card">
+                    <div class="intro-img" style="background: #fbbf24;"><i class="fa-solid fa-utensils"></i></div>
+                    <div class="intro-content">
+                        <h3>Chọn món ăn</h3>
+                        <p>Bạn đến nhà hàng và được chọn TẶNG KÈM 1 món tráng miệng. Menu có 3 loại bánh ngọt và 2 loại chè. Bạn sẽ có bao nhiêu cách chọn 1 món tráng miệng?</p>
+                    </div>
+                </div>
+
+                <div class="intro-card">
+                    <div class="intro-img" style="background: #38bdf8;"><i class="fa-solid fa-shirt"></i></div>
+                    <div class="intro-content">
+                        <h3>Phối đồ ra phố</h3>
+                        <p>Trong tủ đồ có 4 chiếc áo thun và 3 chiếc quần jeans. Để tạo thành 1 bộ trang phục (gồm 1 áo và 1 quần) đi chơi, bạn có bao nhiêu cách phối khác nhau?</p>
+                    </div>
+                </div>
+
+                <div class="intro-card">
+                    <div class="intro-img" style="background: #a78bfa;"><i class="fa-solid fa-map-location-dot"></i></div>
+                    <div class="intro-content">
+                        <h3>Lập lộ trình</h3>
+                        <p>Để đi từ nhà đến trường, bạn phải đi qua siêu thị. Từ nhà đến siêu thị có 2 con đường, từ siêu thị đến trường có 3 con đường. Có bao nhiêu lộ trình để đi học?</p>
+                    </div>
+                </div>
+            </div>
+            <p style="margin-top: 1.5rem; text-align: center; color: var(--text-muted); font-style: italic;">Để giải quyết nhanh các bài toán này, chúng ta cần công cụ hóa chúng bằng 2 quy tắc cơ bản bên dưới.</p>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-puzzle-piece"></i> II. Hình thành Quy tắc & Kéo thả</h2>
+            
+            <div class="concept-grid">
+                <div class="concept-card add">
+                    <div class="concept-icon"><i class="fa-solid fa-code-branch"></i></div>
+                    <div class="concept-title">Từ khóa: HOẶC</div>
+                    <p>Các phương án hoàn toàn <strong>độc lập</strong> và thay thế được cho nhau. Làm cách này thì thôi cách kia.</p>
+                </div>
+                <div class="concept-card mult">
+                    <div class="concept-icon"><i class="fa-solid fa-bars-progress"></i></div>
+                    <div class="concept-title">Từ khóa: VÀ / LIÊN TIẾP</div>
+                    <p>Công việc bị chia làm nhiều <strong>công đoạn</strong>. Phải làm XONG BƯỚC NÀY mới làm TỚI BƯỚC KIA để hoàn thành.</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <strong>Hoạt động Tương tác:</strong> Dựa vào đặc điểm phân biệt ở trên, em hãy <strong>kéo thả</strong> các từ khóa thích hợp vào ô trống để hoàn thiện định nghĩa của 2 quy tắc đếm cơ bản.
+            </div>
+
+            <div class="drag-activity-container" id="def-container">
+                <p style="margin-bottom: 1.5rem;">
+                    <strong>1.</strong> Giả sử một công việc có thể được thực hiện theo <span class="drop-zone" data-answer="phương án"></span> A <strong>hoặc</strong> B. Phương án A có $m$ cách, phương án B có $n$ cách (không trùng nhau). Khi đó, công việc có <strong>$m + n$</strong> cách thực hiện. Đây là quy tắc <span class="drop-zone" data-answer="cộng"></span>.
+                </p>
+                <p>
+                    <strong>2.</strong> Giả sử một công việc phải hoàn thành qua 2 <span class="drop-zone" data-answer="công đoạn"></span> <strong>liên tiếp</strong>. Bước 1 có $m$ cách, ứng với mỗi cách đó, bước 2 có $n$ cách. Khi đó, công việc có <strong>$m \times n$</strong> cách thực hiện. Đây là quy tắc <span class="drop-zone" data-answer="nhân"></span>.
+                </p>
+            </div>
+
+            <div class="drag-pool" id="drag-pool">
+                <div class="draggable-item" draggable="true" id="item1">phương án</div>
+                <div class="draggable-item" draggable="true" id="item2">công đoạn</div>
+                <div class="draggable-item" draggable="true" id="item3">cộng</div>
+                <div class="draggable-item" draggable="true" id="item4">nhân</div>
+                <div class="draggable-item" draggable="true" id="item5">trừ</div>
+            </div>
+
+            <div style="text-align: center;">
+                <button class="btn" onclick="checkDragAndDrop()">Kiểm tra kết quả</button>
+                <button class="btn btn-reset" onclick="resetDragAndDrop()">Làm lại</button>
+                <p id="drag-feedback" style="margin-top: 1rem; font-weight: bold; font-size: 1.1rem;"></p>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-list-check"></i> III. Phân tích Ví dụ Thực tiễn</h2>
+            <p>Việc khó nhất trong Tổ hợp là nhận diện: "Khi nào cộng, khi nào nhân?". Hãy phân tích các ví dụ sau.</p>
+
+            <div style="background: #f8fafc; padding: 2rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid var(--secondary);">
+                <h3 style="margin-bottom: 1rem;">Ví dụ 1: Đi ăn cuối tuần (Quy tắc Cộng)</h3>
+                <p>Nhóm bạn thân quyết định tối nay đi ăn nhà hàng. Có 2 lựa chọn: Hoặc đi ăn lẩu hấp (có 2 chi nhánh Chang Kang Kung gần nhà), hoặc đi ăn thức ăn nhanh (có 3 cửa hàng McDonald's). Hỏi nhóm bạn có bao nhiêu cách chọn địa điểm ăn?</p>
+                
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Xem hướng dẫn phân tích</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p><strong>Phân tích:</strong> Công việc ở đây là "Chọn 1 địa điểm ăn".</p>
+                        <ul>
+                            <li>Phương án 1 (Ăn lẩu hấp): Có 2 cách chọn (2 chi nhánh).</li>
+                            <li>Phương án 2 (Ăn thức ăn nhanh): Có 3 cách chọn (3 cửa hàng).</li>
+                        </ul>
+                        <p>Việc chọn quán lẩu hay quán gà rán là hoàn toàn độc lập (chọn cái này thì thôi cái kia, không ai ăn lẩu xong chạy qua quán khác ăn tiếp gà rán trong cùng 1 bữa). Do đó, ta dùng <strong>Quy tắc cộng</strong>.</p>
+                        <p>$\Rightarrow$ Số cách chọn địa điểm là: $2 + 3 = 5$ (cách).</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #f8fafc; padding: 2rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid var(--accent);">
+                <h3 style="margin-bottom: 1rem;">Ví dụ 2: Lựa chọn trang phục (Quy tắc Nhân)</h3>
+                <p>Một học sinh nam đang chuẩn bị đồ để đi dã ngoại. Trong tủ có 4 chiếc áo thun (mua tại Uniqlo) và 3 chiếc quần jeans (mua tại YaMe VN). Hỏi bạn đó có bao nhiêu cách phối thành 1 bộ trang phục (gồm 1 áo và 1 quần)?</p>
+                
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Xem hướng dẫn phân tích</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p><strong>Phân tích:</strong> Công việc ở đây là "Tạo ra 1 bộ trang phục". Để hoàn thành công việc này, bắt buộc phải qua 2 công đoạn liên tiếp:</p>
+                        <ul>
+                            <li><strong>Công đoạn 1:</strong> Chọn áo (Có 4 cách).</li>
+                            <li><strong>Công đoạn 2:</strong> Chọn quần (Có 3 cách).</li>
+                        </ul>
+                        <p>Nếu chỉ chọn áo hoặc chỉ chọn quần thì công việc chưa hoàn thành (không thể mặc mỗi áo ra đường). Do tính chất <em>liên tiếp và bắt buộc đi kèm nhau</em>, ta dùng <strong>Quy tắc nhân</strong>.</p>
+                        <p>$\Rightarrow$ Số cách phối đồ là: $4 \times 3 = 12$ (cách).</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #f8fafc; padding: 2rem; border-radius: 8px; border-left: 4px solid var(--primary);">
+                <h3 style="margin-bottom: 1rem;">Ví dụ 3: Bài toán kết hợp</h3>
+                <p>Lớp 10A có 15 học sinh nam và 20 học sinh nữ. Giáo viên cần chọn ra một Ban cán sự lớp gồm 2 người: 1 Lớp trưởng và 1 Lớp phó, sao cho phải có 1 nam và 1 nữ. Hỏi có bao nhiêu cách chọn?</p>
+                
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Xem hướng dẫn phân tích (Chia trường hợp & Nhân liên tiếp)</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Công việc này cần chia làm các trường hợp (Quy tắc cộng) và trong mỗi trường hợp có các công đoạn (Quy tắc nhân).</p>
+                        <p><strong>Trường hợp 1 (Phương án 1): Lớp trưởng là Nam, Lớp phó là Nữ.</strong></p>
+                        <ul>
+                            <li>Chọn Lớp trưởng nam: Có 15 cách.</li>
+                            <li>Chọn Lớp phó nữ: Có 20 cách.</li>
+                            <li>$\Rightarrow$ Có $15 \times 20 = 300$ cách.</li>
+                        </ul>
+                        <p><strong>Trường hợp 2 (Phương án 2): Lớp trưởng là Nữ, Lớp phó là Nam.</strong></p>
+                        <ul>
+                            <li>Chọn Lớp trưởng nữ: Có 20 cách.</li>
+                            <li>Chọn Lớp phó nam: Có 15 cách.</li>
+                            <li>$\Rightarrow$ Có $20 \times 15 = 300$ cách.</li>
+                        </ul>
+                        <p>Trường hợp 1 và 2 là hai phương án độc lập. Kết hợp lại ta dùng Quy tắc cộng.</p>
+                        <p>$\Rightarrow$ Tổng số cách chọn Ban cán sự là: $300 + 300 = 600$ (cách).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card" id="quiz-section">
+            <h2 class="section-title"><i class="fa-solid fa-graduation-cap"></i> IV. Luyện tập Trắc nghiệm</h2>
+            <p>Chọn đáp án đúng nhất cho các bài toán đếm sau. Đọc kỹ đề để không sập bẫy nhé!</p>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 1: Một cửa hàng hoa có bán 5 loại hoa hồng khác nhau và 4 loại hoa lan khác nhau. Một người muốn mua <strong>đúng 1 bông hoa</strong>. Hỏi người đó có bao nhiêu cách chọn?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Chính xác! Công việc là chọn 1 bông hoa. Có 2 phương án: hoặc chọn hoa hồng (5 cách), hoặc chọn hoa lan (4 cách). Áp dụng quy tắc cộng: 5 + 4 = 9.')">
+                        <div class="opt-label">A</div> <span>9</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai rồi! Nếu bạn lấy 5 x 4 = 20, nghĩa là bạn đang chọn 1 bó gồm 1 hoa hồng VÀ 1 hoa lan rồi.')">
+                        <div class="opt-label">B</div> <span>20</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai rồi, hãy đọc kĩ đề bài.')">
+                        <div class="opt-label">C</div> <span>5</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai rồi, đọc kĩ yêu cầu đề bài nhé.')">
+                        <div class="opt-label">D</div> <span>4</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 2: Bạn A cần đi mua sắm tại siêu thị Bách Hóa Xanh, sau đó ghé King Food Market để mua thêm đồ chuyên dụng. Từ nhà A đến Bách Hóa Xanh có 3 con đường. Từ Bách Hóa Xanh đến King Food có 2 con đường. Hỏi A có bao nhiêu cách đi từ nhà, qua Bách Hóa Xanh rồi tới King Food?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai rồi! Đây không phải là 2 phương án độc lập. Bạn bắt buộc phải thực hiện cả 2 công đoạn di chuyển.')">
+                        <div class="opt-label">A</div> <span>5</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai rồi! Bạn tính nhầm phép toán rồi.')">
+                        <div class="opt-label">B</div> <span>8</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai rồi, kết quả này lớn hơn thực tế.')">
+                        <div class="opt-label">C</div> <span>9</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Hành trình gồm 2 công đoạn liên tiếp: Đi từ nhà tới BHX (3 cách), rồi từ BHX tới King Food (2 cách). Theo quy tắc nhân: 3 × 2 = 6 cách.')">
+                        <div class="opt-label">D</div> <span>6</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 3: Từ các chữ số $1, 2, 3, 4, 5, 6$ có thể lập được bao nhiêu số tự nhiên có 2 chữ số <strong>khác nhau</strong>?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Nếu 6 × 6 = 36, bạn đã tính cả các số có 2 chữ số giống nhau như 11, 22, 33...')">
+                        <div class="opt-label">A</div> <span>36</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Gọi số có 2 chữ số là $\\overline{ab}$. <br>Bước 1: Chọn chữ số hàng chục $a$, có 6 cách chọn. <br>Bước 2: Chọn chữ số hàng đơn vị $b$. Vì $b \\neq a$, nên $b$ chỉ còn $6 - 1 = 5$ cách chọn. <br>Áp dụng quy tắc nhân: $6 \\times 5 = 30$ cách.')">
+                        <div class="opt-label">B</div> <span>30</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. 11 là phép cộng 6 + 5, không áp dụng được vì đây là 2 công đoạn liên tiếp (chọn hàng chục xong chọn hàng đơn vị).')">
+                        <div class="opt-label">C</div> <span>11</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Nếu 5 × 5 = 25 là bạn đã bỏ qua 1 chữ số ở hàng chục rồi.')">
+                        <div class="opt-label">D</div> <span>25</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer>
+        <h3 style="color: white; margin-bottom: 10px;">Học liệu Toán học Mở</h3>
+        <p>Biên soạn bởi Lê Nguyễn Hồng Linh.</p>
+        <p style="opacity: 0.6; font-size: 0.9rem; margin-top: 20px;">© Đồng hành và hiệu chỉnh mã nguồn: AI trợ lý.</p>
+    </footer>
+
+    <script>
+        // === 1. LOGIC KÉO THẢ (DRAG & DROP) ===
+        const draggables = document.querySelectorAll('.draggable-item');
+        const dropZones = document.querySelectorAll('.drop-zone');
+        const dragPool = document.getElementById('drag-pool');
+        
+        let draggedItem = null;
+
+        const initialPoolState = dragPool.innerHTML;
+
+        function initializeDragAndDrop() {
+            const currentDraggables = document.querySelectorAll('.draggable-item');
+            currentDraggables.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => this.style.opacity = '0.5', 0);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    setTimeout(() => this.style.opacity = '1', 0);
+                    draggedItem = null;
+                });
+            });
+
+            dropZones.forEach(zone => {
+                const newZone = zone.cloneNode(true);
+                zone.parentNode.replaceChild(newZone, zone);
+                
+                newZone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    newZone.classList.add('drag-over');
+                });
+
+                newZone.addEventListener('dragleave', () => {
+                    newZone.classList.remove('drag-over');
+                });
+
+                newZone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
+                    
+                    if (draggedItem) {
+                        if (this.children.length > 0) {
+                            const existingItem = this.children[0];
+                            existingItem.classList.remove('in-zone');
+                            dragPool.appendChild(existingItem);
+                        }
+                        draggedItem.parentNode.removeChild(draggedItem);
+                        this.appendChild(draggedItem);
+                        draggedItem.classList.add('in-zone');
+                        
+                        this.childNodes.forEach(node => {
+                            if (node.nodeType === 3) node.remove();
+                        });
+                    }
+                });
+            });
+
+            dragPool.addEventListener('dragover', e => e.preventDefault());
+            dragPool.addEventListener('drop', function(e) {
+                e.preventDefault();
+                if (draggedItem) {
+                    draggedItem.parentNode.removeChild(draggedItem);
+                    this.appendChild(draggedItem);
+                    draggedItem.classList.remove('in-zone');
+                }
+            });
+        }
+
+        function checkDragAndDrop() {
+            let correctCount = 0;
+            const currentDropZones = document.querySelectorAll('.drop-zone');
+            
+            currentDropZones.forEach(zone => {
+                const answer = zone.getAttribute('data-answer');
+                if (zone.children.length > 0) {
+                    const studentAnswer = zone.children[0].innerText.trim();
+                    if (studentAnswer === answer) {
+                        zone.style.borderColor = "var(--success)";
+                        zone.style.backgroundColor = "#d1fae5";
+                        correctCount++;
+                    } else {
+                        zone.style.borderColor = "var(--danger)";
+                        zone.style.backgroundColor = "#fee2e2";
+                    }
+                } else {
+                    zone.style.borderColor = "var(--danger)";
+                    zone.style.backgroundColor = "#fee2e2";
+                }
+            });
+
+            const feedback = document.getElementById('drag-feedback');
+            if (correctCount === currentDropZones.length) {
+                feedback.innerText = "🎉 Tuyệt vời! Thầy/cô có thể thấy em đã phân biệt chính xác Định nghĩa.";
+                feedback.style.color = "var(--success)";
+            } else {
+                feedback.innerText = `⚠️ Em điền đúng ${correctCount}/${currentDropZones.length} vị trí. Hãy xem lại những ô màu đỏ và thử lại nhé!`;
+                feedback.style.color = "var(--danger)";
+            }
+        }
+
+        function resetDragAndDrop() {
+            dragPool.innerHTML = initialPoolState;
+            const currentDropZones = document.querySelectorAll('.drop-zone');
+            currentDropZones.forEach(zone => {
+                zone.innerHTML = '';
+                zone.style.borderColor = "var(--secondary)";
+                zone.style.backgroundColor = "#e2e8f0";
+            });
+            document.getElementById('drag-feedback').innerText = "";
+            initializeDragAndDrop();
+        }
+
+        initializeDragAndDrop();
+
+        // === 2. LOGIC ACCORDION (Đóng/Mở Ví dụ) ===
+        function toggleAccordion(headerElement) {
+            const content = headerElement.nextElementSibling;
+            const icon = headerElement.querySelector('i');
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('active');
+                icon.style.transform = 'rotate(180deg)';
+                icon.style.transition = 'transform 0.3s';
+            }
+        }
+
+        // === 3. LOGIC TRẮC NGHIỆM ===
+        function checkQuiz(element, isCorrect, explanationText) {
+            const optionsContainer = element.parentElement;
+            const questionContainer = optionsContainer.parentElement;
+            const explanationBox = questionContainer.querySelector('.quiz-explanation');
+            
+            const allOptions = optionsContainer.querySelectorAll('.quiz-option');
+            allOptions.forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+            });
+
+            if (isCorrect) {
+                element.classList.add('correct');
+                explanationBox.style.borderLeftColor = "var(--success)";
+            } else {
+                element.classList.add('wrong');
+                explanationBox.style.borderLeftColor = "var(--danger)";
+            }
+
+            explanationBox.innerHTML = `<strong>Giải thích:</strong> ${explanationText}`;
+            explanationBox.style.display = "block";
+
+            MathJax.typesetPromise([explanationBox]).catch(function (err) {
+                console.log('MathJax typeset failed: ' + err.message);
+            });
+        }
+    </script>
+</body>
+</html>
