@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học liệu Tương tác Chuyên sâu: Đường Parabol</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #0f172a; /* Slate 900 */
+            --secondary: #6366f1; /* Indigo 500 - Tone màu riêng cho Parabol */
+            --accent: #f59e0b; /* Amber 500 */
+            --bg-body: #f1f5f9; /* Slate 100 */
+            --bg-card: #ffffff;
+            --text-main: #334155; /* Slate 700 */
+            --text-muted: #64748b; /* Slate 500 */
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Merriweather', serif;
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+       /* --- Header Khung Giới Thiệu --- */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #312e81 100%);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M10 90 Q 50 10 90 90" stroke="rgba(255,255,255,0.05)" stroke-width="2" fill="none"/></svg>') repeat;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .header-badge {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.5);
+            color: #c7d2fe;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        header h1 {
+            color: white;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- Layout --- */
+        .container {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background-color: var(--secondary);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 1rem;
+        }
+
+        .section-title i {
+            color: var(--secondary);
+        }
+
+        /* --- Info Boxes --- */
+        .info-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .warning-box {
+            background-color: #fffbeb;
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        /* --- Drag & Drop --- */
+        .drag-activity-container {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: justify;
+            font-size: 1.1rem;
+            line-height: 2.2;
+        }
+
+        .drop-zone {
+            display: inline-block;
+            min-width: 180px;
+            height: 38px;
+            background: #e2e8f0;
+            border: 2px dashed var(--secondary);
+            border-radius: 6px;
+            vertical-align: middle;
+            margin: 0 8px;
+            padding: 0 10px;
+            text-align: center;
+            line-height: 34px;
+            font-weight: 600;
+            color: var(--primary);
+            transition: all 0.2s;
+        }
+
+        .drop-zone.drag-over {
+            background: #e0e7ff;
+            border-color: var(--secondary);
+            transform: scale(1.05);
+        }
+
+        .drag-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .draggable-item {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+            font-weight: 500;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+
+        .draggable-item.in-zone {
+            background: transparent;
+            color: var(--primary);
+            padding: 0;
+            box-shadow: none;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 1.5rem;
+        }
+
+        .btn:hover { background: #4f46e5; }
+        .btn-reset { background: #64748b; margin-left: 10px; }
+        .btn-reset:hover { background: #475569; }
+
+        /* --- Tables --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background-color: #f8fafc; }
+
+        /* --- Accordion --- */
+        .accordion {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        .accordion-header {
+            background: #f8fafc;
+            padding: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .accordion-header:hover { background: #f1f5f9; }
+        .accordion-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            background: white;
+        }
+        .accordion-content.active {
+            padding: 1.5rem;
+            max-height: 1000px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* --- Quiz Section --- */
+        .quiz-question {
+            margin-bottom: 2.5rem;
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .quiz-question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .quiz-option {
+            background: white;
+            border: 2px solid #cbd5e1;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        .quiz-option:hover {
+            border-color: var(--secondary);
+            background: #e0e7ff;
+        }
+        .quiz-option .opt-label {
+            width: 30px;
+            height: 30px;
+            background: var(--bg-body);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: #ecfdf5;
+        }
+        .quiz-option.correct .opt-label { background: var(--success); color: white; }
+        
+        .quiz-option.wrong {
+            border-color: var(--danger);
+            background: #fef2f2;
+        }
+        .quiz-option.wrong .opt-label { background: var(--danger); color: white; }
+
+        .quiz-explanation {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #fff;
+            border-left: 4px solid var(--secondary);
+            border-radius: 0 8px 8px 0;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mathematical equation styling */
+        .math-display {
+            display: flex;
+            justify-content: center;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            font-size: 1.3rem;
+            overflow-x: auto;
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 3rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .quiz-options { grid-template-columns: 1fr; }
+            .section-card { padding: 1.5rem; }
+        }
+		/* --- Intro Grid --- */
+        .intro-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 1.5rem;
+        }
+
+        .intro-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .intro-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        }
+
+        .intro-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--secondary);
+            background-color: #e2e8f0;
+            display: block;
+        }
+
+        .intro-content {
+            padding: 1.5rem;
+        }
+
+        .intro-content h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: var(--secondary);
+            border: none;
+            padding-left: 0;
+        }
+
+        .intro-content p {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+ <header>
+        <div class="header-badge"><i class="fa-solid fa-book-open"></i> Toán học 10 - Chương trình 2018</div>
+        <h1>Bài giảng điện tử: Parabol</h1>
+        <p>Học liệu tương tác trực quan • Thiết kế hướng đến phát triển năng lực học sinh</p>
+    </header>
+
+    <div class="container">
+
+<div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-rocket"></i> I. Khởi động: Từ vật lý đến công nghệ</h2>
+            <p>Parabol là một trong những đường cong xuất hiện nhiều nhất trong đời sống và mang những tính chất vật lý vô cùng kỳ diệu.</p>
+            
+            <div class="intro-grid">
+                <div class="intro-card">
+                    <img src="https://tdvvietnam.vn/img/images/products/Sung-phun-nuoc-Jumping-Jet-Rainbow-Flash-50.jpg" alt="Quả bóng rổ bay" class="intro-img">
+                    <div class="intro-content">
+                        <h3>Chuyển động ném</h3>
+                        <p>Bỏ qua lực cản của không khí, quỹ đạo của một vật bị ném xiên (như quả bóng rổ đang bay vào rổ, hay những tia nước từ đài phun nước) luôn luôn là một đường Parabol.</p>
+                    </div>
+                </div>
+
+                <div class="intro-card">
+                    <img src="https://avajsc.com/hoanghung/30/images/4_9m%20ZR-16%201.JPG" alt="Anten Parabol" class="intro-img">
+                    <div class="intro-content">
+                        <h3>Anten chảo & Viễn thông</h3>
+                        <p>Các chảo thu sóng vệ tinh được thiết kế dạng mặt cầu Paraboloid. Nhờ tính chất quang học, mọi tín hiệu song song chiếu tới mặt chảo đều sẽ phản xạ và <em>hội tụ tại đúng một điểm duy nhất</em> (tiêu điểm) để bộ thu tín hiệu bắt được.</p>
+                    </div>
+                </div>
+
+                <div class="intro-card">
+                    <img src="https://katavina.com/uploaded/tin-tuc/cau-tao-den-pha-o-to/den-halogen-co-anh-sang-vang-nhat-voi-do-sang-tuong-doi-manh.jpg" alt="Đèn pha ô tô" class="intro-img">
+                    <div class="intro-content">
+                        <h3>Đèn pha ô tô</h3>
+                        <p>Ngược lại với chảo thu sóng, nếu ta đặt một bóng đèn tại tiêu điểm của chóa đèn hình Parabol, ánh sáng phát ra sẽ phản xạ qua chóa đèn và tạo thành những <em>tia sáng song song</em>, giúp chiếu sáng đi rất xa.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-pencil"></i> II. Định nghĩa & Hoạt động Tương tác</h2>
+            
+            <p><strong>Bản chất của Parabol:</strong> Parabol được sinh ra bởi quy luật: Tập hợp các điểm sao cho khoảng cách giữa nó với tiêu điểm F luôn bằng khoảng cách của nó đến đường chuẩn Δ.</p>
+            
+            <div style="text-align: center; margin: 2rem 0; background: #fff; padding: 1.5rem; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                <canvas id="parabolaCanvas" width="600" height="300" style="max-width: 100%; height: auto; background: #f8fafc; border-radius: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);"></canvas>
+                <br>
+                <button class="btn" onclick="startParabolaAnimation()" id="animBtn" style="margin-top: 1rem; background-color: var(--accent); color: #000;">
+                    <i class="fa-solid fa-play"></i> Bắt đầu vẽ Parabol
+                </button>
+            </div>
+            <div class="warning-box">
+                <strong>Hoạt động:</strong> Dựa vào mô phỏng khoảng cách bằng nhau phía trên, em hãy <strong>kéo thả</strong> các thẻ từ vựng vào ô trống để hoàn thiện định nghĩa chính tả của đường Parabol.
+            </div>
+
+            <div class="drag-activity-container" id="def-container">
+                Cho một điểm $F$ cố định và một đường thẳng $\Delta$ cố định không đi qua $F$. Tập hợp các điểm $M$ sao cho khoảng cách từ $M$ đến $F$ 
+                <span class="drop-zone" data-answer="bằng"></span> 
+                khoảng cách từ $M$ đến $\Delta$ được gọi là đường parabol. Điểm $F$ được gọi là 
+                <span class="drop-zone" data-answer="tiêu điểm"></span> 
+                và đường thẳng $\Delta$ được gọi là 
+                <span class="drop-zone" data-answer="đường chuẩn"></span>. 
+                Khoảng cách từ $F$ đến $\Delta$ được gọi là 
+                <span class="drop-zone" data-answer="tham số tiêu"></span>.
+            </div>
+
+            <div class="drag-pool" id="drag-pool">
+                <div class="draggable-item" draggable="true" id="item1">lớn hơn</div>
+                <div class="draggable-item" draggable="true" id="item2">bằng</div>
+                <div class="draggable-item" draggable="true" id="item3">tiêu điểm</div>
+                <div class="draggable-item" draggable="true" id="item4">đường chuẩn</div>
+                <div class="draggable-item" draggable="true" id="item5">trục đối xứng</div>
+                <div class="draggable-item" draggable="true" id="item6">tham số tiêu</div>
+                <div class="draggable-item" draggable="true" id="item7">tiêu cự</div>
+            </div>
+
+            <div style="text-align: center;">
+                <button class="btn" onclick="checkDragAndDrop()">Kiểm tra kết quả</button>
+                <button class="btn btn-reset" onclick="resetDragAndDrop()">Làm lại</button>
+                <p id="drag-feedback" style="margin-top: 1rem; font-weight: bold; font-size: 1.1rem;"></p>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-square-root-variable"></i> III. Phương trình chính tắc và Các yếu tố</h2>
+            
+            <p>Chọn hệ trục tọa độ $Oxy$ sao cho gốc $O$ là trung điểm của đoạn kẻ từ $F$ vuông góc tới $\Delta$. Trục $Ox$ đi qua $F$ và vuông góc với $\Delta$. Gọi $p$ là khoảng cách từ $F$ đến $\Delta$ (tham số tiêu, $p > 0$).</p>
+
+            <div class="math-display">
+                $$(P): y^2 = 2px \quad (p > 0)$$
+            </div>
+
+            <p><strong>Đặc điểm nhận diện:</strong> Khác với Elip và Hypebol có $x^2$ và $y^2$, phương trình chính tắc của Parabol chỉ có $y^2$ bậc 2, còn $x$ mang bậc 1. Parabol này "ôm" lấy phần dương của trục $Ox$.</p>
+
+            <h3>Bảng Tổng hợp Các yếu tố hình học</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tên gọi</th>
+                        <th>Công thức / Tọa độ</th>
+                        <th>Ý nghĩa thực tế trên đồ thị</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Tham số tiêu</strong></td>
+                        <td>$p$</td>
+                        <td>Khoảng cách từ tiêu điểm $F$ đến đường chuẩn $\Delta$. ($p > 0$)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tọa độ tiêu điểm</strong></td>
+                        <td>$F\left(\dfrac{p}{2}; 0\right)$</td>
+                        <td>Điểm "lõi" của Parabol nằm trên trục $Ox$.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Phương trình đường chuẩn</strong></td>
+                        <td>$\Delta: x = -\dfrac{p}{2}$</td>
+                        <td>Đường thẳng ranh giới đứng thẳng đứng, đối xứng với $F$ qua trục $Oy$.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tọa độ đỉnh</strong></td>
+                        <td>$O(0; 0)$</td>
+                        <td>Gốc tọa độ luôn là đỉnh của Parabol chính tắc.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Trục đối xứng</strong></td>
+                        <td>Trục $Ox$ ($y = 0$)</td>
+                        <td>Parabol chính tắc có trục đối xứng nằm ngang. Nửa trên và nửa dưới hoàn toàn giống nhau.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-list-check"></i> IV. Ví dụ Phân tích Từng bước</h2>
+            <p>Hãy click vào từng bước để xem hướng dẫn giải chi tiết, giúp bạn hiểu rõ tư duy làm bài.</p>
+
+            <div style="background: #f8fafc; padding: 2rem; border-radius: 8px; margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1rem;">Ví dụ 1: Khai thác thông tin từ phương trình</h3>
+                <p>Cho Parabol có phương trình $(P): y^2 = 12x$. Hãy xác định tham số tiêu, tọa độ tiêu điểm và phương trình đường chuẩn.</p>
+                
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Bước 1: Xác định tham số tiêu p</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Phương trình chính tắc có dạng $y^2 = 2px$. Đối chiếu với đề bài, ta có:</p>
+                        <p>$$2p = 12 \Rightarrow p = 6$$</p>
+                        <p>Vậy tham số tiêu $p = 6$.</p>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Bước 2: Tìm tiêu điểm F</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Tọa độ tiêu điểm được tính bằng công thức $F\left(\dfrac{p}{2}; 0\right)$.</p>
+                        <p>Thế $p = 6$ vào, ta được $F\left(\dfrac{6}{2}; 0\right)$ hay $F(3; 0)$.</p>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Bước 3: Viết phương trình đường chuẩn $\Delta$</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Phương trình đường chuẩn là $\Delta: x = -\dfrac{p}{2}$.</p>
+                        <p>Thế $p = 6$ vào, ta được $\Delta: x = -3$.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #f8fafc; padding: 2rem; border-radius: 8px;">
+                <h3 style="margin-bottom: 1rem;">Ví dụ 2: Lập phương trình Parabol</h3>
+                <p>Viết phương trình chính tắc của Parabol $(P)$, biết $(P)$ đi qua điểm $M(2; 4)$.</p>
+                
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Xem hướng dẫn giải chi tiết</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p><strong>1. Dạng phương trình:</strong> Gọi phương trình chính tắc của Parabol là $(P): y^2 = 2px \quad (p > 0)$.</p>
+                        <p><strong>2. Thế tọa độ điểm M:</strong> Do điểm $M(2; 4)$ thuộc $(P)$ nên tọa độ của $M$ thỏa mãn phương trình $(P)$. Ta thay $x = 2$ và $y = 4$ vào:</p>
+                        <p>$$4^2 = 2p \cdot 2$$</p>
+                        <p>$$\Leftrightarrow 16 = 4p$$</p>
+                        <p>$$\Leftrightarrow p = 4$$</p>
+                        <p><strong>3. Kết luận:</strong> Phương trình chính tắc của Parabol là: 
+                        $$y^2 = 8x$$
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card" id="quiz-section">
+            <h2 class="section-title"><i class="fa-solid fa-graduation-cap"></i> V. Luyện tập Trắc nghiệm</h2>
+            <p>Chọn đáp án đúng nhất cho các câu hỏi sau. Nhấn vào đáp án để xem giải thích chi tiết!</p>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 1: Phương trình nào sau đây là phương trình chính tắc của một đường Parabol?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai rồi! Mặc dù đây là một hàm số bậc hai có đồ thị là Parabol học ở cấp 2, nhưng trong mặt phẳng tọa độ lớp 10, đây không phải là phương trình CHÍNH TẮC ($y^2 = 2px$).')">
+                        <div class="opt-label">A</div> <span>$y = x^2$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Chính xác! Phương trình này có dạng $y^2 = 2px$ với $2p = 5 \\Rightarrow p = \dfrac{5}{2} > 0$.')">
+                        <div class="opt-label">B</div> <span>$y^2 = 5x$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai rồi! Dạng chính tắc yêu cầu $p > 0$, tức là hệ số của $x$ phải dương. Ở đây hệ số là -4 âm.')">
+                        <div class="opt-label">C</div> <span>$y^2 = -4x$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai rồi! Phương trình chính tắc của Parabol là $y^2 = 2px$, ở đây là $x^2 = 2y$ nên trục đối xứng là $Oy$, không phải dạng chuẩn.')">
+                        <div class="opt-label">D</div> <span>$x^2 = 2y$</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 2: Cho Parabol $(P): y^2 = 8x$. Phương trình đường chuẩn của $(P)$ là:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Từ phương trình ta có $2p = 8 \\Rightarrow p = 4$. Phương trình đường chuẩn là $x = -\\dfrac{p}{2} \\Rightarrow x = -2$.')">
+                        <div class="opt-label">A</div> <span>$x = -2$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Bạn đã tính nhầm $x = -p$ rồi.')">
+                        <div class="opt-label">B</div> <span>$x = -4$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Phương trình đường chuẩn là $x = ...$ chứ không phải $y = ...$')">
+                        <div class="opt-label">C</div> <span>$y = -2$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Khoảng cách phải nằm về phía âm trục hoành, đường chuẩn là $x = -\\dfrac{p}{2}$.')">
+                        <div class="opt-label">D</div> <span>$x = 2$</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 3: Parabol có tiêu điểm $F(5; 0)$ có phương trình chính tắc là:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Với phương trình này $2p=10 \\Rightarrow p=5 \\Rightarrow F(\\dfrac{5}{2}; 0)$.')">
+                        <div class="opt-label">A</div> <span>$y^2 = 10x$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Với phương trình này $2p=5 \\Rightarrow p=2.5 \\Rightarrow F(1.25; 0)$.')">
+                        <div class="opt-label">B</div> <span>$y^2 = 5x$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Tiêu điểm $F(5; 0)$ nên $\\dfrac{p}{2} = 5 \\Rightarrow p = 10$. Phương trình chính tắc là $y^2 = 2px = 2(10)x = 20x$.')">
+                        <div class="opt-label">C</div> <span>$y^2 = 20x$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Đây là phương trình với trục đứng, không phải dạng chính tắc của lớp 10.')">
+                        <div class="opt-label">D</div> <span>$x^2 = 20y$</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer>
+        <h3 style="color: white; margin-bottom: 10px;">Học liệu Toán học Mở</h3>
+        <p>Biên soạn bởi Lê Nguyễn Hồng Linh.</p>
+        <p style="opacity: 0.6; font-size: 0.9rem; margin-top: 20px;">© Đồng hành và hiệu chỉnh mã nguồn: AI trợ lý.</p>
+    </footer>
+
+    <script>
+        // === 1. LOGIC KÉO THẢ (DRAG & DROP) ===
+        const draggables = document.querySelectorAll('.draggable-item');
+        const dropZones = document.querySelectorAll('.drop-zone');
+        const dragPool = document.getElementById('drag-pool');
+        
+        let draggedItem = null;
+
+        // Lưu trạng thái ban đầu để reset
+        const initialPoolState = dragPool.innerHTML;
+
+        function initializeDragAndDrop() {
+            const currentDraggables = document.querySelectorAll('.draggable-item');
+            currentDraggables.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => this.style.opacity = '0.5', 0);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    setTimeout(() => this.style.opacity = '1', 0);
+                    draggedItem = null;
+                });
+            });
+
+            dropZones.forEach(zone => {
+                const newZone = zone.cloneNode(true);
+                zone.parentNode.replaceChild(newZone, zone);
+                
+                newZone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    newZone.classList.add('drag-over');
+                });
+
+                newZone.addEventListener('dragleave', () => {
+                    newZone.classList.remove('drag-over');
+                });
+
+                newZone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
+                    
+                    if (draggedItem) {
+                        if (this.children.length > 0) {
+                            const existingItem = this.children[0];
+                            existingItem.classList.remove('in-zone');
+                            dragPool.appendChild(existingItem);
+                        }
+                        draggedItem.parentNode.removeChild(draggedItem);
+                        this.appendChild(draggedItem);
+                        draggedItem.classList.add('in-zone');
+                        
+                        this.childNodes.forEach(node => {
+                            if (node.nodeType === 3) node.remove();
+                        });
+                    }
+                });
+            });
+
+            dragPool.addEventListener('dragover', e => e.preventDefault());
+            dragPool.addEventListener('drop', function(e) {
+                e.preventDefault();
+                if (draggedItem) {
+                    draggedItem.parentNode.removeChild(draggedItem);
+                    this.appendChild(draggedItem);
+                    draggedItem.classList.remove('in-zone');
+                }
+            });
+        }
+
+        function checkDragAndDrop() {
+            let correctCount = 0;
+            const currentDropZones = document.querySelectorAll('.drop-zone');
+            
+            currentDropZones.forEach(zone => {
+                const answer = zone.getAttribute('data-answer');
+                if (zone.children.length > 0) {
+                    const studentAnswer = zone.children[0].innerText.trim();
+                    if (studentAnswer === answer) {
+                        zone.style.borderColor = "var(--success)";
+                        zone.style.backgroundColor = "#d1fae5";
+                        correctCount++;
+                    } else {
+                        zone.style.borderColor = "var(--danger)";
+                        zone.style.backgroundColor = "#fee2e2";
+                    }
+                } else {
+                    zone.style.borderColor = "var(--danger)";
+                    zone.style.backgroundColor = "#fee2e2";
+                }
+            });
+
+            const feedback = document.getElementById('drag-feedback');
+            if (correctCount === currentDropZones.length) {
+                feedback.innerText = "🎉 Tuyệt vời! Em đã điền đúng toàn bộ định nghĩa.";
+                feedback.style.color = "var(--success)";
+            } else {
+                feedback.innerText = `⚠️ Em điền đúng ${correctCount}/${currentDropZones.length} vị trí. Hãy xem lại những ô màu đỏ nhé!`;
+                feedback.style.color = "var(--danger)";
+            }
+        }
+
+        function resetDragAndDrop() {
+            dragPool.innerHTML = initialPoolState;
+            const currentDropZones = document.querySelectorAll('.drop-zone');
+            currentDropZones.forEach(zone => {
+                zone.innerHTML = '';
+                zone.style.borderColor = "var(--secondary)";
+                zone.style.backgroundColor = "#e2e8f0";
+            });
+            document.getElementById('drag-feedback').innerText = "";
+            initializeDragAndDrop();
+        }
+
+        initializeDragAndDrop();
+
+        // === 2. LOGIC ACCORDION (Đóng/Mở Ví dụ) ===
+        function toggleAccordion(headerElement) {
+            const content = headerElement.nextElementSibling;
+            const icon = headerElement.querySelector('i');
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('active');
+                icon.style.transform = 'rotate(180deg)';
+                icon.style.transition = 'transform 0.3s';
+            }
+        }
+
+        // === 3. LOGIC TRẮC NGHIỆM ===
+        function checkQuiz(element, isCorrect, explanationText) {
+            const optionsContainer = element.parentElement;
+            const questionContainer = optionsContainer.parentElement;
+            const explanationBox = questionContainer.querySelector('.quiz-explanation');
+            
+            const allOptions = optionsContainer.querySelectorAll('.quiz-option');
+            allOptions.forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+            });
+
+            if (isCorrect) {
+                element.classList.add('correct');
+                explanationBox.style.borderLeftColor = "var(--success)";
+            } else {
+                element.classList.add('wrong');
+                explanationBox.style.borderLeftColor = "var(--danger)";
+            }
+
+            explanationBox.innerHTML = `<strong>Giải thích:</strong> ${explanationText}`;
+            explanationBox.style.display = "block";
+
+            MathJax.typesetPromise([explanationBox]).catch(function (err) {
+                console.log('MathJax typeset failed: ' + err.message);
+            });
+        }
+
+		// === 4. LOGIC MÔ PHỎNG VẼ PARABOL ===
+        let animId;
+        let t = -150; // Biến chạy cho Parabol (sẽ chạy theo trục y)
+        let isAnimating = false;
+
+        function drawParabolaFrame(ctx, w, h, p_scale, t_current) {
+            ctx.clearRect(0, 0, w, h);
+            
+            // Dịch chuyển trục y sang trái một chút để thấy rõ Parabol mở sang phải
+            const cx = 150; 
+            const cy = h / 2;
+
+            // Vẽ hệ trục tọa độ mờ
+            ctx.beginPath();
+            ctx.moveTo(0, cy); ctx.lineTo(w, cy); // Trục Ox
+            ctx.moveTo(cx, 0); ctx.lineTo(cx, h); // Trục Oy
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // Tọa độ tiêu điểm F và đường chuẩn
+            const f_x = cx + p_scale / 2;
+            const delta_x = cx - p_scale / 2;
+
+            // Vẽ đường chuẩn Delta
+            ctx.beginPath();
+            ctx.moveTo(delta_x, 0); ctx.lineTo(delta_x, h);
+            ctx.strokeStyle = '#cbd5e1'; 
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Viết text Delta
+            ctx.fillStyle = '#64748b';
+            ctx.font = "italic 14px Arial";
+            ctx.fillText('Δ', delta_x - 15, 20);
+
+            // Vẽ Parabol (dạng x = y^2 / 2p) từ y = -150 đến t_current
+            ctx.beginPath();
+            for (let y = -150; y <= t_current; y += 2) {
+                let px = cx + (y * y) / (2 * p_scale);
+                let py = cy + y;
+                if (y === -150) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.strokeStyle = '#6366f1'; // Màu Indigo
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Tọa độ điểm M hiện tại
+            let mx = cx + (t_current * t_current) / (2 * p_scale);
+            let my = cy + t_current;
+
+            // Tính khoảng cách
+            // M đến F
+            ctx.beginPath();
+            ctx.moveTo(mx, my);
+            ctx.lineTo(f_x, cy);
+            ctx.strokeStyle = '#f59e0b'; // Màu cam
+            ctx.setLineDash([4, 4]);
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // M đến đường chuẩn Delta (Kẻ vuông góc)
+            ctx.beginPath();
+            ctx.moveTo(mx, my);
+            ctx.lineTo(delta_x, my);
+            ctx.stroke();
+            ctx.setLineDash([]); 
+
+            // Đánh dấu góc vuông tại đường chuẩn
+            ctx.beginPath();
+            ctx.moveTo(delta_x, my - 8);
+            ctx.lineTo(delta_x + 8, my - 8);
+            ctx.lineTo(delta_x + 8, my);
+            ctx.strokeStyle = '#64748b';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // Vẽ Tiêu điểm F
+            ctx.fillStyle = '#ef4444'; // Đỏ
+            ctx.beginPath(); ctx.arc(f_x, cy, 5, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = '#334155';
+            ctx.font = "bold 14px Arial";
+            ctx.fillText('F', f_x + 8, cy + 20);
+
+            // Vẽ điểm M
+            ctx.fillStyle = '#0f172a'; // Đen
+            ctx.beginPath(); ctx.arc(mx, my, 6, 0, Math.PI*2); ctx.fill();
+            ctx.fillText('M', mx + 10, my - 10);
+            
+            // Đoạn text d(M, F) = d(M, Δ) chạy theo điểm M
+            ctx.fillStyle = '#f59e0b';
+            ctx.font = "italic 13px Arial";
+            ctx.fillText('MF = d(M, Δ)', mx + 20, my + 15);
+        }
+
+        function animateParabola() {
+            const canvas = document.getElementById('parabolaCanvas');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            // Thông số p quy mô hiển thị
+            const p_scale = 100; // Tham số tiêu trên bản vẽ
+            
+            drawParabolaFrame(ctx, canvas.width, canvas.height, p_scale, t);
+            
+            t += 2; // Tốc độ chạy của y
+            if (t <= 150) { // Vẽ đối xứng từ y = -150 đến y = 150
+                animId = requestAnimationFrame(animateParabola);
+            } else {
+                isAnimating = false;
+                document.getElementById('animBtn').innerHTML = '<i class="fa-solid fa-rotate-right"></i> Xem lại';
+            }
+        }
+
+        function startParabolaAnimation() {
+            if (isAnimating) return; 
+            isAnimating = true;
+            t = -150; 
+            cancelAnimationFrame(animId);
+            animateParabola();
+            document.getElementById('animBtn').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang vẽ...';
+        }
+        
+        window.addEventListener('load', () => {
+            const canvas = document.getElementById('parabolaCanvas');
+            if(canvas) {
+                const ctx = canvas.getContext('2d');
+                drawParabolaFrame(ctx, canvas.width, canvas.height, 100, 150); // Vẽ khung hình tĩnh đầy đủ ban đầu
+            }
+        });
+    </script>
+</body>
+</html>
