@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học liệu 10: Mặt Cắt Hình Nón (Conic Sections)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] } };
+    </script>
+
+    <style>
+        body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; background-color: #0f172a; display: flex; justify-content: center; align-items: center; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        .aspect-container {
+            width: 100vw; height: 56.25vw; max-height: 100vh; max-width: 177.78vh;
+            background-color: #ffffff; box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            display: flex; position: relative; border-radius: 12px; overflow: hidden;
+        }
+
+        #left-panel { width: 35%; background: #f8fafc; border-right: 2px solid #e2e8f0; display: flex; flex-direction: column; padding: 2vw; z-index: 10; }
+        
+        #visual-wrapper { width: 65%; height: 100%; position: relative; background: radial-gradient(circle at center, #1e293b 0%, #020617 100%); overflow: hidden; cursor: grab; }
+        #visual-wrapper:active { cursor: grabbing; }
+        
+        canvas#simCanvas { width: 100%; height: 100%; display: block; }
+        canvas#miniMap { position: absolute; bottom: 20px; right: 20px; width: 25%; height: 25%; background: rgba(15, 23, 42, 0.7); border: 2px solid #334155; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; margin: 15px 0; }
+        input[type=range]:focus { outline: none; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: #cbd5e1; border-radius: 4px; }
+        input[type=range]::-webkit-slider-thumb { height: 24px; width: 24px; border-radius: 50%; background: #3b82f6; cursor: pointer; -webkit-appearance: none; margin-top: -9px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: transform 0.1s; }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.1); }
+
+        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #10b981; }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        .math-container { display: none; margin-top: 10px; padding: 15px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+        .math-container.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .text-circle { color: #10b981; }   
+        .text-ellipse { color: #eab308; }  
+        .text-parabola { color: #f97316; } 
+        .text-hyperbola { color: #ef4444; }
+    </style>
+</head>
+<body>
+
+    <div class="aspect-container">
+        <div id="left-panel">
+            <h1 class="text-xl lg:text-2xl font-black text-sky-800 mb-2 border-b-2 border-sky-200 pb-2 uppercase tracking-widest">
+                Đường Conic
+            </h1>
+            <p class="text-slate-500 text-sm mb-6">Xoay camera 3D bằng cách kéo thả chuột trên vùng tối.</p>
+            
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-bold text-slate-700 text-sm uppercase">Góc mặt phẳng cắt:</span>
+                    <span id="angle-display" class="font-mono font-bold text-lg text-blue-600">0&deg;</span>
+                </div>
+                <input type="range" id="angle-slider" min="0" max="90" step="1" value="0">
+                <div class="flex justify-between text-xs text-slate-400 font-bold mt-1">
+                    <span>Tròn (0&deg;)</span>
+                    <span>Hypebol (90&deg;)</span>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-sm flex-1 flex flex-col">
+                <h3 class="font-bold text-slate-800 mb-4 border-b border-slate-300 pb-2">Phân tích Giao tuyến</h3>
+                
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-slate-700 font-medium">Hiển thị tên đường:</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-name">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div id="name-display" class="text-2xl font-black text-center mb-4 opacity-0 transition-opacity duration-300 tracking-widest uppercase">
+                    Đường Tròn
+                </div>
+
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-slate-700 font-medium">Hiển thị phương trình:</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-eq">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div id="eq-wrapper" class="opacity-0 transition-opacity duration-300">
+                    <div id="eq-circle" class="math-container text-center">$$ x^2 + y^2 = R^2 $$</div>
+                    <div id="eq-ellipse" class="math-container text-center">$$ \frac{x^2}{a^2} + \frac{y^2}{b^2} = 1 \quad (a > b > 0) $$</div>
+                    <div id="eq-parabola" class="math-container text-center">$$ y^2 = 2px \quad (p > 0) $$</div>
+                    <div id="eq-hyperbola" class="math-container text-center">$$ \frac{x^2}{a^2} - \frac{y^2}{b^2} = 1 \quad (a, b > 0) $$</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="visual-wrapper">
+            <canvas id="simCanvas"></canvas>
+            <canvas id="miniMap"></canvas>
+            
+            <div class="absolute top-4 right-4 bg-slate-900/60 px-3 py-1 rounded text-xs text-slate-300 border border-slate-700 pointer-events-none">
+                <span class="text-sky-400">Góc sinh nón: 45&deg;</span>
+            </div>
+            <div class="absolute bottom-[27%] right-[20px] bg-slate-900/80 px-2 py-1 rounded text-[10px] text-slate-400 font-bold tracking-widest pointer-events-none uppercase">
+                Mặt phẳng trải phẳng
+            </div>
+        </div>
+    </div>
+
+<script>
+    // --- GIAO DIỆN & TƯƠNG TÁC ---
+    const slider = document.getElementById('angle-slider');
+    const angleDisp = document.getElementById('angle-display');
+    const toggleName = document.getElementById('toggle-name');
+    const toggleEq = document.getElementById('toggle-eq');
+    const nameDisp = document.getElementById('name-display');
+    const eqWrapper = document.getElementById('eq-wrapper');
+    
+    const eqs = {
+        'circle': document.getElementById('eq-circle'),
+        'ellipse': document.getElementById('eq-ellipse'),
+        'parabola': document.getElementById('eq-parabola'),
+        'hyperbola': document.getElementById('eq-hyperbola')
+    };
+
+    let currentConic = 'circle';
+    let planeAngleDeg = 0;
+
+    function updateUI() {
+        planeAngleDeg = parseFloat(slider.value);
+        angleDisp.innerText = planeAngleDeg + "°";
+
+        let newConic = '';
+        if (planeAngleDeg === 0) newConic = 'circle';
+        else if (planeAngleDeg < 45) newConic = 'ellipse';
+        else if (planeAngleDeg === 45) newConic = 'parabola';
+        else newConic = 'hyperbola';
+
+        if (newConic !== currentConic) {
+            currentConic = newConic;
+            nameDisp.className = `text-2xl font-black text-center mb-4 transition-opacity duration-300 tracking-widest uppercase text-${newConic}`;
+            const names = { 'circle': 'Đường Tròn', 'ellipse': 'Đường Elip', 'parabola': 'Đường Parabol', 'hyperbola': 'Đường Hypebol' };
+            nameDisp.innerText = names[newConic];
+
+            Object.values(eqs).forEach(el => el.classList.remove('active'));
+            eqs[newConic].classList.add('active');
+        }
+    }
+
+    slider.addEventListener('input', () => { updateUI(); draw(); });
+    toggleName.addEventListener('change', (e) => { nameDisp.style.opacity = e.target.checked ? 1 : 0; });
+    toggleEq.addEventListener('change', (e) => { eqWrapper.style.opacity = e.target.checked ? 1 : 0; });
+
+    // --- ENGINE 3D MỚI (Tọa độ cực - Cực mượt) ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    const miniMap = document.getElementById('miniMap');
+    const miniCtx = miniMap.getContext('2d');
+
+    let W, H, mW, mH;
+    let rotX = 0.35; 
+    let rotZ = -0.5; 
+
+    function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        W = rect.width; H = rect.height;
+        canvas.width = W * dpr; canvas.height = H * dpr;
+        ctx.scale(dpr, dpr);
+
+        const mRect = miniMap.getBoundingClientRect();
+        mW = mRect.width; mH = mRect.height;
+        miniMap.width = mW * dpr; miniMap.height = mH * dpr;
+        miniCtx.scale(dpr, dpr);
+        draw();
+    }
+    window.addEventListener('resize', resize);
+
+    // Xoay Camera
+    let isDragging = false;
+    let lastMouse = { x: 0, y: 0 };
+    canvas.addEventListener('mousedown', e => { isDragging = true; lastMouse = { x: e.clientX, y: e.clientY }; });
+    window.addEventListener('mouseup', () => { isDragging = false; });
+    window.addEventListener('mousemove', e => {
+        if (!isDragging) return;
+        rotZ += (e.clientX - lastMouse.x) * 0.01;
+        rotX -= (e.clientY - lastMouse.y) * 0.01;
+        if (rotX > 1.5) rotX = 1.5; if (rotX < -1.5) rotX = -1.5;
+        lastMouse = { x: e.clientX, y: e.clientY };
+        draw();
+    });
+
+    const SCALE = 25; 
+    function project3D(x, y, z) {
+        let x1 = x * Math.cos(rotZ) - y * Math.sin(rotZ);
+        let y1 = x * Math.sin(rotZ) + y * Math.cos(rotZ);
+        let y2 = y1 * Math.cos(rotX) - z * Math.sin(rotX);
+        return {
+            x: W / 2 + x1 * SCALE,
+            y: H / 2 + 50 - y2 * SCALE // Offset xuống 50px để hình cân đối
+        };
+    }
+
+    // --- LOGIC VẼ TOÁN HỌC ---
+    const CONE_H = 8; 
+
+    function draw() {
+        ctx.clearRect(0, 0, W, H);
+        miniCtx.clearRect(0, 0, mW, mH);
+
+        // VẼ NÓN (Wireframe)
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)'; 
+        
+        for(let z = -CONE_H; z <= CONE_H; z += 1) {
+            ctx.beginPath();
+            let radius = Math.abs(z);
+            for(let a = 0; a <= Math.PI * 2; a += 0.2) {
+                let p = project3D(radius * Math.cos(a), radius * Math.sin(a), z);
+                if(a === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+            }
+            ctx.closePath(); ctx.stroke();
+        }
+
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.15)';
+        for(let a = 0; a < Math.PI * 2; a += Math.PI / 6) {
+            ctx.beginPath();
+            let pTop = project3D(CONE_H * Math.cos(a), CONE_H * Math.sin(a), CONE_H);
+            let pBot = project3D(-CONE_H * Math.cos(a), -CONE_H * Math.sin(a), -CONE_H);
+            ctx.moveTo(pTop.x, pTop.y);
+            ctx.lineTo(project3D(0,0,0).x, project3D(0,0,0).y);
+            ctx.lineTo(pBot.x, pBot.y);
+            ctx.stroke();
+        }
+
+        // TÍNH TOÁN GIAO TUYẾN BẰNG TỌA ĐỘ CỰC (Chống gãy khúc)
+        // Điểm tựa mới của mặt phẳng: (0, -2, 2). Chống suy biến hình X.
+        const safeAngle = planeAngleDeg === 90 ? 89.99 : planeAngleDeg;
+        const theta = safeAngle * Math.PI / 180;
+        const tanA = Math.tan(theta);
+        
+        let branch1 = [], branch2 = [];
+        const STEPS = 1000; // 1000 điểm đảm bảo độ cong hoàn hảo
+
+        for(let i=0; i<=STEPS; i++) {
+            let t = (i / STEPS) * Math.PI * 2;
+            let sinT = Math.sin(t);
+            let cosT = Math.cos(t);
+
+            // Nón trên
+            let denom1 = 1 - sinT * tanA;
+            if (Math.abs(denom1) > 0.001) {
+                let r1 = (2 + 2*tanA) / denom1;
+                if (r1 >= 0 && r1 <= CONE_H) branch1.push({x: r1 * cosT, y: r1 * sinT, z: r1});
+                else branch1.push(null);
+            } else branch1.push(null);
+
+            // Nón dưới
+            let denom2 = 1 + sinT * tanA;
+            if (Math.abs(denom2) > 0.001) {
+                let r2 = (-2 - 2*tanA) / denom2;
+                if (r2 >= 0 && r2 <= CONE_H) branch2.push({x: r2 * cosT, y: r2 * sinT, z: -r2});
+                else branch2.push(null);
+            } else branch2.push(null);
+        }
+
+        let color = {'circle': '#10b981', 'ellipse': '#eab308', 'parabola': '#f97316', 'hyperbola': '#ef4444'}[currentConic];
+
+        // Hàm vẽ không nối các điểm đứt gãy
+        const drawGlowingPath = (path, context, is3D = true, scale = SCALE, offsetX = W/2, offsetY = H/2) => {
+            if(path.length === 0) return;
+            context.beginPath();
+            let isFirst = true;
+            for(let i=0; i<path.length; i++) {
+                if (!path[i]) { isFirst = true; continue; }
+                let pt = is3D ? project3D(path[i].x, path[i].y, path[i].z) : { x: offsetX + path[i].x * scale, y: offsetY - path[i].y * scale };
+                if (isFirst) { context.moveTo(pt.x, pt.y); isFirst = false; }
+                else context.lineTo(pt.x, pt.y);
+            }
+            context.shadowBlur = is3D ? 15 : 5; context.shadowColor = color;
+            context.strokeStyle = color; context.lineWidth = is3D ? 3 : 2;
+            context.stroke(); context.shadowBlur = 0;
+        };
+
+        drawGlowingPath(branch1, ctx, true);
+        drawGlowingPath(branch2, ctx, true);
+
+        // VẼ MẶT PHẲNG CẮT
+        ctx.fillStyle = 'rgba(148, 163, 184, 0.15)'; ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)'; ctx.lineWidth = 1;
+        ctx.beginPath();
+        const S = 9; 
+        let p1 = project3D(-S, -S * Math.cos(theta) - 2, -S * Math.sin(theta) + 2);
+        let p2 = project3D(S, -S * Math.cos(theta) - 2, -S * Math.sin(theta) + 2);
+        let p3 = project3D(S, S * Math.cos(theta) - 2, S * Math.sin(theta) + 2);
+        let p4 = project3D(-S, S * Math.cos(theta) - 2, S * Math.sin(theta) + 2);
+        ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.lineTo(p3.x, p3.y); ctx.lineTo(p4.x, p4.y);
+        ctx.closePath(); ctx.fill(); ctx.stroke();
+
+        // MINI-MAP 2D
+        miniCtx.fillStyle = '#0f172a'; miniCtx.fillRect(0, 0, mW, mH);
+        miniCtx.strokeStyle = '#475569'; miniCtx.lineWidth = 1;
+        miniCtx.beginPath(); miniCtx.moveTo(0, mH/2); miniCtx.lineTo(mW, mH/2); miniCtx.stroke(); 
+        miniCtx.beginPath(); miniCtx.moveTo(mW/2, 0); miniCtx.lineTo(mW/2, mH); miniCtx.stroke(); 
+
+        // Phép trải phẳng tọa độ hoàn hảo (Chống vỡ tọa độ khi 90 độ)
+        let flattenPath = (path) => path.map(p => p ? { x: p.x, y: (p.y + 2) * Math.cos(theta) + (p.z - 2) * Math.sin(theta), z: 0 } : null);
+        
+        drawGlowingPath(flattenPath(branch1), miniCtx, false, 15, mW/2, mH/2 + 10);
+        drawGlowingPath(flattenPath(branch2), miniCtx, false, 15, mW/2, mH/2 + 10);
+    }
+
+    setTimeout(() => { updateUI(); resize(); }, 100);
+</script>
+</body>
+</html>
