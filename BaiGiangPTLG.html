@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học liệu Tương tác: Phương trình lượng giác cơ bản</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                tags: 'ams'
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #082f49; /* Sky 900 */
+            --secondary: #0284c7; /* Sky 600 */
+            --accent: #0ea5e9; /* Sky 500 */
+            --highlight: #f59e0b; /* Amber 500 */
+            --bg-body: #f0f9ff; /* Sky 50 */
+            --bg-card: #ffffff;
+            --text-main: #334155; 
+            --text-muted: #64748b; 
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Merriweather', serif;
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+       /* --- Header --- */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #0369a1 100%);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--highlight);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M 0 50 Q 25 25 50 50 T 100 50" stroke="rgba(255,255,255,0.05)" stroke-width="3" fill="none"/></svg>') repeat;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .header-badge {
+            display: inline-block;
+            background: rgba(2, 132, 199, 0.4);
+            border: 1px solid rgba(14, 165, 233, 0.5);
+            color: #e0f2fe;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        header h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            color: #bae6fd;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- Layout --- */
+        .container {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background-color: var(--secondary);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 1rem;
+        }
+
+        .section-title i {
+            color: var(--secondary);
+        }
+
+        /* --- Info Boxes & Math --- */
+        .formula-box {
+            background: #f0f9ff;
+            border: 2px solid #bae6fd;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            font-size: 1.2rem;
+            color: var(--primary);
+            text-align: center;
+            position: relative;
+        }
+        
+        .formula-box .badge {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--secondary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .note-box {
+            background-color: #fffbeb;
+            border-left: 4px solid var(--highlight);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .math-display {
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-size: 1.25rem;
+        }
+
+        /* --- Drag & Drop Scoped Container --- */
+        .dnd-wrapper {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .dnd-sentence {
+            font-size: 1.15rem;
+            line-height: 2.4;
+            text-align: justify;
+        }
+
+        .drop-zone {
+            display: inline-block;
+            min-width: 140px;
+            height: 40px;
+            background: #e2e8f0;
+            border: 2px dashed var(--secondary);
+            border-radius: 6px;
+            vertical-align: middle;
+            margin: 0 8px;
+            padding: 0 10px;
+            text-align: center;
+            line-height: 36px;
+            font-weight: 600;
+            color: var(--primary);
+            transition: all 0.2s;
+        }
+
+        .drop-zone.drag-over {
+            background: #e0f2fe;
+            border-color: var(--secondary);
+            transform: scale(1.05);
+        }
+
+        .drag-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .draggable-item {
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+            font-weight: 500;
+            transition: transform 0.1s;
+        }
+
+        .draggable-item:active { cursor: grabbing; transform: scale(0.95); }
+        .draggable-item.in-zone { background: transparent; color: var(--primary); padding: 0; }
+
+        .btn {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 1rem;
+        }
+        .btn:hover { background: #0369a1; }
+        .btn-reset { background: #64748b; margin-left: 10px; }
+        .btn-reset:hover { background: #475569; }
+
+        /* --- Accordion --- */
+        .accordion {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        .accordion-header {
+            background: #f8fafc;
+            padding: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            user-select: none;
+            transition: background 0.2s;
+            border-left: 4px solid var(--secondary);
+        }
+        .accordion-header:hover { background: #f1f5f9; }
+        .accordion-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            background: white;
+        }
+        .accordion-content.active {
+            padding: 1.5rem;
+            max-height: 1000px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* --- Quiz Section --- */
+        .quiz-question {
+            margin-bottom: 2.5rem;
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .quiz-question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .quiz-option {
+            background: white;
+            border: 2px solid #cbd5e1;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        .quiz-option:hover {
+            border-color: var(--secondary);
+            background: #f0f9ff;
+        }
+        .quiz-option .opt-label {
+            width: 30px;
+            height: 30px;
+            background: var(--bg-body);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: #ecfdf5;
+        }
+        .quiz-option.correct .opt-label { background: var(--success); color: white; }
+        
+        .quiz-option.wrong {
+            border-color: var(--danger);
+            background: #fef2f2;
+        }
+        .quiz-option.wrong .opt-label { background: var(--danger); color: white; }
+
+        .quiz-explanation {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #fff;
+            border-left: 4px solid var(--secondary);
+            border-radius: 0 8px 8px 0;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 3rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .quiz-options { grid-template-columns: 1fr; }
+            .section-card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+ <header>
+        <div class="header-badge"><i class="fa-solid fa-water"></i> Toán học 11 - Chương trình 2018</div>
+        <h1>Phương trình Lượng giác Cơ bản</h1>
+        <p>Làm chủ chu kỳ của sóng sin, cos, tan và cot</p>
+    </header>
+
+    <div class="container">
+
+        <div class="section-card" style="background: linear-gradient(to right, #f0f9ff, #e0f2fe);">
+            <h2 class="section-title"><i class="fa-solid fa-compass"></i> Giới thiệu</h2>
+            <p>Trong tự nhiên, các hiện tượng lặp đi lặp lại như nhịp đập trái tim, thủy triều, hay dao động của con lắc đồng hồ đều được mô tả bằng hàm số lượng giác. Giải phương trình lượng giác chính là đi tìm <strong>thời điểm</strong> mà hiện tượng đó lặp lại một trạng thái cụ thể.</p>
+            <p>Bí quyết cốt lõi để giỏi chương này là: Thuộc vòng tròn lượng giác, nắm vững tính chu kỳ ($k2\pi$ hoặc $k\pi$) và sử dụng thành thạo dấu ngoặc vuông <code>[</code> (nghĩa là HOẶC).</p>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-wave-square"></i> I. Phương trình $\sin x = m$</h2>
+            
+            <p><strong>Điều kiện có nghiệm:</strong> Vì đồ thị hàm sin luôn dao động trong khoảng từ $-1$ đến $1$, nên phương trình chỉ có nghiệm khi và chỉ khi <strong>$|m| \le 1$</strong> (hay $-1 \le m \le 1$).</p>
+            
+            <div class="formula-box">
+                <div class="badge">Công thức tổng quát</div>
+                <p>Nếu $|m| \le 1$, gọi $\alpha$ là góc (radian) sao cho $\sin \alpha = m$. Ta có:</p>
+                <div class="math-display">
+                    $$ \sin x = \sin \alpha \Leftrightarrow \left[ \begin{array}{l} x = \alpha + k2\pi \\ x = \pi - \alpha + k2\pi \end{array} \right. \quad (k \in \mathbb{Z}) $$
+                </div>
+                <p style="font-size: 1rem; color: var(--text-muted);"><em>(Ghi nhớ: "Sin bù" - góc $\alpha$ và góc $\pi - \alpha$ có cùng giá trị sin)</em></p>
+            </div>
+
+            <div class="dnd-wrapper" id="dnd1">
+                <div class="dnd-sentence">
+                    <strong>Hoạt động:</strong> Phương trình $\sin x = 1$ có nghiệm đặc biệt là $x =$ <span class="drop-zone" data-answer="pi/2 + k2pi"></span>. Phương trình $\sin x = 0$ có nghiệm là $x =$ <span class="drop-zone" data-answer="kpi"></span>.
+                </div>
+                <div class="drag-pool">
+                    <div class="draggable-item" draggable="true">pi/2 + k2pi</div>
+                    <div class="draggable-item" draggable="true">kpi</div>
+                    <div class="draggable-item" draggable="true">-pi/2 + k2pi</div>
+                </div>
+                <div style="text-align: center;">
+                    <button class="btn" onclick="checkDnD('dnd1')">Kiểm tra</button>
+                    <button class="btn btn-reset" onclick="resetDnD('dnd1')">Làm lại</button>
+                    <p class="feedback" style="margin-top: 10px; font-weight: bold;"></p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; color: var(--primary);">Ví dụ phân tích:</h3>
+            
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Ví dụ 1: $\sin x = \dfrac{1}{2}$</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Bấm máy tính (chế độ Radian): $\text{SHIFT} \rightarrow \sin \rightarrow \dfrac{1}{2} = \dfrac{\pi}{6}$. Ta viết lại phương trình:</p>
+                    <p>$$ \sin x = \sin \dfrac{\pi}{6} $$</p>
+                    <p>Áp dụng công thức:</p>
+                    <p>$$ \Leftrightarrow \left[ \begin{array}{l} x = \dfrac{\pi}{6} + k2\pi \\ x = \pi - \dfrac{\pi}{6} + k2\pi \end{array} \right. \Leftrightarrow \left[ \begin{array}{l} x = \dfrac{\pi}{6} + k2\pi \\ x = \dfrac{5\pi}{6} + k2\pi \end{array} \right. \quad (k \in \mathbb{Z}) $$</p>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Ví dụ 2: $\sin 2x = -\dfrac{\sqrt{3}}{2}$</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Ta có $\sin\left(-\dfrac{\pi}{3}\right) = -\dfrac{\sqrt{3}}{2}$. Phương trình trở thành:</p>
+                    <p>$$ \sin 2x = \sin\left(-\dfrac{\pi}{3}\right) $$</p>
+                    <p>$$ \Leftrightarrow \left[ \begin{array}{l} 2x = -\dfrac{\pi}{3} + k2\pi \\ 2x = \pi - \left(-\dfrac{\pi}{3}\right) + k2\pi \end{array} \right. \Leftrightarrow \left[ \begin{array}{l} 2x = -\dfrac{\pi}{3} + k2\pi \\ 2x = \dfrac{4\pi}{3} + k2\pi \end{array} \right. $$</p>
+                    <p>Chia cả hai vế cho 2:</p>
+                    <p>$$ \Leftrightarrow \left[ \begin{array}{l} x = -\dfrac{\pi}{6} + k\pi \\ x = \dfrac{2\pi}{3} + k\pi \end{array} \right. \quad (k \in \mathbb{Z}) $$</p>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Ví dụ 3: Sử dụng độ $\sin(x - 30^\circ) = \sin 45^\circ$</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Khi đề bài dùng đơn vị độ ($^\circ$), ta phải dùng $180^\circ$ thay cho $\pi$, và $k360^\circ$ thay cho $k2\pi$. Không được dùng lẫn lộn!</p>
+                    <p>$$ \Leftrightarrow \left[ \begin{array}{l} x - 30^\circ = 45^\circ + k360^\circ \\ x - 30^\circ = 180^\circ - 45^\circ + k360^\circ \end{array} \right. $$</p>
+                    <p>$$ \Leftrightarrow \left[ \begin{array}{l} x = 75^\circ + k360^\circ \\ x = 165^\circ + k360^\circ \end{array} \right. \quad (k \in \mathbb{Z}) $$</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-chart-line"></i> II. Phương trình $\cos x = m$</h2>
+            
+            <p><strong>Điều kiện có nghiệm:</strong> Tương tự hàm $\sin$, phương trình chỉ có nghiệm khi <strong>$|m| \le 1$</strong>.</p>
+            
+            <div class="formula-box">
+                <div class="badge">Công thức tổng quát</div>
+                <p>Gọi $\alpha$ là góc sao cho $\cos \alpha = m$. Ta có:</p>
+                <div class="math-display">
+                    $$ \cos x = \cos \alpha \Leftrightarrow \left[ \begin{array}{l} x = \alpha + k2\pi \\ x = -\alpha + k2\pi \end{array} \right. \quad (k \in \mathbb{Z}) $$
+                </div>
+                <p style="font-size: 1rem; color: var(--text-muted);"><em>(Ghi nhớ: "Cos đối" - góc $\alpha$ và góc $-\alpha$ có cùng giá trị cos)</em></p>
+            </div>
+
+            <div class="dnd-wrapper" id="dnd2">
+                <div class="dnd-sentence">
+                    <strong>Hoạt động:</strong> Phương trình $\cos x = 1$ có nghiệm là $x =$ <span class="drop-zone" data-answer="k2pi"></span>. Phương trình $\cos x = -1$ có nghiệm là $x =$ <span class="drop-zone" data-answer="pi + k2pi"></span>.
+                </div>
+                <div class="drag-pool">
+                    <div class="draggable-item" draggable="true">k2pi</div>
+                    <div class="draggable-item" draggable="true">pi + k2pi</div>
+                    <div class="draggable-item" draggable="true">kpi</div>
+                </div>
+                <div style="text-align: center;">
+                    <button class="btn" onclick="checkDnD('dnd2')">Kiểm tra</button>
+                    <button class="btn btn-reset" onclick="resetDnD('dnd2')">Làm lại</button>
+                    <p class="feedback" style="margin-top: 10px; font-weight: bold;"></p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; color: var(--primary);">Ví dụ phân tích:</h3>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Ví dụ 1: $\cos x = \dfrac{\sqrt{2}}{2}$</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Ta biết $\cos \dfrac{\pi}{4} = \dfrac{\sqrt{2}}{2}$. Do đó:</p>
+                    <p>$$ \cos x = \cos \dfrac{\pi}{4} \Leftrightarrow \left[ \begin{array}{l} x = \dfrac{\pi}{4} + k2\pi \\ x = -\dfrac{\pi}{4} + k2\pi \end{array} \right. \quad (k \in \mathbb{Z}) $$</p>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Ví dụ 2: $\cos 3x = -\dfrac{1}{2}$</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Ta có $\cos \dfrac{2\pi}{3} = -\dfrac{1}{2}$. Phương trình trở thành:</p>
+                    <p>$$ \cos 3x = \cos \dfrac{2\pi}{3} \Leftrightarrow \left[ \begin{array}{l} 3x = \dfrac{2\pi}{3} + k2\pi \\ 3x = -\dfrac{2\pi}{3} + k2\pi \end{array} \right. $$</p>
+                    <p>Chia cả hai vế cho 3 (chú ý chia cả phần đuôi chu kỳ):</p>
+                    <p>$$ \Leftrightarrow \left[ \begin{array}{l} x = \dfrac{2\pi}{9} + k\dfrac{2\pi}{3} \\ x = -\dfrac{2\pi}{9} + k\dfrac{2\pi}{3} \end{array} \right. \quad (k \in \mathbb{Z}) $$</p>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Ví dụ 3: $\cos x = 2$</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Nhận thấy $m = 2 > 1$, vi phạm điều kiện có nghiệm $|m| \le 1$.</p>
+                    <p><strong>Kết luận:</strong> Phương trình vô nghiệm. Tập nghiệm $S = \emptyset$.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-angle-up"></i> III. Phương trình $\tan x = m$</h2>
+            
+            <p><strong>Điều kiện xác định:</strong> $\cos x \neq 0 \Leftrightarrow x \neq \dfrac{\pi}{2} + k\pi$. Tuy nhiên, phương trình $\tan x = m$ <strong>luôn có nghiệm</strong> với mọi giá trị của $m \in \mathbb{R}$.</p>
+            
+            <div class="formula-box">
+                <div class="badge">Công thức tổng quát</div>
+                <p>Gọi $\alpha$ là góc sao cho $\tan \alpha = m$. Chu kỳ của $\tan$ là $\pi$ (không phải $2\pi$ nhé):</p>
+                <div class="math-display">
+                    $$ \tan x = \tan \alpha \Leftrightarrow x = \alpha + k\pi \quad (k \in \mathbb{Z}) $$
+                </div>
+            </div>
+
+            <div class="dnd-wrapper" id="dnd3">
+                <div class="dnd-sentence">
+                    <strong>Hoạt động:</strong> Hàm $\tan$ và $\cot$ có chu kỳ tuần hoàn là <span class="drop-zone" data-answer="pi"></span>, do đó đuôi nghiệm luôn cộng thêm <span class="drop-zone" data-answer="kpi"></span> chứ không phải $k2\pi$.
+                </div>
+                <div class="drag-pool">
+                    <div class="draggable-item" draggable="true">pi</div>
+                    <div class="draggable-item" draggable="true">kpi</div>
+                    <div class="draggable-item" draggable="true">2pi</div>
+                </div>
+                <div style="text-align: center;">
+                    <button class="btn" onclick="checkDnD('dnd3')">Kiểm tra</button>
+                    <button class="btn btn-reset" onclick="resetDnD('dnd3')">Làm lại</button>
+                    <p class="feedback" style="margin-top: 10px; font-weight: bold;"></p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; color: var(--primary);">Ví dụ phân tích:</h3>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Ví dụ 1: $\tan x = 1$</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Ta có $\tan \dfrac{\pi}{4} = 1$.</p>
+                    <p>$$ \tan x = \tan \dfrac{\pi}{4} \Leftrightarrow x = \dfrac{\pi}{4} + k\pi \quad (k \in \mathbb{Z}) $$</p>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Ví dụ 2: $\tan\left(2x - \dfrac{\pi}{6}\right) = -\sqrt{3}$</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Ta có $\tan\left(-\dfrac{\pi}{3}\right) = -\sqrt{3}$.</p>
+                    <p>$$ \Rightarrow 2x - \dfrac{\pi}{6} = -\dfrac{\pi}{3} + k\pi $$</p>
+                    <p>$$ \Leftrightarrow 2x = -\dfrac{\pi}{6} + k\pi $$</p>
+                    <p>$$ \Leftrightarrow x = -\dfrac{\pi}{12} + k\dfrac{\pi}{2} \quad (k \in \mathbb{Z}) $$</p>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Ví dụ 3: $\tan x = 5$ (Số không đẹp)</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Khi giá trị $m$ không thuộc các góc đặc biệt, ta sử dụng hàm $\arctan$ (hàm ngược của $\tan$).</p>
+                    <p>$$ \tan x = 5 \Leftrightarrow x = \arctan(5) + k\pi \quad (k \in \mathbb{Z}) $$</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-angle-down"></i> IV. Phương trình $\cot x = m$</h2>
+            
+            <p><strong>Điều kiện xác định:</strong> $\sin x \neq 0 \Leftrightarrow x \neq k\pi$. Phương trình $\cot x = m$ cũng <strong>luôn có nghiệm</strong> với mọi $m \in \mathbb{R}$.</p>
+            
+            <div class="formula-box">
+                <div class="badge">Công thức tổng quát</div>
+                <p>Gọi $\alpha$ là góc sao cho $\cot \alpha = m$.</p>
+                <div class="math-display">
+                    $$ \cot x = \cot \alpha \Leftrightarrow x = \alpha + k\pi \quad (k \in \mathbb{Z}) $$
+                </div>
+            </div>
+
+            <div class="note-box">
+                <i class="fa-solid fa-lightbulb" style="color: var(--highlight);"></i> <strong>Mẹo bấm máy tính:</strong> Trên máy tính Casio không có nút <code>cot</code>. Để giải $\cot x = m$ (với $m \neq 0$), ta bấm <code>SHIFT</code> $\tan \left(\dfrac{1}{m}\right)$ để tìm góc $\alpha$.
+            </div>
+
+            <h3 style="margin-top: 2rem; color: var(--primary);">Ví dụ phân tích:</h3>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Ví dụ 1: $\cot x = \sqrt{3}$</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Ta biết $\cot \dfrac{\pi}{6} = \sqrt{3}$ (hoặc bấm máy tính $\arctan(\dfrac{1}{\sqrt{3}}) = \dfrac{\pi}{6}$).</p>
+                    <p>$$ \cot x = \cot \dfrac{\pi}{6} \Leftrightarrow x = \dfrac{\pi}{6} + k\pi \quad (k \in \mathbb{Z}) $$</p>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Ví dụ 2: $\cot \dfrac{x}{2} = -1$</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Ta có $\cot\left(-\dfrac{\pi}{4}\right) = -1$.</p>
+                    <p>$$ \Rightarrow \dfrac{x}{2} = -\dfrac{\pi}{4} + k\pi $$</p>
+                    <p>Nhân cả 2 vế cho 2:</p>
+                    <p>$$ \Leftrightarrow x = -\dfrac{\pi}{2} + k2\pi \quad (k \in \mathbb{Z}) $$</p>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Ví dụ 3: $\cot x = 0$</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Vì $\cot x = \dfrac{\cos x}{\sin x}$, nên $\cot x = 0 \Leftrightarrow \cos x = 0$.</p>
+                    <p>Nghiệm đặc biệt của $\cos x = 0$ là $x = \dfrac{\pi}{2} + k\pi$.</p>
+                    <p>$$ \Rightarrow x = \dfrac{\pi}{2} + k\pi \quad (k \in \mathbb{Z}) $$</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card" id="quiz-section">
+            <h2 class="section-title"><i class="fa-solid fa-dumbbell"></i> V. Bài tập rèn luyện (10 câu)</h2>
+            <p>Hệ thống trắc nghiệm nhằm kiểm tra kỹ năng nhận diện công thức, điều kiện có nghiệm và nghiệm đặc biệt.</p>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 1: Phương trình $\sin x = m$ có nghiệm khi và chỉ khi:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Thiếu điều kiện giới hạn dưới.')">
+                        <div class="opt-label">A</div> <span>$m \le 1$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Tập giá trị của sin là $[-1; 1]$.')">
+                        <div class="opt-label">B</div> <span>$m > 0$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Giá trị của hàm số sin luôn nằm trong đoạn $[-1; 1]$.')">
+                        <div class="opt-label">C</div> <span>$-1 \le m \le 1$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Hàm số lượng giác bị chặn, không thể nhận mọi giá trị thực.')">
+                        <div class="opt-label">D</div> <span>$m \in \mathbb{R}$</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 2: Nghiệm của phương trình $\cos x = 1$ là:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Tại vị trí này $\cos x = -1$.')">
+                        <div class="opt-label">A</div> <span>$x = \pi + k2\pi$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Trên đường tròn lượng giác, điểm có hoành độ bằng 1 là điểm gốc, ứng với cung $0 + k2\pi$.')">
+                        <div class="opt-label">B</div> <span>$x = k2\pi$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Tại đây $\cos x = 0$.')">
+                        <div class="opt-label">C</div> <span>$x = \dfrac{\pi}{2} + k\pi$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Chu kỳ của nghiệm đặc biệt này là $k2\pi$, nếu $k\pi$ sẽ lấy thêm điểm $\pi$ (làm $\cos x = -1$).')">
+                        <div class="opt-label">D</div> <span>$x = k\pi$</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 3: Phương trình nào dưới đây <strong>vô nghiệm</strong>?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Phương trình $\\tan$ luôn có nghiệm.')">
+                        <div class="opt-label">A</div> <span>$\tan x = 3$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Phương trình $\\cot$ luôn có nghiệm.')">
+                        <div class="opt-label">B</div> <span>$\cot x = -\sqrt{5}$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Mặc dù $x$ là $2x$, nhưng vế phải bằng $0$, nằm trong đoạn $[-1; 1]$ nên có nghiệm bình thường.')">
+                        <div class="opt-label">C</div> <span>$\cos 2x = 0$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Do $\\sin x \\in [-1; 1]$ nên $\\sin x = \\dfrac{3}{2} = 1.5$ là điều vô lý.')">
+                        <div class="opt-label">D</div> <span>$\sin x = \dfrac{3}{2}$</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 4: Nghiệm của phương trình $\sin x = \sin \dfrac{\pi}{3}$ là:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Áp dụng công thức $\\sin x = \\sin \\alpha$, nghiệm là $x = \\alpha + k2\\pi$ hoặc $x = \\pi - \\alpha + k2\\pi$. Ở đây $\\pi - \\dfrac{\\pi}{3} = \\dfrac{2\\pi}{3}$.')">
+                        <div class="opt-label">A</div> <span>$x = \dfrac{\pi}{3} + k2\pi$ hoặc $x = \dfrac{2\pi}{3} + k2\pi$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Đây là công thức của phương trình Cos (cos đối).')">
+                        <div class="opt-label">B</div> <span>$x = \pm \dfrac{\pi}{3} + k2\pi$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Hàm sin có chu kỳ là $2\\pi$, bạn dùng $k\\pi$ là thiếu đuôi.')">
+                        <div class="opt-label">C</div> <span>$x = \dfrac{\pi}{3} + k\pi$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai.')">
+                        <div class="opt-label">D</div> <span>$x = \dfrac{\pi}{3} + k2\pi$ hoặc $x = -\dfrac{2\pi}{3} + k2\pi$</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 5: Tập nghiệm của phương trình $\sqrt{3} \tan x - 3 = 0$ là:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Chu kỳ của phương trình tan là $k\\pi$, không phải $k2\\pi$.')">
+                        <div class="opt-label">A</div> <span>$x = \dfrac{\pi}{3} + k2\pi$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. $\\tan \\dfrac{\\pi}{6} = \\dfrac{1}{\\sqrt{3}}$, chứ không phải $\\sqrt{3}$.')">
+                        <div class="opt-label">B</div> <span>$x = \dfrac{\pi}{6} + k\pi$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! Chuyển vế ta có $\\tan x = \\dfrac{3}{\\sqrt{3}} = \\sqrt{3}$. Mà $\\tan \\dfrac{\\pi}{3} = \\sqrt{3}$. Vậy $x = \\dfrac{\\pi}{3} + k\\pi$.')">
+                        <div class="opt-label">C</div> <span>$x = \dfrac{\pi}{3} + k\pi$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Phương trình tan luôn có một họ nghiệm duy nhất (không có $\\pm$).')">
+                        <div class="opt-label">D</div> <span>$x = \pm \dfrac{\pi}{3} + k\pi$</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 6: Phương trình $\cos x = \cos 60^\circ$ có các họ nghiệm là:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Chính xác! Đề bài dùng độ nên đuôi là $k360^\\circ$. Công thức Cos là $\\pm \\alpha$.')">
+                        <div class="opt-label">A</div> <span>$x = \pm 60^\circ + k360^\circ$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Hàm Cos tuần hoàn với chu kỳ $360^\\circ$ ($2\\pi$).')">
+                        <div class="opt-label">B</div> <span>$x = \pm 60^\circ + k180^\circ$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Đây là công thức của hàm Sin (sin bù).')">
+                        <div class="opt-label">C</div> <span>$x = 60^\circ + k360^\circ$ hoặc $x = 120^\circ + k360^\circ$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Không được pha trộn giữa Radian ($\\pi$) và Độ ($^\\circ$) trong cùng một họ nghiệm.')">
+                        <div class="opt-label">D</div> <span>$x = \pm 60^\circ + k2\pi$</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 7: Giải phương trình lượng giác: $2\cos 2x + \sqrt{2} = 0$.</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Bạn quên chia vế cho 2 ở đuôi chu kỳ $k2\\pi$.')">
+                        <div class="opt-label">A</div> <span>$x = \pm \dfrac{3\pi}{4} + k2\pi$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! $\\cos 2x = -\\dfrac{\\sqrt{2}}{2} \\Leftrightarrow 2x = \\pm \\dfrac{3\\pi}{4} + k2\\pi \\Leftrightarrow x = \\pm \\dfrac{3\\pi}{8} + k\\pi$.')">
+                        <div class="opt-label">B</div> <span>$x = \pm \dfrac{3\pi}{8} + k\pi$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. $\\cos \\dfrac{\\pi}{4} = \\dfrac{\\sqrt{2}}{2}$, chứ không phải $-\\dfrac{\\sqrt{2}}{2}$.')">
+                        <div class="opt-label">C</div> <span>$x = \pm \dfrac{\pi}{8} + k\pi$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Hàm Cos phải có $\\pm$.')">
+                        <div class="opt-label">D</div> <span>$x = \dfrac{3\pi}{8} + k\pi$</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 8: Phương trình $\cot 3x = \cot \dfrac{\pi}{7}$ có nghiệm là:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Phương trình của cot có dạng $x = \\alpha + k\\pi$, không có hai họ nghiệm $\\pm$.')">
+                        <div class="opt-label">A</div> <span>$x = \pm \dfrac{\pi}{21} + k\dfrac{\pi}{3}$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! $3x = \\dfrac{\\pi}{7} + k\\pi \\Leftrightarrow x = \\dfrac{\\pi}{21} + k\\dfrac{\\pi}{3}$.')">
+                        <div class="opt-label">B</div> <span>$x = \dfrac{\pi}{21} + k\dfrac{\pi}{3}$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Bạn chia phần đầu cho 3 nhưng quên chia phần đuôi $k\\pi$ cho 3.')">
+                        <div class="opt-label">C</div> <span>$x = \dfrac{\pi}{21} + k\pi$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai.')">
+                        <div class="opt-label">D</div> <span>$x = \dfrac{\pi}{7} + k\pi$</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 9: Giải phương trình: $\sin^2 x - 1 = 0$.</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Mới giải được $\\sin x = 1$ nhưng sót trường hợp $\\sin x = -1$.')">
+                        <div class="opt-label">A</div> <span>$x = \dfrac{\pi}{2} + k2\pi$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Đúng! $\\sin^2 x = 1 \\Leftrightarrow \\sin x = 1$ hoặc $\\sin x = -1$. Nghĩa là $\\cos x = 0$, có họ nghiệm gộp là $x = \\dfrac{\\pi}{2} + k\\pi$.')">
+                        <div class="opt-label">B</div> <span>$x = \dfrac{\pi}{2} + k\pi$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Tại $k\\pi$ thì $\\sin x = 0$.')">
+                        <div class="opt-label">C</div> <span>$x = k\pi$</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai.')">
+                        <div class="opt-label">D</div> <span>$x = \pm \dfrac{\pi}{2} + k\pi$</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="quiz-question-text">Câu 10: (Lý thuyết nâng cao) Tại sao trong phương trình $\tan x = m$, ta <strong>không cần</strong> ghi thêm điều kiện $\cos x \neq 0$?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Có những bài toán phụ phải xét điều kiện rất nghiêm ngặt.')">
+                        <div class="opt-label">A</div> <span>Vì trong tự luận, giáo viên thường bỏ qua bước này để học sinh làm nhanh.</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai. Hàm $\\tan$ không phải lúc nào cũng xác định, nó không xác định khi $\\cos x = 0$.')">
+                        <div class="opt-label">B</div> <span>Vì hàm $\tan x$ luôn xác định trên toàn bộ trục số thực $\mathbb{R}$.</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true, 'Chính xác! Khi $\\tan x = m$ (một số thực hữu hạn), thì hiển nhiên tỉ số $\\dfrac{\\sin x}{\\cos x}$ có giá trị thực, suy ra $\\cos x$ chắc chắn đã khác 0. Do đó điều kiện này tự động thỏa mãn.')">
+                        <div class="opt-label">C</div> <span>Vì khi $\tan x$ bằng một số hữu hạn $m$, thì tự động $\cos x \neq 0$ đã được thỏa mãn.</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false, 'Sai.')">
+                        <div class="opt-label">D</div> <span>Vì $m$ là số nguyên.</span>
+                    </div>
+                </div>
+                <div class="quiz-explanation"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer>
+        <h3 style="color: white; margin-bottom: 10px;">Học liệu Toán học Mở</h3>
+        <p>Biên soạn bởi Lê Nguyễn Hồng Linh.</p>
+        <p style="opacity: 0.6; font-size: 0.9rem; margin-top: 20px;">© Đồng hành và hiệu chỉnh mã nguồn: AI trợ lý.</p>
+    </footer>
+
+    <script>
+        // === LOGIC KÉO THẢ (DRAG & DROP) CHO NHIỀU VÙNG ĐỘC LẬP ===
+        let draggedItem = null;
+        let sourcePool = null;
+
+        // Lưu trạng thái ban đầu của các pool
+        const initialStates = {};
+
+        function initializeDnD() {
+            const wrappers = document.querySelectorAll('.dnd-wrapper');
+            
+            wrappers.forEach(wrapper => {
+                const wrapperId = wrapper.id;
+                const pool = wrapper.querySelector('.drag-pool');
+                
+                // Lưu HTML ban đầu của pool nếu chưa có
+                if (!initialStates[wrapperId]) {
+                    initialStates[wrapperId] = pool.innerHTML;
+                }
+
+                const items = wrapper.querySelectorAll('.draggable-item');
+                const zones = wrapper.querySelectorAll('.drop-zone');
+
+                // Xóa event cũ bằng cách clone node (để an toàn khi reset)
+                zones.forEach(zone => {
+                    const newZone = zone.cloneNode(true);
+                    zone.parentNode.replaceChild(newZone, zone);
+                    
+                    newZone.addEventListener('dragover', e => {
+                        e.preventDefault();
+                        newZone.classList.add('drag-over');
+                    });
+
+                    newZone.addEventListener('dragleave', () => {
+                        newZone.classList.remove('drag-over');
+                    });
+
+                    newZone.addEventListener('drop', function(e) {
+                        e.preventDefault();
+                        this.classList.remove('drag-over');
+                        
+                        // Chỉ cho phép thả từ pool cùng khu vực
+                        if (draggedItem && sourcePool === pool) {
+                            if (this.children.length > 0) {
+                                const existingItem = this.children[0];
+                                existingItem.classList.remove('in-zone');
+                                pool.appendChild(existingItem);
+                            }
+                            draggedItem.parentNode.removeChild(draggedItem);
+                            this.appendChild(draggedItem);
+                            draggedItem.classList.add('in-zone');
+                        }
+                    });
+                });
+
+                // Set event cho items (phải lấy lại node do có thể vừa render lại từ initial state)
+                wrapper.querySelectorAll('.draggable-item').forEach(item => {
+                    item.addEventListener('dragstart', function(e) {
+                        draggedItem = this;
+                        sourcePool = pool;
+                        setTimeout(() => this.style.opacity = '0.5', 0);
+                    });
+                    
+                    item.addEventListener('dragend', function() {
+                        setTimeout(() => this.style.opacity = '1', 0);
+                        draggedItem = null;
+                        sourcePool = null;
+                    });
+                });
+
+                // Cho phép thả lại về pool
+                pool.addEventListener('dragover', e => e.preventDefault());
+                pool.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    if (draggedItem && sourcePool === pool) {
+                        draggedItem.parentNode.removeChild(draggedItem);
+                        this.appendChild(draggedItem);
+                        draggedItem.classList.remove('in-zone');
+                    }
+                });
+            });
+        }
+
+        function checkDnD(wrapperId) {
+            const wrapper = document.getElementById(wrapperId);
+            const zones = wrapper.querySelectorAll('.drop-zone');
+            let correctCount = 0;
+
+            zones.forEach(zone => {
+                const answer = zone.getAttribute('data-answer');
+                if (zone.children.length > 0) {
+                    const studentAnswer = zone.children[0].innerText.trim();
+                    if (studentAnswer === answer) {
+                        zone.style.borderColor = "var(--success)";
+                        zone.style.backgroundColor = "#d1fae5";
+                        correctCount++;
+                    } else {
+                        zone.style.borderColor = "var(--danger)";
+                        zone.style.backgroundColor = "#fee2e2";
+                    }
+                } else {
+                    zone.style.borderColor = "var(--danger)";
+                    zone.style.backgroundColor = "#fee2e2";
+                }
+            });
+
+            const feedback = wrapper.querySelector('.feedback');
+            if (correctCount === zones.length) {
+                feedback.innerText = "🎉 Hoàn toàn chính xác!";
+                feedback.style.color = "var(--success)";
+            } else {
+                feedback.innerText = `⚠️ Đúng ${correctCount}/${zones.length} vị trí. Thử lại nhé!`;
+                feedback.style.color = "var(--danger)";
+            }
+        }
+
+        function resetDnD(wrapperId) {
+            const wrapper = document.getElementById(wrapperId);
+            const pool = wrapper.querySelector('.drag-pool');
+            const zones = wrapper.querySelectorAll('.drop-zone');
+            const feedback = wrapper.querySelector('.feedback');
+
+            // Khôi phục pool
+            pool.innerHTML = initialStates[wrapperId];
+            
+            // Xóa vùng thả
+            zones.forEach(zone => {
+                zone.innerHTML = '';
+                zone.style.borderColor = "var(--secondary)";
+                zone.style.backgroundColor = "#e2e8f0";
+            });
+            
+            feedback.innerText = "";
+            initializeDnD(); // Gán lại event
+        }
+
+        // Khởi tạo ban đầu
+        initializeDnD();
+
+        // === LOGIC ACCORDION ===
+        function toggleAccordion(headerElement) {
+            const content = headerElement.nextElementSibling;
+            const icon = headerElement.querySelector('i');
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('active');
+                icon.style.transform = 'rotate(180deg)';
+                icon.style.transition = 'transform 0.3s';
+            }
+        }
+
+        // === LOGIC TRẮC NGHIỆM ===
+        function checkQuiz(element, isCorrect, explanationText) {
+            const optionsContainer = element.parentElement;
+            const questionContainer = optionsContainer.parentElement;
+            const explanationBox = questionContainer.querySelector('.quiz-explanation');
+            
+            const allOptions = optionsContainer.querySelectorAll('.quiz-option');
+            allOptions.forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+            });
+
+            if (isCorrect) {
+                element.classList.add('correct');
+                explanationBox.style.borderLeftColor = "var(--success)";
+            } else {
+                element.classList.add('wrong');
+                explanationBox.style.borderLeftColor = "var(--danger)";
+            }
+
+            explanationBox.innerHTML = `<strong>Giải thích:</strong> ${explanationText}`;
+            explanationBox.style.display = "block";
+
+            MathJax.typesetPromise([explanationBox]).catch(function (err) {
+                console.log('MathJax typeset failed: ' + err.message);
+            });
+        }
+    </script>
+</body>
+</html>
