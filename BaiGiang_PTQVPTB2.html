@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học liệu Tương tác: Phương trình quy về phương trình bậc hai</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                tags: 'ams'
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #9f1239; /* Rose 800 */
+            --secondary: #e11d48; /* Rose 600 */
+            --accent: #0284c7; /* Sky 600 */
+            --bg-body: #fff1f2; /* Rose 50 */
+            --bg-card: #ffffff;
+            --text-main: #334155; 
+            --text-muted: #64748b; 
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.7;
+            margin: 0; padding: 0;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Merriweather', serif;
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #4c0519 100%);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M 20 80 Q 50 20 80 80" stroke="rgba(255,255,255,0.05)" stroke-width="4" fill="none"/><line x1="20" y1="80" x2="80" y2="80" stroke="rgba(255,255,255,0.05)" stroke-width="2"/></svg>') repeat;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .header-badge {
+            display: inline-block;
+            background: rgba(225, 29, 72, 0.3);
+            border: 1px solid rgba(244, 63, 94, 0.5);
+            color: #ffe4e6;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        header h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            color: #fecdd3;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background-color: var(--secondary);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 1rem;
+        }
+
+        .section-title i {
+            color: var(--secondary);
+        }
+
+        /* --- Concept boxes --- */
+        .concept-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .concept-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-family: 'Merriweather', serif;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 10px;
+        }
+
+        .concept-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .note-box {
+            background-color: #fffbeb;
+            border-left: 4px solid var(--warning);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .alert-box {
+            background-color: #fef2f2;
+            border-left: 4px solid var(--danger);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+        
+        .math-display {
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-size: 1.25rem;
+            text-align: center;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px dashed #cbd5e1;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            color: var(--primary);
+        }
+
+        /* --- Interactive Applet --- */
+        .applet-container {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            background: #fff1f2;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #fecdd3;
+        }
+
+        /* Toggle Switch CSS */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--secondary); }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        #phantomCanvas {
+            max-width: 100%;
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            margin: 10px 0;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .stat-value {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin: 5px;
+            font-size: 1.1rem;
+        }
+
+        /* --- Drag & Drop --- */
+        .dnd-wrapper {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .dnd-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            gap: 15px;
+        }
+
+        .dnd-row span:first-child { flex: 1; font-size: 1.1rem; }
+
+        .drop-zone {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 200px;
+            min-height: 45px;
+            background: #e2e8f0;
+            border: 2px dashed var(--secondary);
+            border-radius: 6px;
+            font-weight: 600;
+            color: var(--primary);
+            transition: all 0.2s;
+            flex-shrink: 0;
+            padding: 0 10px;
+        }
+
+        .drop-zone.drag-over {
+            background: #ffe4e6;
+            border-color: var(--secondary);
+            transform: scale(1.02);
+        }
+
+        .drag-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .draggable-item {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+            font-size: 1.1rem;
+            transition: transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .draggable-item:hover { box-shadow: 0 4px 12px rgba(159,18,57,0.35); transform: translateY(-1px); }
+        .draggable-item:active { cursor: grabbing; transform: scale(0.95); }
+        .draggable-item.in-zone { background: transparent; color: var(--primary); padding: 0; box-shadow: none; font-weight: bold; }
+
+        .btn {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn:hover { background: #be123c; }
+        .btn-reset { background: #64748b; margin-left: 10px; }
+        .btn-reset:hover { background: #475569; }
+
+        /* --- Accordion --- */
+        .accordion {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            background: white;
+        }
+        .accordion-header {
+            background: #f8fafc;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--primary);
+            transition: background 0.2s;
+        }
+        .accordion-header:hover { background: #ffe4e6; }
+        .accordion-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+        .accordion-content.active {
+            padding: 1.5rem;
+            max-height: 2000px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .step {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        .step-num {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--secondary);
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+        .step-content { flex: 1; }
+
+        /* --- Quiz Section --- */
+        .quiz-question {
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .quiz-question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            line-height: 1.5;
+        }
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .quiz-option {
+            background: white;
+            border: 2px solid #cbd5e1;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+        .quiz-option:hover:not(.disabled) {
+            border-color: var(--secondary);
+            background: #fff1f2;
+        }
+        .quiz-option.disabled { cursor: not-allowed; opacity: 0.7; }
+        .quiz-option .opt-label {
+            width: 30px;
+            height: 30px;
+            background: var(--bg-body);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-weight: bold;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+        .quiz-option.correct { border-color: var(--success) !important; background: #ecfdf5 !important; opacity: 1; }
+        .quiz-option.correct .opt-label { background: var(--success); color: white; }
+        .quiz-option.wrong { border-color: var(--danger) !important; background: #fef2f2 !important; }
+        .quiz-option.wrong .opt-label { background: var(--danger); color: white; }
+
+        .quiz-explanation {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #fff;
+            border-left: 4px solid var(--secondary);
+            border-radius: 0 8px 8px 0;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        #quiz-score-bar {
+            position: sticky;
+            bottom: 1.5rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.05rem;
+            box-shadow: 0 4px 14px rgba(159,18,57,0.4);
+            z-index: 99;
+            transition: all 0.3s;
+            display: none;
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 3rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .quiz-options { grid-template-columns: 1fr; }
+            .section-card { padding: 1.5rem; }
+            .dnd-row { flex-direction: column; text-align: center; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-badge"><i class="fa-solid fa-square-root-variable"></i> Toán học 10 — Chương trình 2018</div>
+    <h1>Phương trình quy về<br>Phương trình bậc hai</h1>
+    <p>Bí ẩn của phép Bình phương hai vế và sự xuất hiện của "Nghiệm ngoại lai"</p>
+</header>
+
+<div class="container">
+
+    <!-- ============================
+         PHẦN I: Khởi động
+         ============================ -->
+    <div class="section-card">
+        <h2 class="section-title"><i class="fa-solid fa-lightbulb"></i> I. Khởi động: Lời giải này đúng hay sai?</h2>
+        <p>Xét phương trình: $\sqrt{-x^2 + x + 1} = x$. Một bạn học sinh đã giải như sau:</p>
+        <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--danger); margin: 1rem 0;">
+            <p>1. Bình phương hai vế: $-x^2 + x + 1 = x^2$</p>
+            <p>2. Chuyển vế, rút gọn: $-2x^2 + x + 1 = 0$</p>
+            <p>3. Giải phương trình bậc hai ta được: $x = 1$ hoặc $x = -\frac{1}{2}$.</p>
+            <p><strong>Kết luận:</strong> Phương trình có 2 nghiệm là 1 và $-\frac{1}{2}$.</p>
+        </div>
+        <p>Theo em, lời giải trên đã <strong>thiếu bước nào</strong> khiến kết quả bị sai lệch? Hãy thay thử $x = -\frac{1}{2}$ vào phương trình ban đầu, ta sẽ thấy Vế trái $\ge 0$, nhưng Vế phải $x = -\frac{1}{2} < 0$ (Vô lí!).</p>
+        <p>Tại sao lại sinh ra cái nghiệm "vô lí" đó? Hãy cùng khám phá trong bài học hôm nay!</p>
+    </div>
+
+    <!-- ============================
+         PHẦN II: Lý thuyết
+         ============================ -->
+    <div class="section-card">
+        <h2 class="section-title"><i class="fa-solid fa-book-open"></i> II. Kiến thức trọng tâm</h2>
+
+        <div class="concept-box">
+            <div class="concept-header">
+                <div class="concept-icon">1</div>
+                Phương trình dạng $\sqrt{ax^2+bx+c} = \sqrt{dx^2+ex+f}$
+            </div>
+            
+            <p>Để giải phương trình chứa hai dấu căn bằng nhau, ta thực hiện 3 bước chuẩn mực sau:</p>
+            <ul style="line-height: 2;">
+                <li><strong>Bước 1:</strong> Bình phương hai vế của phương trình để khử căn, thu được: <br>
+                $ax^2+bx+c = dx^2+ex+f$.</li>
+                <li><strong>Bước 2:</strong> Chuyển vế, rút gọn và giải phương trình bậc hai nhận được ở Bước 1.</li>
+                <li><strong>Bước 3 (Bắt buộc):</strong> <strong>Thử lại</strong> các giá trị $x$ tìm được ở Bước 2 bằng cách thay vào phương trình ban đầu. Chỉ nhận các giá trị làm cho biểu thức dưới căn không âm. Kết luận nghiệm.</li>
+            </ul>
+        </div>
+
+        <div class="concept-box">
+            <div class="concept-header">
+                <div class="concept-icon">2</div>
+                Phương trình dạng $\sqrt{ax^2+bx+c} = dx+e$
+            </div>
+            
+            <p>Tương tự như dạng trên, ta cũng thực hiện theo 3 bước:</p>
+            <ul style="line-height: 2;">
+                <li><strong>Bước 1:</strong> Bình phương hai vế của phương trình để thu được: <br>
+                $ax^2+bx+c = (dx+e)^2$.</li>
+                <li><strong>Bước 2:</strong> Khai triển vế phải, chuyển vế, rút gọn và giải phương trình bậc hai nhận được.</li>
+                <li><strong>Bước 3 (Bắt buộc):</strong> <strong>Thử lại</strong> các nghiệm. Loại bỏ các <em>nghiệm ngoại lai</em>. Kết luận.</li>
+            </ul>
+        </div>
+
+        <!-- HOẠT ĐỘNG TƯƠNG TÁC -->
+        <div class="applet-container">
+            <h3 style="color: var(--primary); margin-top: 0;">Khám phá Tương tác: Bí ẩn của Nghiệm ngoại lai</h3>
+            <p style="text-align: justify; margin-bottom: 1.5rem;">Cùng xét phương trình $\sqrt{x+1} = x - 1$. Giao điểm thực sự của hai đồ thị (đường cong xanh và đường thẳng đen) là nghiệm của phương trình. Hãy gạt công tắc để xem chuyện gì xảy ra khi ta <strong>bình phương hai vế</strong> nhé!</p>
+
+            <div class="switch-container">
+                <span style="font-weight: bold; font-size: 1.1rem;" id="stateLabel1">Chưa bình phương</span>
+                <label class="switch">
+                    <input type="checkbox" id="squareToggle" onchange="updatePhantomGraph()">
+                    <span class="slider"></span>
+                </label>
+                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text-muted);" id="stateLabel2">Đã bình phương</span>
+            </div>
+
+            <div style="font-size: 1.4rem; font-weight: bold; margin-bottom: 15px; color: var(--primary);">
+                <span id="funcText">$\sqrt{x+1} = x - 1$</span>
+            </div>
+
+            <canvas id="phantomCanvas" width="800" height="300"></canvas>
+
+            <div class="alert-box" id="phantomExplanation" style="text-align: left; display: none;">
+                <strong><i class="fa-solid fa-ghost"></i> Bóng ma xuất hiện!</strong><br>
+                Khi bình phương thành $x+1 = (x-1)^2$, đồ thị vô tình được vẽ thêm một <strong>nhánh ảo</strong> $y = -\sqrt{x+1}$ (nét đứt màu đỏ). Nhánh ảo này cắt đường thẳng tại $x = 0$. Đây chính là nguyên nhân sinh ra <strong>nghiệm ngoại lai</strong> $x = 0$!
+            </div>
+            <div class="note-box" id="normalExplanation" style="text-align: left;">
+                <strong><i class="fa-solid fa-check"></i> Trạng thái ban đầu:</strong><br>
+                Đồ thị $y = \sqrt{x+1}$ chỉ có phần nằm trên trục hoành (vì căn bậc hai luôn $\ge 0$). Nó chỉ cắt đường thẳng $y = x - 1$ tại đúng 1 điểm là $x = 3$.
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================
+         PHẦN III: Kéo - Thả
+         ============================ -->
+    <div class="section-card">
+        <h2 class="section-title"><i class="fa-solid fa-puzzle-piece"></i> III. Thử thách Kéo - Thả</h2>
+        <p>Để giải một phương trình chứa căn, ta cần tuân thủ nghiêm ngặt các bước. Hãy <strong>kéo</strong> các mảnh ghép ở dưới và <strong>thả</strong> vào định nghĩa/vị trí tương ứng của nó.</p>
+
+        <div class="dnd-wrapper" id="dnd-container">
+            <div class="dnd-row">
+                <span>1. Mục đích của việc <strong>Bình phương hai vế</strong> là để...</span>
+                <span class="drop-zone" data-answer="Làm mất dấu căn"></span>
+            </div>
+            <div class="dnd-row">
+                <span>2. <strong>Nghiệm ngoại lai</strong> là...</span>
+                <span class="drop-zone" data-answer="Nghiệm sinh ra do bình phương nhưng sai"></span>
+            </div>
+            <div class="dnd-row">
+                <span>3. Để loại bỏ nghiệm ngoại lai, <strong>bước bắt buộc</strong> cuối cùng là...</span>
+                <span class="drop-zone" data-answer="Thử lại các giá trị x"></span>
+            </div>
+            <div class="dnd-row">
+                <span>4. Điều kiện để căn thức $\sqrt{A}$ <strong>có nghĩa</strong> là...</span>
+                <span class="drop-zone" data-answer="Biểu thức dưới căn A ≥ 0"></span>
+            </div>
+
+            <div class="drag-pool" id="drag-pool">
+                <div class="draggable-item" draggable="true" data-val="Thử lại các giá trị x">Thử lại các giá trị $x$</div>
+                <div class="draggable-item" draggable="true" data-val="Làm mất dấu căn">Làm mất dấu căn</div>
+                <div class="draggable-item" draggable="true" data-val="Biểu thức dưới căn A ≥ 0">Biểu thức dưới căn $A \ge 0$</div>
+                <div class="draggable-item" draggable="true" data-val="Nghiệm sinh ra do bình phương nhưng sai">Nghiệm sinh ra do bình phương nhưng sai</div>
+            </div>
+
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <button class="btn" onclick="checkDnD()">Kiểm tra kết quả</button>
+                <button class="btn btn-reset" onclick="resetDnD()">Làm lại</button>
+                <p id="dnd-feedback" style="margin-top: 1rem; font-weight: bold; font-size: 1.1rem;"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================
+         PHẦN IV: Các ví dụ phân tích
+         ============================ -->
+    <div class="section-card">
+        <h2 class="section-title"><i class="fa-solid fa-chalkboard-user"></i> IV. Các Ví dụ Phân tích Từng bước</h2>
+        
+        <!-- Ví dụ 1 -->
+        <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span><i class="fa-solid fa-equals"></i> Ví dụ 1: Dạng 2 căn bằng nhau</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="accordion-content">
+                <p><strong>Giải phương trình:</strong> $\sqrt{2x^2 - 6x - 8} = \sqrt{x^2 - 5x - 2}$</p>
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-content"><strong>Bình phương hai vế:</strong> <br>
+                    $2x^2 - 6x - 8 = x^2 - 5x - 2$</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-content"><strong>Chuyển vế, giải phương trình bậc hai:</strong> <br>
+                    $x^2 - x - 6 = 0$<br>
+                    Phương trình có hai nghiệm là $x = -2$ và $x = 3$.</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-content"><strong>Thử lại:</strong><br>
+                    - Thay $x = -2$ vào pt ban đầu: $\sqrt{2(-2)^2 - 6(-2) - 8} = \sqrt{x^2 - 5(-2) - 2} \Rightarrow \sqrt{12} = \sqrt{12}$ (Đúng. Nhận).<br>
+                    - Thay $x = 3$ vào pt ban đầu: $\sqrt{2(3)^2 - 6(3) - 8} = \sqrt{-8}$. (Biểu thức dưới căn âm $\Rightarrow$ Vô lí. Loại).<br>
+                    <strong>Kết luận:</strong> Phương trình có nghiệm duy nhất $x = -2$.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ví dụ 2 -->
+        <div class="accordion" style="margin-top: 1rem;">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span><i class="fa-solid fa-square-root-variable"></i> Ví dụ 2: Dạng căn bằng đa thức</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="accordion-content">
+                <p><strong>Giải phương trình:</strong> $\sqrt{3x^2 + 5x - 13} = x + 1$</p>
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-content"><strong>Bình phương hai vế:</strong> <br>
+                    $3x^2 + 5x - 13 = (x + 1)^2$</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-content"><strong>Khai triển và giải phương trình bậc hai:</strong> <br>
+                    $3x^2 + 5x - 13 = x^2 + 2x + 1$<br>
+                    $2x^2 + 3x - 14 = 0$<br>
+                    Phương trình có hai nghiệm: $x = 2$ và $x = -\frac{7}{2}$.</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-content"><strong>Thử lại:</strong><br>
+                    - Với $x = -\frac{7}{2}$, vế phải của phương trình là $x + 1 = -\frac{7}{2} + 1 = -\frac{5}{2} < 0$. (Mà vế trái là căn thức luôn $\ge 0$, nên vô lí. Loại $x = -\frac{7}{2}$).<br>
+                    - Với $x = 2$, thay vào pt: $\sqrt{3(2)^2 + 5(2) - 13} = 2 + 1 \Rightarrow \sqrt{9} = 3$ (Đúng. Nhận).<br>
+                    <strong>Kết luận:</strong> Phương trình có nghiệm duy nhất $x = 2$.</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================
+         PHẦN V: Trắc nghiệm
+         ============================ -->
+    <div class="section-card" id="quiz-section">
+        <h2 class="section-title"><i class="fa-solid fa-list-check"></i> V. Bài tập Rèn luyện (10 câu Trắc nghiệm)</h2>
+        <p style="margin-bottom: 2rem;">Hãy chọn đáp án đúng nhất. Rất nhiều câu chứa bẫy "nghiệm ngoại lai", em hãy cẩn thận nhé!</p>
+        <div id="quiz-container"></div>
+    </div>
+
+    <!-- Thanh điểm sticky -->
+    <div id="quiz-score-bar">📊 Điểm của em: <span id="score-correct">0</span> / <span id="score-total">0</span> câu đúng</div>
+
+</div>
+
+<footer>
+    <h3 style="color: white; margin-bottom: 10px;">Học liệu Toán học Mở</h3>
+    <p>Biên soạn bởi Lê Nguyễn Hồng Linh.</p>
+    <p style="opacity: 0.6; font-size: 0.9rem; margin-top: 20px;">© Bản thiết kế tương tác theo chuẩn Chương trình GDPT 2018</p>
+</footer>
+
+<script>
+// ==========================================
+// 1. APPLET CANVAS (Bóng ma nghiệm ngoại lai)
+// ==========================================
+function updatePhantomGraph() {
+    const isSquared = document.getElementById('squareToggle').checked;
+    
+    // Update labels
+    const label1 = document.getElementById('stateLabel1');
+    const label2 = document.getElementById('stateLabel2');
+    const funcText = document.getElementById('funcText');
+    const expNormal = document.getElementById('normalExplanation');
+    const expPhantom = document.getElementById('phantomExplanation');
+
+    if (isSquared) {
+        label1.style.color = "var(--text-muted)";
+        label2.style.color = "var(--primary)";
+        funcText.innerHTML = "$$x + 1 = (x - 1)^2$$";
+        expNormal.style.display = "none";
+        expPhantom.style.display = "block";
+    } else {
+        label1.style.color = "var(--primary)";
+        label2.style.color = "var(--text-muted)";
+        funcText.innerHTML = "$$\\sqrt{x + 1} = x - 1$$";
+        expNormal.style.display = "block";
+        expPhantom.style.display = "none";
+    }
+    
+    MathJax.typesetPromise([funcText]);
+
+    drawPhantomCanvas(isSquared);
+}
+
+function drawPhantomCanvas(isSquared) {
+    const canvas = document.getElementById('phantomCanvas');
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    const scaleX = 40;
+    const scaleY = 40;
+    const originX = w / 2 - 80;
+    const originY = h / 2 + 50;
+
+    // Draw Axes
+    ctx.beginPath();
+    ctx.moveTo(0, originY); ctx.lineTo(w, originY); // X axis
+    ctx.moveTo(originX, 0); ctx.lineTo(originX, h); // Y axis
+    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 2; ctx.stroke();
+
+    // Ticks X
+    ctx.fillStyle = '#64748b'; ctx.font = '12px Arial'; ctx.textAlign = 'center';
+    for(let i = -5; i <= 10; i++) {
+        if(i === 0) continue;
+        let px = originX + i * scaleX;
+        ctx.beginPath(); ctx.moveTo(px, originY - 4); ctx.lineTo(px, originY + 4); ctx.stroke();
+        ctx.fillText(i, px, originY + 18);
+    }
+    // Ticks Y
+    ctx.textAlign = 'right';
+    for(let j = -3; j <= 5; j++) {
+        if(j === 0) continue;
+        let py = originY - j * scaleY;
+        ctx.beginPath(); ctx.moveTo(originX - 4, py); ctx.lineTo(originX + 4, py); ctx.stroke();
+        ctx.fillText(j, originX - 8, py + 4);
+    }
+
+    // Draw line y = x - 1 (Black/Dark Slate)
+    ctx.beginPath();
+    ctx.moveTo(0, originY - ((0 - originX)/scaleX - 1) * scaleY);
+    ctx.lineTo(w, originY - ((w - originX)/scaleX - 1) * scaleY);
+    ctx.strokeStyle = '#334155';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Draw upper half parabola y = sqrt(x+1) (Blue)
+    ctx.beginPath();
+    let first = true;
+    for(let x = -1; x <= 10; x += 0.05) {
+        let px = originX + x * scaleX;
+        let py = originY - Math.sqrt(x + 1) * scaleY;
+        if(first) { ctx.moveTo(px, py); first = false; }
+        else { ctx.lineTo(px, py); }
+    }
+    ctx.strokeStyle = '#0284c7';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Intersection at x = 3, y = 2
+    let px3 = originX + 3 * scaleX;
+    let py2 = originY - 2 * scaleY;
+    ctx.beginPath(); ctx.arc(px3, py2, 6, 0, 2*Math.PI);
+    ctx.fillStyle = '#10b981'; ctx.fill(); // Green valid root
+
+    // If squared, draw lower half parabola y = -sqrt(x+1)
+    if (isSquared) {
+        ctx.beginPath();
+        let firstLower = true;
+        for(let x = -1; x <= 10; x += 0.05) {
+            let px = originX + x * scaleX;
+            let py = originY - (-Math.sqrt(x + 1)) * scaleY;
+            if(firstLower) { ctx.moveTo(px, py); firstLower = false; }
+            else { ctx.lineTo(px, py); }
+        }
+        ctx.strokeStyle = '#ef4444'; // Red dashed
+        ctx.setLineDash([5, 5]);
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.setLineDash([]); // Reset
+
+        // Extraneous intersection at x = 0, y = -1
+        let px0 = originX + 0 * scaleX;
+        let pyn1 = originY - (-1) * scaleY;
+        ctx.beginPath(); ctx.arc(px0, pyn1, 6, 0, 2*Math.PI);
+        ctx.fillStyle = '#ef4444'; ctx.fill(); // Red invalid root
+        
+        ctx.fillStyle = '#ef4444'; ctx.textAlign = 'left'; ctx.font = 'bold 13px Arial';
+        ctx.fillText('Nghiệm ngoại lai (x=0)', px0 + 10, pyn1 + 10);
+    }
+    
+    ctx.fillStyle = '#10b981'; ctx.textAlign = 'left'; ctx.font = 'bold 13px Arial';
+    ctx.fillText('Nghiệm thực sự (x=3)', px3 - 40, py2 - 15);
+}
+
+window.addEventListener('load', () => updatePhantomGraph());
+
+// ==========================================
+// 2. ACCORDION
+// ==========================================
+function toggleAccordion(headerEl) {
+    const content = headerEl.nextElementSibling;
+    const icon = headerEl.querySelector('i.fa-chevron-down');
+    if (content.classList.contains('active')) {
+        content.classList.remove('active');
+        icon.style.transform = 'rotate(0deg)';
+    } else {
+        content.classList.add('active');
+        icon.style.transform = 'rotate(180deg)';
+        icon.style.transition = 'transform 0.3s';
+        if (window.MathJax) MathJax.typesetPromise([content]).catch(e => console.log(e));
+    }
+}
+
+// ==========================================
+// 3. DRAG & DROP
+// ==========================================
+const dragPool = document.getElementById('drag-pool');
+let draggedItem = null;
+let initialPoolHTML = '';
+
+window.addEventListener('DOMContentLoaded', () => {
+    initialPoolHTML = dragPool.innerHTML;
+    initializeDnD();
+});
+
+function initializeDnD() {
+    const currentDraggables = document.querySelectorAll('.draggable-item');
+    const dropZones = document.querySelectorAll('.drop-zone');
+
+    currentDraggables.forEach(item => {
+        item.addEventListener('dragstart', function() {
+            draggedItem = this;
+            setTimeout(() => this.style.opacity = '0.5', 0);
+        });
+        item.addEventListener('dragend', function() {
+            setTimeout(() => this.style.opacity = '1', 0);
+            draggedItem = null;
+        });
+    });
+
+    dropZones.forEach(zone => {
+        const newZone = zone.cloneNode(true);
+        zone.parentNode.replaceChild(newZone, zone);
+
+        newZone.addEventListener('dragover', e => { e.preventDefault(); newZone.classList.add('drag-over'); });
+        newZone.addEventListener('dragleave', () => { newZone.classList.remove('drag-over'); });
+        newZone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            if (draggedItem) {
+                if (this.children.length > 0) {
+                    const old = this.children[0];
+                    old.classList.remove('in-zone');
+                    dragPool.appendChild(old);
+                }
+                draggedItem.parentNode.removeChild(draggedItem);
+                this.appendChild(draggedItem);
+                draggedItem.classList.add('in-zone');
+                this.childNodes.forEach(n => { if (n.nodeType === 3) n.remove(); });
+                if (window.MathJax) MathJax.typesetPromise([this]).catch(e => console.log(e));
+            }
+        });
+    });
+
+    dragPool.addEventListener('dragover', e => e.preventDefault());
+    dragPool.addEventListener('drop', function(e) {
+        e.preventDefault();
+        if (draggedItem) {
+            draggedItem.parentNode.removeChild(draggedItem);
+            this.appendChild(draggedItem);
+            draggedItem.classList.remove('in-zone');
+        }
+    });
+}
+
+function checkDnD() {
+    let correct = 0;
+    const zones = document.querySelectorAll('.drop-zone');
+    zones.forEach(zone => {
+        const ans = zone.getAttribute('data-answer');
+        if (zone.children.length > 0) {
+            const val = zone.children[0].getAttribute('data-val');
+            // Allow loose matching
+            if (val === ans) {
+                zone.style.borderColor = 'var(--success)'; zone.style.backgroundColor = '#d1fae5'; correct++;
+            } else {
+                zone.style.borderColor = 'var(--danger)'; zone.style.backgroundColor = '#fef2f2';
+            }
+        } else {
+            zone.style.borderColor = 'var(--danger)'; zone.style.backgroundColor = '#fef2f2';
+        }
+    });
+    const fb = document.getElementById('dnd-feedback');
+    if (correct === zones.length) {
+        fb.textContent = '🎉 Tuyệt vời! Em đã ghép đúng tất cả quy tắc.';
+        fb.style.color = 'var(--success)';
+    } else {
+        fb.textContent = `⚠️ Em ghép đúng ${correct}/${zones.length} vị trí. Hãy xem lại các ô màu đỏ nhé.`;
+        fb.style.color = 'var(--danger)';
+    }
+}
+
+function resetDnD() {
+    dragPool.innerHTML = initialPoolHTML;
+    const zones = document.querySelectorAll('.drop-zone');
+    zones.forEach(zone => {
+        zone.innerHTML = '';
+        zone.style.borderColor = 'var(--secondary)';
+        zone.style.backgroundColor = '#e2e8f0';
+    });
+    document.getElementById('dnd-feedback').textContent = '';
+    initializeDnD();
+    if (window.MathJax) MathJax.typesetPromise([dragPool]).catch(e => console.log(e));
+}
+
+// ==========================================
+// 4. TRẮC NGHIỆM 10 CÂU
+// ==========================================
+const quizData = [
+    {
+        q: "Phương pháp chung để giải phương trình có chứa căn thức là gì?",
+        options: ["Bình phương hai vế để làm mất dấu căn", "Đặt nhân tử chung", "Chia hai vế cho x", "Tính biệt thức Delta của đa thức trong căn"],
+        correct: 0,
+        explain: "Bước đầu tiên luôn là bình phương hai vế của phương trình để làm mất dấu căn, đưa về phương trình đa thức."
+    },
+    {
+        q: "Tại sao khi giải phương trình chứa căn bằng cách bình phương hai vế, ta BẮT BUỘC phải thử lại nghiệm?",
+        options: ["Để kiểm tra xem mình có tính sai không", "Vì phép bình phương có thể sinh ra nghiệm ngoại lai", "Để tìm thêm nghiệm", "Để xem biểu thức có đẹp không"],
+        correct: 1,
+        explain: "Phép bình phương hai vế $A=B \\Rightarrow A^2=B^2$ là phép biến đổi hệ quả (không tương đương). Nó làm mất dấu của hai vế, do đó có thể sinh ra các nghiệm ngoại lai."
+    },
+    {
+        q: "Nghiệm của phương trình $\\sqrt{2x^2 - 6x - 8} = \\sqrt{x^2 - 5x - 2}$ là:",
+        options: ["$x = -2, x = 3$", "$x = 3$", "$x = -2$", "Vô nghiệm"],
+        correct: 2,
+        explain: "Bình phương 2 vế ta được pt: $x^2 - x - 6 = 0 \\Rightarrow x = -2$ hoặc $x = 3$. Thử lại: $x=3$ làm biểu thức dưới căn bị âm ($-8 < 0$), nên loại. Chỉ nhận $x=-2$."
+    },
+    {
+        q: "Giải phương trình $\\sqrt{3x^2 + 5x - 13} = x + 1$. Tập nghiệm của phương trình là:",
+        options: ["$S = \\{2; -\\frac{7}{2}\\}$", "$S = \\{-\\frac{7}{2}\\}$", "$S = \\{2\\}$", "$S = \\emptyset$"],
+        correct: 2,
+        explain: "Bình phương thu được $2x^2 + 3x - 14 = 0 \\Rightarrow x = 2, x = -3.5$. Thử lại $x = -3.5$ làm vế phải $x+1 = -2.5 < 0$, trong khi vế trái $\\ge 0$. Nên loại. Chỉ nhận $x=2$."
+    },
+    {
+        q: "Lời giải sau đây đã nhận cả nghiệm ngoại lai khi giải phương trình. Đó là bước nào?",
+        options: ["Bước bình phương 2 vế", "Bước rút gọn phương trình", "Bước giải pt bậc hai", "Bước bỏ qua việc thử lại điều kiện/thử lại nghiệm"],
+        correct: 3,
+        explain: "Việc không thử lại nghiệm vào phương trình gốc (hoặc không đặt điều kiện) sẽ dẫn đến việc kết luận sai lầm bằng cách nhận luôn nghiệm ngoại lai."
+    },
+    {
+        q: "Phương trình $\\sqrt{x^2 - x - 4} = x + 2$ có bao nhiêu nghiệm?",
+        options: ["0", "1", "2", "3"],
+        correct: 1,
+        explain: "Bình phương: $x^2 - x - 4 = x^2 + 4x + 4 \\Rightarrow -5x = 8 \\Rightarrow x = -1.6$. Thử lại: vế phải $x + 2 = -1.6 + 2 = 0.4 > 0$. Vế trái $\\sqrt{(-1.6)^2 - (-1.6) - 4} = \\sqrt{0.16} = 0.4$. Hợp lí! Có 1 nghiệm."
+    },
+    {
+        q: "Điều kiện xác định của biểu thức $\\sqrt{ax^2 + bx + c}$ là gì?",
+        options: ["$ax^2 + bx + c > 0$", "$ax^2 + bx + c \\ge 0$", "$ax^2 + bx + c \\ne 0$", "Tùy thuộc vào x"],
+        correct: 1,
+        explain: "Biểu thức dưới dấu căn bậc hai (căn bậc chẵn) phải lớn hơn hoặc bằng 0."
+    },
+    {
+        q: "Cho phương trình $\\sqrt{2x^2 - 3x - 10} = -5$. Kết luận nào sau đây ĐÚNG?",
+        options: ["Phương trình vô nghiệm", "Phương trình có 2 nghiệm phân biệt", "Cần bình phương 2 vế để tìm nghiệm", "Phương trình có nghiệm x = 0"],
+        correct: 0,
+        explain: "Không cần giải! Vế trái là căn bậc hai nên luôn $\\ge 0$. Vế phải bằng $-5 < 0$. Một số không âm không thể bằng số âm. Bất phương trình vô nghiệm."
+    },
+    {
+        q: "Bài toán thực tế: Một tam giác vuông có một cạnh góc vuông ngắn hơn cạnh huyền 8 cm. Chu vi tam giác bằng 30 cm. Độ dài cạnh huyền là:",
+        options: ["13 cm", "29 cm", "12 cm", "5 cm"],
+        correct: 0,
+        explain: "Gọi cạnh huyền là $x$, một cạnh góc vuông là $x-8$. Cạnh góc vuông còn lại là $30 - x - (x-8) = 38 - 2x$. Theo Pytago: $(x-8)^2 + (38-2x)^2 = x^2$. Giải pt ta được $x = 13$ (thỏa) hoặc $x = 29$ (loại vì khi đó $38-2x < 0$)."
+    },
+    {
+        q: "Giải phương trình $\\sqrt{x^2 - 1} = \\frac{1}{2}\\sqrt{x^2 + 1}$. Tập nghiệm là:",
+        options: ["$x = \\pm \\sqrt{\\frac{5}{3}}$", "$x = \\frac{5}{3}$", "$x = \\pm \\frac{\\sqrt{15}}{3}$", "$\\emptyset$"],
+        correct: 2,
+        explain: "Bình phương 2 vế: $x^2 - 1 = \\frac{1}{4}(x^2 + 1) \\Rightarrow 4x^2 - 4 = x^2 + 1 \\Rightarrow 3x^2 = 5 \\Rightarrow x^2 = \\frac{5}{3} \\Rightarrow x = \\pm \\frac{\\sqrt{15}}{3}$. Cả hai đều thỏa mãn $x^2-1 > 0$."
+    }
+];
+
+let scoreCorrect = 0;
+let scoreAnswered = 0;
+
+const container = document.getElementById('quiz-container');
+
+quizData.forEach((item, index) => {
+    const qDiv = document.createElement('div');
+    qDiv.className = 'quiz-question';
+
+    const qTitle = document.createElement('div');
+    qTitle.className = 'quiz-question-text';
+    qTitle.innerHTML = `<span style="color: var(--secondary); margin-right: 8px;">Câu ${index + 1}:</span> ${item.q}`;
+    qDiv.appendChild(qTitle);
+
+    const optionsGrid = document.createElement('div');
+    optionsGrid.className = 'quiz-options';
+
+    const explainDiv = document.createElement('div');
+    explainDiv.className = 'quiz-explanation';
+    explainDiv.innerHTML = `<strong>💡 Giải thích:</strong> ${item.explain}`;
+
+    item.options.forEach((optText, optIndex) => {
+        const btn = document.createElement('div');
+        btn.className = 'quiz-option';
+        btn.innerHTML = `<div class="opt-label">${String.fromCharCode(65 + optIndex)}</div> <span>${optText}</span>`;
+
+        btn.addEventListener('click', function () {
+            if (this.classList.contains('disabled')) return;
+
+            const allBtns = optionsGrid.querySelectorAll('.quiz-option');
+            allBtns.forEach(b => b.classList.add('disabled'));
+
+            scoreAnswered++;
+            if (optIndex === item.correct) {
+                this.classList.add('correct');
+                explainDiv.style.borderLeftColor = 'var(--success)';
+                scoreCorrect++;
+            } else {
+                this.classList.add('wrong');
+                allBtns[item.correct].classList.add('correct');
+                explainDiv.style.borderLeftColor = 'var(--danger)';
+            }
+
+            explainDiv.style.display = 'block';
+            if (window.MathJax) MathJax.typesetPromise([explainDiv]).catch(e => console.log(e));
+
+            const bar = document.getElementById('quiz-score-bar');
+            document.getElementById('score-correct').textContent = scoreCorrect;
+            document.getElementById('score-total').textContent = scoreAnswered;
+            bar.style.display = 'block';
+            bar.style.background = scoreCorrect === scoreAnswered
+                ? 'linear-gradient(90deg, #059669, #10b981)'
+                : 'linear-gradient(90deg, var(--primary), var(--secondary))';
+        });
+
+        optionsGrid.appendChild(btn);
+    });
+
+    qDiv.appendChild(optionsGrid);
+    qDiv.appendChild(explainDiv);
+    container.appendChild(qDiv);
+});
+
+window.addEventListener('load', () => {
+    if (window.MathJax) MathJax.typesetPromise().catch(e => console.log(e));
+});
+</script>
+</body>
+</html>
