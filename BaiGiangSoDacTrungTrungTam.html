@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học liệu Tương tác: Các số đặc trưng đo xu thế trung tâm</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                tags: 'ams'
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #0f766e; /* Teal 700 */
+            --secondary: #0ea5e9; /* Light Blue 500 */
+            --accent: #f59e0b; /* Amber 500 */
+            --bg-body: #f0fdfa; /* Teal 50 */
+            --bg-card: #ffffff;
+            --text-main: #334155; 
+            --text-muted: #64748b; 
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Merriweather', serif;
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+       /* --- Header --- */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #0369a1 100%);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="70" width="15" height="30" fill="rgba(255,255,255,0.05)"/><rect x="35" y="40" width="15" height="60" fill="rgba(255,255,255,0.05)"/><rect x="60" y="20" width="15" height="80" fill="rgba(255,255,255,0.05)"/></svg>') repeat;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .header-badge {
+            display: inline-block;
+            background: rgba(14, 165, 233, 0.3);
+            border: 1px solid rgba(56, 189, 248, 0.5);
+            color: #e0f2fe;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        header h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            color: #ccfbf1;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- Layout --- */
+        .container {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background-color: var(--secondary);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 1rem;
+        }
+
+        .section-title i {
+            color: var(--secondary);
+        }
+
+        /* --- Info Boxes & Math --- */
+        .concept-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .concept-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-family: 'Merriweather', serif;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 10px;
+        }
+
+        .concept-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            font-size: 1.2rem;
+        }
+
+        .note-box {
+            background-color: #fffbeb;
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .math-display {
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-size: 1.25rem;
+            text-align: center;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        table.stat-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: white;
+        }
+        table.stat-table th, table.stat-table td {
+            border: 1px solid #cbd5e1;
+            padding: 12px;
+            text-align: center;
+        }
+        table.stat-table th {
+            background-color: #e0f2fe;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* --- Interactive Outlier Applet --- */
+        .applet-container {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        .slider-container {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        input[type="range"] {
+            width: 60%;
+            cursor: pointer;
+        }
+        #appletCanvas {
+            max-width: 100%;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+        }
+        .stat-value {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin: 0 10px;
+            font-size: 1.2rem;
+        }
+        .mean-val { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
+        .median-val { background: #d1fae5; color: #059669; border: 1px solid #6ee7b7; }
+
+        /* --- Drag & Drop --- */
+        .dnd-wrapper {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .dnd-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .drop-zone {
+            display: inline-block;
+            width: 200px;
+            height: 45px;
+            background: #e2e8f0;
+            border: 2px dashed var(--secondary);
+            border-radius: 6px;
+            vertical-align: middle;
+            text-align: center;
+            line-height: 41px;
+            font-weight: 600;
+            color: var(--primary);
+            transition: all 0.2s;
+        }
+
+        .drop-zone.drag-over {
+            background: #e0f2fe;
+            border-color: var(--secondary);
+            transform: scale(1.02);
+        }
+
+        .drag-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .draggable-item {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+            font-weight: 500;
+            transition: transform 0.1s;
+        }
+
+        .draggable-item:active { cursor: grabbing; transform: scale(0.95); }
+        .draggable-item.in-zone { background: transparent; color: var(--primary); padding: 0; }
+
+        .btn {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn:hover { background: #0284c7; }
+        .btn-reset { background: #64748b; margin-left: 10px; }
+        .btn-reset:hover { background: #475569; }
+
+        /* --- Quiz Section --- */
+        .quiz-question {
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .quiz-question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .quiz-option {
+            background: white;
+            border: 2px solid #cbd5e1;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+        .quiz-option:hover:not(.disabled) {
+            border-color: var(--secondary);
+            background: #f0f9ff;
+        }
+        .quiz-option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .quiz-option .opt-label {
+            width: 30px;
+            height: 30px;
+            background: var(--bg-body);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-weight: bold;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+        .quiz-option.correct {
+            border-color: var(--success) !important;
+            background: #ecfdf5 !important;
+            opacity: 1;
+        }
+        .quiz-option.correct .opt-label { background: var(--success); color: white; }
+        
+        .quiz-option.wrong {
+            border-color: var(--danger) !important;
+            background: #fef2f2 !important;
+        }
+        .quiz-option.wrong .opt-label { background: var(--danger); color: white; }
+
+        .quiz-explanation {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #fff;
+            border-left: 4px solid var(--secondary);
+            border-radius: 0 8px 8px 0;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 3rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .quiz-options { grid-template-columns: 1fr; }
+            .section-card { padding: 1.5rem; }
+            .dnd-row { flex-direction: column; text-align: center; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+ <header>
+        <div class="header-badge"><i class="fa-solid fa-chart-simple"></i> Toán học 10 - Chương trình 2018</div>
+        <h1>Các số đặc trưng đo<br>Xu thế trung tâm</h1>
+        <p>Để mẫu số liệu không chỉ là những con số vô hồn, ta cần tìm ra những "đại diện" ưu tú nhất của chúng!</p>
+    </header>
+
+    <div class="container">
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-lightbulb"></i> I. Tại sao cần Số đặc trưng?</h2>
+            <p>Giả sử em có bảng điểm của 50 học sinh trong lớp. Việc nhìn vào 50 con số riêng lẻ sẽ làm em "hoa mắt". Em cần một con số duy nhất để trả lời câu hỏi: <em>"Nhìn chung, lớp có các bạn học tốt hay học khá?"</em>. </p>
+            <p>Để làm được điều đó, Toán học Thống kê cung cấp 4 công cụ (4 đại lượng) để tìm ra <strong>điểm trung tâm</strong> của dữ liệu. Cùng tìm hiểu nhé!</p>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-book-open"></i> II. Bốn Đại lượng Trọng tâm</h2>
+            
+            <div class="concept-box">
+                <div class="concept-header">
+                    <div class="concept-icon">1</div>
+                    Số trung bình (Mean)
+                </div>
+                <p><strong>Định nghĩa:</strong> Là giá trị trung bình cộng của tất cả các số liệu. Kí hiệu là $\bar{x}$.</p>
+                <div class="math-display">
+                    $$ \bar{x} = \frac{x_1 + x_2 + ... + x_n}{n} $$
+                </div>
+				<div style="overflow-x: auto;">
+                    <table class="stat-table" style="width: 90%; margin: 1.5rem auto; border: 2px solid var(--primary);">
+                        <tbody>
+                            <tr>
+                                <th style="background-color: var(--primary); color: white; width: 25%;">Giá trị ($x_i$)</th>
+                                <td>$x_1$</td>
+                                <td>$x_2$</td>
+                                <td>...</td>
+                                <td>$x_k$</td>
+                            </tr>
+                            <tr>
+                                <th style="background-color: var(--primary); color: white;">Tần số ($n_i$)</th>
+                                <td>$n_1$</td>
+                                <td>$n_2$</td>
+                                <td>...</td>
+                                <td>$n_k$</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>Nếu mẫu số liệu cho dưới dạng bảng tần số (giá trị $x_i$ xuất hiện $n_i$ lần):</p>
+                <div class="math-display">
+                    $$ \bar{x} = \frac{n_1x_1 + n_2x_2 + ... + n_kx_k}{n} $$
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <div class="concept-header">
+                    <div class="concept-icon">2</div>
+                    Trung vị (Median)
+                </div>
+                <p><strong>Định nghĩa:</strong> Trung vị là giá trị đứng ở vị trí <strong>chính giữa</strong> của mẫu số liệu sau khi đã được <strong>sắp xếp theo thứ tự từ bé đến lớn</strong>. Kí hiệu là $M_e$.</p>
+                
+                <p style="margin-top: 10px; font-weight: bold;">Quy tắc tìm:</p>
+                <ul style="line-height: 2;">
+                    <li><strong>Bước 1:</strong> Bắt buộc phải sắp xếp số liệu tăng dần: $x_1 \le x_2 \le ... \le x_n$.</li>
+                    <li><strong>Bước 2:</strong> 
+                        <ul>
+                            <li>Nếu $n$ <strong>lẻ</strong>: Lấy số ở chính giữa. $M_e = x_{\frac{n+1}{2}}$</li>
+                            <li>Nếu $n$ <strong>chẵn</strong>: Lấy trung bình cộng của 2 số ở giữa. $M_e = \frac{1}{2}\left(x_{\frac{n}{2}} + x_{\frac{n}{2} + 1}\right)$</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="applet-container">
+                <h3 style="color: var(--primary); margin-top: 0;">Trải nghiệm Tương tác: Sức mạnh của sự "Bất thường" (Outlier)</h3>
+                <p style="text-align: justify;">Tại sao có Số trung bình rồi mà Toán học còn sinh ra Trung vị? Hãy xem bài toán lương thưởng này: Có 5 nhân viên nhận lương (triệu VNĐ) lần lượt là: 5, 6, 7, 7, và một người Quản lý. Em hãy kéo thanh trượt để thay đổi mức lương của người Quản lý và quan sát <strong>Số trung bình</strong> và <strong>Trung vị</strong> ai bị ảnh hưởng nhiều hơn nhé!</p>
+                
+                <div class="slider-container">
+                    <label style="font-weight: bold;">Lương Quản lý:</label>
+                    <input type="range" id="outlierSlider" min="7" max="50" value="8" oninput="updateOutlier()">
+                    <span id="sliderVal" style="font-weight: bold; color: var(--accent); font-size: 1.2rem;">8</span>
+                </div>
+
+                <canvas id="appletCanvas" width="800" height="150"></canvas>
+                
+                <div style="margin-top: 15px;">
+                    <div class="stat-value mean-val">Số trung bình $\bar{x}$ = <span id="meanText">6.6</span></div>
+                    <div class="stat-value median-val">Trung vị $M_e$ = <span id="medianText">7</span></div>
+                </div>
+                
+                <div class="note-box" style="text-align: left; margin-top: 20px;">
+                    <i class="fa-solid fa-bell"></i> <strong>Bài học rút ra:</strong> Số trung bình rất dễ bị "kéo lệch" bởi các giá trị bất thường (quá lớn hoặc quá bé). Khi đó, <strong>Trung vị</strong> là đại lượng đại diện tốt hơn cho mẫu số liệu!
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <div class="concept-header">
+                    <div class="concept-icon">3</div>
+                    Tứ phân vị (Quartiles)
+                </div>
+                <p><strong>Định nghĩa:</strong> Tứ phân vị gồm 3 giá trị $Q_1, Q_2, Q_3$ dùng để chia mẫu số liệu (đã sắp xếp) thành <strong>4 phần bằng nhau</strong>.</p>
+                
+                <div style="text-align: center; margin: 1.5rem 0;">
+                    <img src="https://cdnv2.tgdd.vn/mwg-static/common/News/0/tu-phan-vi-la-gi-01.jpg" alt="Minh họa Tứ phân vị" style="width: 50%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 1px solid #cbd5e1; margin: 0 auto; display: block;">
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 8px;"><em>Sơ đồ minh họa cách các điểm Tứ phân vị chia đều dữ liệu</em></p>
+                </div>
+
+                <ul style="line-height: 2;">
+                    <li><strong>$Q_2$ (Tứ phân vị thứ hai):</strong> Chính là Trung vị $M_e$ của toàn bộ dữ liệu (cắt đôi 50%).</li>
+                    <li><strong>$Q_1$ (Tứ phân vị thứ nhất):</strong> Là Trung vị của <em>nửa dữ liệu bên trái</em> $Q_2$ (mốc 25%).</li>
+                    <li><strong>$Q_3$ (Tứ phân vị thứ ba):</strong> Là Trung vị của <em>nửa dữ liệu bên phải</em> $Q_2$ (mốc 75%).</li>
+                </ul>
+            </div>
+
+            <div class="concept-box">
+                <div class="concept-header">
+                    <div class="concept-icon">4</div>
+                    Mốt (Mode)
+                </div>
+                <p><strong>Định nghĩa:</strong> Mốt là giá trị có <strong>tần số lớn nhất</strong> (xuất hiện nhiều lần nhất) trong mẫu số liệu. Kí hiệu là $M_o$.</p>
+                <p><em>Lưu ý:</em> Một mẫu có thể không có mốt (nếu tần số bằng nhau hết), hoặc có nhiều mốt cùng lúc.</p>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title"><i class="fa-solid fa-puzzle-piece"></i> III. Thử thách Phân loại (Kéo - Thả)</h2>
+            <p>Em hãy <strong>kéo</strong> thẻ chứa đặc điểm ở bên dưới và <strong>thả</strong> vào ô tương ứng với Đại lượng thống kê phù hợp nhất nhé.</p>
+            
+            <div class="dnd-wrapper" id="dnd-container">
+                <div class="dnd-row">
+                    <span>1. Dễ bị "kéo lệch" bởi các giá trị bất thường (outlier)</span>
+                    <span class="drop-zone" data-answer="Số trung bình"></span>
+                </div>
+                <div class="dnd-row">
+                    <span>2. Chia mẫu số liệu (đã sắp xếp) thành hai phần 50% bằng nhau</span>
+                    <span class="drop-zone" data-answer="Trung vị"></span>
+                </div>
+                <div class="dnd-row">
+                    <span>3. Mẫu số liệu có thể có nhiều giá trị này, hoặc không có giá trị nào</span>
+                    <span class="drop-zone" data-answer="Mốt"></span>
+                </div>
+                <div class="dnd-row">
+                    <span>4. Gồm 3 giá trị, dùng để chia mẫu số liệu thành 4 phần</span>
+                    <span class="drop-zone" data-answer="Tứ phân vị"></span>
+                </div>
+
+                <div class="drag-pool" id="drag-pool">
+                    <div class="draggable-item" draggable="true">Trung vị</div>
+                    <div class="draggable-item" draggable="true">Tứ phân vị</div>
+                    <div class="draggable-item" draggable="true">Mốt</div>
+                    <div class="draggable-item" draggable="true">Số trung bình</div>
+                </div>
+
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <button class="btn" onclick="checkDnD()">Kiểm tra kết quả</button>
+                    <button class="btn btn-reset" onclick="resetDnD()">Làm lại</button>
+                    <p id="dnd-feedback" style="margin-top: 1rem; font-weight: bold; font-size: 1.1rem;"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card" id="quiz-section">
+            <h2 class="section-title"><i class="fa-solid fa-list-ol"></i> IV. Bài tập Rèn luyện (20 câu Trắc nghiệm)</h2>
+            <p style="margin-bottom: 2rem;">Hãy chọn đáp án đúng nhất. Kết quả và lời giải thích sẽ hiển thị ngay sau khi em chọn.</p>
+
+            <div id="quiz-container">
+                </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <h3 style="color: white; margin-bottom: 10px;">Học liệu Toán học Mở</h3>
+        <p>Biên soạn bởi Lê Nguyễn Hồng Linh.</p>
+        <p style="opacity: 0.6; font-size: 0.9rem; margin-top: 20px;">© Bản thiết kế và Mô phỏng tương tác bởi AI trợ lý.</p>
+    </footer>
+
+    <script>
+        // ==========================================
+        // 1. LOGIC ỨNG DỤNG MÔ PHỎNG OUTLIER (CANVAS)
+        // ==========================================
+        const baseData = [5, 6, 7, 7]; // 4 nhân viên cố định
+        let outlierVal = 8; // Mặc định ban đầu
+        
+        function updateOutlier() {
+            outlierVal = parseInt(document.getElementById('outlierSlider').value);
+            document.getElementById('sliderVal').innerText = outlierVal;
+            drawOutlierCanvas();
+        }
+
+        function drawOutlierCanvas() {
+            const canvas = document.getElementById('appletCanvas');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+            const cy = h / 2;
+            
+            // Xóa canvas
+            ctx.clearRect(0, 0, w, h);
+
+            // Tính toán Thống kê
+            let currentData = [...baseData, outlierVal];
+            currentData.sort((a, b) => a - b);
+            
+            let sum = currentData.reduce((a, b) => a + b, 0);
+            let mean = sum / currentData.length;
+            let median = currentData[2]; // Vì n=5 lẻ, vị trí thứ 3 (index 2)
+            
+            // Update Text
+            document.getElementById('meanText').innerText = mean.toFixed(1);
+            document.getElementById('medianText').innerText = median;
+            
+            // Yêu cầu MathJax cập nhật lại số nếu cần (không bắt buộc vì không bọc trong $)
+
+            // Vẽ trục số
+            const minX = 0;
+            const maxX = 55;
+            const scaleX = (w - 60) / (maxX - minX);
+            const paddingLeft = 30;
+
+            const getX = (val) => paddingLeft + (val - minX) * scaleX;
+
+            // Vẽ đường trục
+            ctx.beginPath();
+            ctx.moveTo(paddingLeft, cy);
+            ctx.lineTo(w - 20, cy);
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Mũi tên
+            ctx.beginPath();
+            ctx.moveTo(w - 20, cy - 5);
+            ctx.lineTo(w - 10, cy);
+            ctx.lineTo(w - 20, cy + 5);
+            ctx.fillStyle = '#94a3b8';
+            ctx.fill();
+
+            // Vạch chia (mỗi 5 đơn vị)
+            ctx.fillStyle = '#64748b';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            for (let i = 0; i <= 50; i += 5) {
+                let xPos = getX(i);
+                ctx.beginPath();
+                ctx.moveTo(xPos, cy - 5);
+                ctx.lineTo(xPos, cy + 5);
+                ctx.stroke();
+                if(i % 10 === 0) ctx.fillText(i, xPos, cy + 20);
+            }
+
+            // Vẽ các điểm dữ liệu (chấm tròn xanh đậm)
+            ctx.fillStyle = '#0f172a';
+            currentData.forEach((val, idx) => {
+                let xPos = getX(val);
+                ctx.beginPath();
+                // Vẽ xếp chồng lên nhau nếu trùng giá trị
+                let yOffset = 0;
+                if(idx > 0 && val === currentData[idx-1]) yOffset = -15; 
+                ctx.arc(xPos, cy - 10 + yOffset, 6, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+
+            // Vẽ vị trí Median (Vuông màu xanh ngọc)
+            let medX = getX(median);
+            ctx.fillStyle = '#10b981'; // Success
+            ctx.fillRect(medX - 5, cy - 40, 10, 30);
+            ctx.fillStyle = '#047857';
+            ctx.fillText("Me", medX, cy - 45);
+
+            // Vẽ vị trí Mean (Tam giác màu đỏ)
+            let meanX = getX(mean);
+            ctx.fillStyle = '#ef4444'; // Danger
+            ctx.beginPath();
+            ctx.moveTo(meanX, cy + 5);
+            ctx.lineTo(meanX - 8, cy + 30);
+            ctx.lineTo(meanX + 8, cy + 30);
+            ctx.fill();
+            ctx.fillStyle = '#b91c1c';
+            ctx.fillText("Mean", meanX, cy + 45);
+        }
+
+        // Khởi tạo Canvas lúc tải trang
+        window.addEventListener('load', drawOutlierCanvas);
+
+
+        // ==========================================
+        // 2. LOGIC KÉO THẢ (DRAG & DROP)
+        // ==========================================
+        const dragPool = document.getElementById('drag-pool');
+        let draggedItem = null;
+        const initialPoolState = dragPool.innerHTML;
+
+        function initializeDnD() {
+            const currentDraggables = document.querySelectorAll('.draggable-item');
+            const dropZones = document.querySelectorAll('.drop-zone');
+
+            currentDraggables.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    setTimeout(() => this.style.opacity = '0.5', 0);
+                });
+                
+                item.addEventListener('dragend', function() {
+                    setTimeout(() => this.style.opacity = '1', 0);
+                    draggedItem = null;
+                });
+            });
+
+            dropZones.forEach(zone => {
+                const newZone = zone.cloneNode(true);
+                zone.parentNode.replaceChild(newZone, zone);
+                
+                newZone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    newZone.classList.add('drag-over');
+                });
+
+                newZone.addEventListener('dragleave', () => {
+                    newZone.classList.remove('drag-over');
+                });
+
+                newZone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
+                    
+                    if (draggedItem) {
+                        if (this.children.length > 0) {
+                            const existingItem = this.children[0];
+                            existingItem.classList.remove('in-zone');
+                            dragPool.appendChild(existingItem);
+                        }
+                        draggedItem.parentNode.removeChild(draggedItem);
+                        this.appendChild(draggedItem);
+                        draggedItem.classList.add('in-zone');
+                        
+                        this.childNodes.forEach(node => {
+                            if (node.nodeType === 3) node.remove();
+                        });
+                    }
+                });
+            });
+
+            dragPool.addEventListener('dragover', e => e.preventDefault());
+            dragPool.addEventListener('drop', function(e) {
+                e.preventDefault();
+                if (draggedItem) {
+                    draggedItem.parentNode.removeChild(draggedItem);
+                    this.appendChild(draggedItem);
+                    draggedItem.classList.remove('in-zone');
+                }
+            });
+        }
+
+        function checkDnD() {
+            let correctCount = 0;
+            const dropZones = document.querySelectorAll('.drop-zone');
+            
+            dropZones.forEach(zone => {
+                const answer = zone.getAttribute('data-answer');
+                if (zone.children.length > 0) {
+                    const studentAnswer = zone.children[0].innerText.trim();
+                    if (studentAnswer === answer) {
+                        zone.style.borderColor = "var(--success)";
+                        zone.style.backgroundColor = "#d1fae5";
+                        correctCount++;
+                    } else {
+                        zone.style.borderColor = "var(--danger)";
+                        zone.style.backgroundColor = "#fee2e2";
+                    }
+                } else {
+                    zone.style.borderColor = "var(--danger)";
+                    zone.style.backgroundColor = "#fee2e2";
+                }
+            });
+
+            const feedback = document.getElementById('dnd-feedback');
+            if (correctCount === dropZones.length) {
+                feedback.innerText = "🎉 Hoàn toàn chính xác! Em đã phân loại đúng chức năng.";
+                feedback.style.color = "var(--success)";
+            } else {
+                feedback.innerText = `⚠️ Em ghép đúng ${correctCount}/${dropZones.length} vị trí. Hãy xem lại các ô màu đỏ.`;
+                feedback.style.color = "var(--danger)";
+            }
+        }
+
+        function resetDnD() {
+            dragPool.innerHTML = initialPoolState;
+            const dropZones = document.querySelectorAll('.drop-zone');
+            dropZones.forEach(zone => {
+                zone.innerHTML = '';
+                zone.style.borderColor = "var(--secondary)";
+                zone.style.backgroundColor = "#e2e8f0";
+            });
+            document.getElementById('dnd-feedback').innerText = "";
+            initializeDnD();
+        }
+
+        window.addEventListener('load', initializeDnD);
+
+
+        // ==========================================
+        // 3. LOGIC RENDER VÀ CHẤM TRẮC NGHIỆM (20 CÂU)
+        // ==========================================
+        // Dữ liệu câu hỏi được bảo toàn hoàn toàn từ bản gốc, chỉ thay đổi chuẩn MathJax
+        const quizData = [
+            {
+                q: "Giá trị có tần số lớn nhất trong mẫu số liệu được gọi là gì?",
+                options: ["Số trung bình", "Trung vị", "Mốt", "Tứ phân vị"],
+                correct: 2,
+                explain: "Mốt là giá trị có tần số lớn nhất (xuất hiện nhiều nhất) trong mẫu."
+            },
+            {
+                q: "Kí hiệu của số trung vị là gì?",
+                options: ["$M_o$", "$M_e$", "$\\bar{x}$", "$Q_1$"],
+                correct: 1,
+                explain: "$M_e$ là kí hiệu của trung vị (Median)."
+            },
+            {
+                q: "Kí hiệu của Mốt là gì?",
+                options: ["$M_o$", "$M_e$", "$\\bar{x}$", "$Q_2$"],
+                correct: 0,
+                explain: "$M_o$ là kí hiệu của Mốt (Mode)."
+            },
+            {
+                q: "Để tìm trung vị của mẫu số liệu, bước ĐẦU TIÊN bắt buộc ta phải làm là gì?",
+                options: ["Tính tổng các số liệu", "Tìm giá trị xuất hiện nhiều nhất", "Sắp xếp số liệu theo thứ tự không giảm", "Chia mẫu thành 4 phần"],
+                correct: 2,
+                explain: "Luôn phải sắp xếp số liệu (từ nhỏ đến lớn) trước khi tìm trung vị."
+            },
+            {
+                q: "Tứ phân vị của một mẫu số liệu gồm bao nhiêu giá trị?",
+                options: ["1 giá trị", "2 giá trị", "3 giá trị", "4 giá trị"],
+                correct: 2,
+                explain: "Gồm 3 giá trị là $Q_1, Q_2, Q_3$ để chia mẫu thành 4 phần."
+            },
+            {
+                q: "Tứ phân vị thứ hai ($Q_2$) của mẫu số liệu có giá trị bằng với số đặc trưng nào?",
+                options: ["Số trung bình", "Mốt", "Tứ phân vị thứ nhất", "Trung vị"],
+                correct: 3,
+                explain: "$Q_2$ chia đôi mẫu số liệu nên nó chính là Trung vị ($M_e$)."
+            },
+            {
+                q: "Số lần lặp lại của một giá trị trong mẫu số liệu được gọi là:",
+                options: ["Tần số", "Tần suất", "Kích thước mẫu", "Trung vị"],
+                correct: 0,
+                explain: "Theo định nghĩa, số lần lặp lại gọi là tần số."
+            },
+            {
+                q: "Tổng các tần suất trong một bảng phân bố tần suất luôn bằng bao nhiêu?",
+                options: ["10%", "50%", "100%", "Cỡ mẫu n"],
+                correct: 2,
+                explain: "Tổng các tần suất tương đối luôn bằng 100% (hoặc bằng 1)."
+            },
+            {
+                q: "Đại lượng nào sau đây được dùng làm đại diện cho các số liệu của mẫu?",
+                options: ["Tần số", "Số trung bình cộng", "Cỡ mẫu", "Giá trị nhỏ nhất"],
+                correct: 1,
+                explain: "Số trung bình được dùng làm đại diện cho các số liệu, đo xu thế trung tâm."
+            },
+            {
+                q: "Khẳng định nào sau đây là ĐÚNG về số lượng mốt của một mẫu số liệu?",
+                options: ["Luôn chỉ có duy nhất một mốt", "Có thể có một mốt, nhiều mốt hoặc không có mốt", "Luôn có hai mốt", "Không bao giờ có mốt"],
+                correct: 1,
+                explain: "Nếu nhiều giá trị có cùng tần số lớn nhất thì có nhiều mốt. Nếu tất cả tần số bằng nhau thì không có mốt."
+            },
+            {
+                q: "Tứ phân vị thứ nhất ($Q_1$) là gì?",
+                options: ["Là trung vị của nửa số liệu đã sắp xếp bên trái $Q_2$", "Là trung vị của nửa số liệu đã sắp xếp bên phải $Q_2$", "Là số trung bình của toàn mẫu", "Là mốt của mẫu số liệu"],
+                correct: 0,
+                explain: "$Q_1$ là trung vị của nửa bên trái $Q_2$."
+            },
+            {
+                q: "Các điểm tứ phân vị chia mẫu số liệu thành 4 phần. Mỗi phần chứa khoảng bao nhiêu phần trăm tổng số liệu?",
+                options: ["10%", "20%", "25%", "50%"],
+                correct: 2,
+                explain: "Tứ phân vị chia mẫu thành 4 phần bằng nhau, mỗi phần chứa 25%."
+            },
+            {
+                q: "Cho mẫu số liệu đã sắp xếp: 1; 3; 5; 7; 9. Trung vị của mẫu này là giá trị nào?",
+                options: ["3", "5", "7", "9"],
+                correct: 1,
+                explain: "Dãy có 5 số (số lẻ), số ở vị trí chính giữa (vị trí thứ 3) là số 5."
+            },
+            {
+                q: "Cho mẫu số liệu đã sắp xếp: 2; 4; 6; 8. Trung vị của mẫu này được tính như thế nào?",
+                options: ["Bằng 4", "Bằng 6", "Trung bình cộng của 4 và 6", "Bằng 8"],
+                correct: 2,
+                explain: "Dãy có 4 số (chẵn), trung vị là trung bình cộng của 2 số giữa: $\\frac{4+6}{2} = 5$."
+            },
+            {
+                q: "Mẫu số liệu sau có mốt ($M_o$) là bao nhiêu: 4; 4; 5; 6; 6; 6; 7?",
+                options: ["4", "5", "6", "7"],
+                correct: 2,
+                explain: "Số 6 xuất hiện nhiều nhất (3 lần)."
+            },
+            {
+                q: "Số trung bình cộng của mẫu số liệu: 3; 4; 5 là:",
+                options: ["3", "4", "5", "12"],
+                correct: 1,
+                explain: "Trung bình cộng = $\\frac{3 + 4 + 5}{3} = \\frac{12}{3} = 4$."
+            },
+            {
+                q: `Cho bảng tần số sau:<br>
+                    <table class="stat-table">
+                        <tr><th>Giá trị</th><td>10</td><td>15</td><td>20</td></tr>
+                        <tr><th>Tần số</th><td>2</td><td>8</td><td>5</td></tr>
+                    </table>
+                    Mốt của mẫu số liệu này là:`,
+                options: ["8", "15", "20", "10"],
+                correct: 1,
+                explain: "Giá trị 15 có tần số lớn nhất là 8, nên Mốt là 15."
+            },
+            {
+                q: `Cho bảng tần số sau:<br>
+                    <table class="stat-table">
+                        <tr><th>Giá trị</th><td>6</td><td>7</td><td>8</td></tr>
+                        <tr><th>Tần số</th><td>4</td><td>4</td><td>4</td></tr>
+                    </table>
+                    Khẳng định nào sau đây ĐÚNG về mốt của mẫu số liệu trên?`,
+                options: ["Mốt là 8", "Mốt là 4", "Mẫu số liệu có 3 mốt", "Mẫu số liệu không có mốt"],
+                correct: 3,
+                explain: "Do tất cả các giá trị đều có tần số bằng nhau (bằng 4), mẫu không có mốt."
+            },
+            {
+                q: "Khái niệm cỡ mẫu ($n$) là gì?",
+                options: ["Tổng các giá trị của mẫu", "Tổng các tần số của mẫu", "Giá trị lớn nhất của mẫu", "Trung bình cộng của mẫu"],
+                correct: 1,
+                explain: "Cỡ mẫu là tổng số các đối tượng được thống kê, bằng tổng các tần số ($n = n_1 + n_2 + ...$)."
+            },
+            {
+                q: "Công thức $M_e = x_{k+1}$ dùng để tính số trung vị trong trường hợp nào?",
+                options: ["Cỡ mẫu $n$ là số chẵn", "Cỡ mẫu $n$ là số lẻ ($n=2k+1$)", "Mẫu không có mốt", "Tính số trung bình"],
+                correct: 1,
+                explain: "Khi $n$ lẻ ($n=2k+1$) thì trung vị lấy đúng phần tử ở vị trí chính giữa là $k+1$."
+            }
+        ];
+
+        const container = document.getElementById('quiz-container');
+
+        quizData.forEach((item, index) => {
+            const qDiv = document.createElement('div');
+            qDiv.className = "quiz-question";
+
+            const qTitle = document.createElement('div');
+            qTitle.className = "quiz-question-text";
+            qTitle.innerHTML = `Câu ${index + 1}: ${item.q}`;
+            qDiv.appendChild(qTitle);
+
+            const optionsGrid = document.createElement('div');
+            optionsGrid.className = "quiz-options";
+
+            const explainDiv = document.createElement('div');
+            explainDiv.className = "quiz-explanation";
+            explainDiv.innerHTML = `<strong>Giải thích:</strong> ${item.explain}`;
+
+            item.options.forEach((optText, optIndex) => {
+                const btn = document.createElement('div');
+                btn.className = "quiz-option";
+                btn.innerHTML = `<div class="opt-label">${String.fromCharCode(65 + optIndex)}</div> <span>${optText}</span>`;
+                
+                btn.addEventListener('click', function() {
+                    // Nếu đã disable thì không làm gì cả
+                    if (this.classList.contains('disabled')) return;
+
+                    const allBtns = optionsGrid.querySelectorAll('.quiz-option');
+                    allBtns.forEach(b => {
+                        b.classList.add('disabled');
+                    });
+
+                    if (optIndex === item.correct) {
+                        this.classList.add('correct');
+                        explainDiv.style.borderLeftColor = "var(--success)";
+                    } else {
+                        this.classList.add('wrong');
+                        allBtns[item.correct].classList.add('correct');
+                        explainDiv.style.borderLeftColor = "var(--danger)";
+                    }
+
+                    explainDiv.style.display = "block";
+                    MathJax.typesetPromise([explainDiv]).catch((err) => console.log(err.message));
+                });
+
+                optionsGrid.appendChild(btn);
+            });
+
+            qDiv.appendChild(optionsGrid);
+            qDiv.appendChild(explainDiv);
+            container.appendChild(qDiv);
+        });
+
+        // Kích hoạt MathJax sau khi render xong toàn bộ quiz
+        window.addEventListener('load', () => {
+            MathJax.typesetPromise().catch((err) => console.log(err.message));
+        });
+    </script>
+</body>
+</html>
