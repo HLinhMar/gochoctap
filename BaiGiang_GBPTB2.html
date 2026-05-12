@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giải Bất phương trình Bậc hai — Học liệu Tương tác v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script>
+window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']],processEscapes:true,tags:'ams'},svg:{fontCache:'global'}};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+:root{
+  --purple:#6b21a8; --purple-mid:#7c3aed; --purple-light:#9333ea;
+  --amber:#f59e0b; --amber-light:#fef3c7;
+  --bg:#faf5ff; --card:#fff;
+  --text:#334155; --muted:#64748b;
+  --success:#10b981; --danger:#ef4444; --warn:#f59e0b;
+  --sky:#0284c7;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden;}
+h1,h2,h3,h4{font-family:'Merriweather',serif;color:var(--purple);margin-top:0;}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* HEADER */
+header{background:linear-gradient(135deg,var(--purple) 0%,#4c1d95 100%);color:#fff;padding:4.5rem 2rem;text-align:center;border-bottom:5px solid var(--amber);position:relative;overflow:hidden;}
+header::after{content:'';position:absolute;inset:0;background:url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M 0 50 Q 25 25 50 50 T 100 50" stroke="rgba(255,255,255,0.05)" stroke-width="3" fill="none"/></svg>') repeat;pointer-events:none;z-index:0;}
+header>*{position:relative;z-index:1;}
+.header-badge{display:inline-block;background:rgba(147,51,234,.28);border:1px solid rgba(168,85,247,.45);color:#e9d5ff;padding:7px 18px;border-radius:28px;font-size:.9rem;font-weight:700;margin-bottom:1.2rem;letter-spacing:1.2px;text-transform:uppercase;}
+header h1{color:#fff;font-size:2.7rem;margin-bottom:.7rem;text-shadow:0 3px 8px rgba(0,0,0,.28);}
+header p{font-size:1.1rem;color:#d8b4fe;max-width:760px;margin:0 auto;}
+
+/* CONTAINER */
+.container{max-width:980px;margin:2.5rem auto;padding:0 1.8rem;}
+
+/* SECTION CARD */
+.section-card{background:var(--card);border-radius:16px;padding:2.5rem;margin-bottom:2.5rem;box-shadow:0 8px 24px -6px rgba(107,33,168,.07);position:relative;overflow:hidden;}
+.section-card::before{content:'';position:absolute;top:0;left:0;width:5px;height:100%;background:var(--purple-mid);}
+.section-title{font-size:1.75rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:12px;border-bottom:2px solid #e2e8f0;padding-bottom:.9rem;}
+.section-title i{color:var(--amber);}
+
+/* CONCEPT BOX */
+.concept-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1.75rem;margin-bottom:1.75rem;}
+.concept-header{display:flex;align-items:center;gap:10px;font-size:1.3rem;color:var(--purple);font-family:'Merriweather',serif;margin-bottom:.9rem;border-bottom:1px solid #cbd5e1;padding-bottom:9px;}
+.concept-icon{display:flex;align-items:center;justify-content:center;width:38px;height:38px;background:var(--purple-mid);color:#fff;border-radius:50%;font-size:1.1rem;flex-shrink:0;}
+
+/* INFO BOXES */
+.note-box{background:#fffbeb;border-left:4px solid var(--warn);padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;margin:1.2rem 0;}
+.success-box{background:#f0fdf4;border-left:4px solid var(--success);padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;margin:1.2rem 0;}
+.info-box{background:#f0f9ff;border-left:4px solid var(--sky);padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;margin:1.2rem 0;}
+.math-display{overflow-x:auto;margin:.9rem 0;font-size:1.1rem;text-align:center;padding:1.2rem;background:#fff;border-radius:8px;border:1px dashed #cbd5e1;color:var(--purple);}
+
+/* APPLICATION CARDS */
+.app-row{display:flex;gap:14px;flex-wrap:wrap;margin:1.2rem 0;justify-content:center;}
+.app-card{flex:1;min-width:155px;max-width:210px;background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:1rem .8rem .8rem;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,.06);transition:transform .2s,box-shadow .2s;}
+.app-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(107,33,168,.12);}
+.app-card .ai{font-size:2.6rem;display:block;margin-bottom:.3rem;}
+.app-card strong{display:block;font-size:.88rem;color:var(--purple);margin-bottom:.2rem;}
+.app-card p{font-size:.77rem;color:var(--muted);margin:0;}
+
+/* CASE CARDS (3 parabola cases) */
+.case-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:1.2rem 0;}
+.case-card{background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:1rem;text-align:center;transition:transform .2s,box-shadow .2s;}
+.case-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(107,33,168,.1);}
+.case-card svg{display:block;margin:0 auto .5rem;}
+.case-title{font-size:.85rem;font-weight:800;color:var(--purple);margin-bottom:.3rem;}
+.case-rule{font-size:.78rem;color:var(--muted);line-height:1.4;}
+
+/* SUMMARY TABLE */
+table.sol-table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,.06);font-size:.95rem;}
+table.sol-table th,table.sol-table td{border:1px solid #e2e8f0;padding:10px 12px;text-align:center;}
+table.sol-table thead th{background:var(--purple);color:#fff;font-weight:700;}
+table.sol-table thead th:first-child{background:#4c1d95;}
+table.sol-table td.row-hdr{background:var(--amber-light);font-weight:700;color:#92400e;}
+table.sol-table td.cell-r{color:var(--success);font-weight:700;}
+table.sol-table td.cell-empty{color:var(--danger);font-weight:700;}
+table.sol-table tr:hover td{background:#faf5ff;}
+
+/* APPLET */
+.applet-container{background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:1.8rem;margin:1.8rem 0;text-align:center;}
+.controls-wrapper{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;margin:16px 0;background:var(--bg);padding:14px;border-radius:8px;border:1px solid #e9d5ff;}
+.slider-group{display:flex;flex-direction:column;align-items:center;min-width:110px;}
+input[type="range"]{width:100%;cursor:pointer;accent-color:var(--purple-mid);margin-top:7px;}
+select{padding:7px 11px;border-radius:6px;border:1px solid #cbd5e1;font-size:1rem;font-weight:700;color:var(--purple);cursor:pointer;font-family:'Nunito',sans-serif;}
+#ineqCanvas{max-width:100%;background:#fff;border-radius:8px;border:1px solid #cbd5e1;margin:10px 0;}
+.sol-badge{display:inline-block;padding:9px 18px;border-radius:8px;font-weight:700;margin:4px;font-size:1.05rem;}
+
+/* NUMBER LINE GAME */
+.nl-wrap{background:#f8fafc;border:2px dashed #cbd5e1;border-radius:12px;padding:1.8rem;margin:1.8rem 0;}
+.nl-problem{font-size:1.05rem;font-weight:700;color:var(--purple);margin-bottom:.5rem;}
+.nl-sub{font-size:.88rem;color:var(--muted);margin-bottom:1rem;}
+.nl-axis{display:flex;align-items:center;justify-content:center;gap:0;margin:1.2rem 0;flex-wrap:nowrap;overflow-x:auto;}
+.nl-seg{height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-top:3px solid #94a3b8;border-bottom:3px solid #94a3b8;min-width:90px;font-size:.82rem;font-weight:700;color:var(--muted);background:#f1f5f9;transition:background .2s,color .2s;user-select:none;padding:0 8px;}
+.nl-seg.selected{background:#ddd6fe;color:var(--purple);border-color:var(--purple-mid);}
+.nl-seg.nl-inf{border-left:none;min-width:70px;}
+.nl-seg.nl-inf-r{border-right:none;min-width:70px;}
+.nl-point{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.82rem;font-weight:800;border:3px solid #94a3b8;background:#fff;color:var(--muted);transition:all .2s;user-select:none;flex-shrink:0;position:relative;}
+.nl-point.open-sel{border-color:var(--purple-mid);background:#fff;color:var(--purple-mid);}
+.nl-point.closed-sel{border-color:var(--purple-mid);background:var(--purple-mid);color:#fff;}
+.nl-point .pt-label{position:absolute;top:46px;font-size:.75rem;color:var(--muted);white-space:nowrap;}
+.nl-legend{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin:.8rem 0;font-size:.83rem;color:var(--muted);}
+.nl-legend span{display:flex;align-items:center;gap:6px;}
+.nl-arrow{font-size:1.2rem;color:#94a3b8;flex-shrink:0;}
+
+/* DnD */
+.dnd-wrapper{background:#f8fafc;border:2px dashed #cbd5e1;border-radius:12px;padding:1.8rem;margin:1.8rem 0;}
+.dnd-row{display:flex;align-items:center;justify-content:space-between;background:#fff;padding:13px 15px;margin-bottom:9px;border-radius:8px;border:1px solid #e2e8f0;gap:14px;}
+.dnd-row span:first-child{flex:1;font-size:.97rem;}
+.drop-zone{display:inline-flex;align-items:center;justify-content:center;width:230px;min-height:44px;background:#e2e8f0;border:2px dashed var(--purple-mid);border-radius:6px;font-weight:700;color:var(--purple);transition:all .2s;flex-shrink:0;padding:0 10px;}
+.drop-zone.drag-over{background:#faf5ff;border-color:var(--purple-mid);transform:scale(1.03);}
+.drag-pool{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:1.3rem;padding:1.3rem;background:#fff;border-radius:8px;border:1px solid #cbd5e1;}
+.draggable-item{background:var(--purple);color:#fff;padding:9px 18px;border-radius:8px;cursor:grab;user-select:none;font-size:1rem;transition:transform .1s,box-shadow .1s;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.14);}
+.draggable-item:hover{box-shadow:0 4px 12px rgba(107,33,168,.3);transform:translateY(-1px);}
+.draggable-item:active{cursor:grabbing;transform:scale(.95);}
+.draggable-item.in-zone{background:transparent;color:var(--purple);padding:0;box-shadow:none;font-weight:800;}
+
+/* BUTTON */
+.btn{display:inline-block;background:var(--purple-mid);color:#fff;padding:10px 22px;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;transition:background .25s,transform .1s;font-family:'Nunito',sans-serif;}
+.btn:hover{background:#581c87;transform:translateY(-1px);}
+.btn-reset{background:#64748b;margin-left:10px;}
+.btn-reset:hover{background:#475569;}
+
+/* ACCORDION */
+.accordion{border:1px solid #e2e8f0;border-radius:10px;margin-bottom:.9rem;overflow:hidden;background:#fff;}
+.accordion-header{background:#f8fafc;padding:.95rem 1.4rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;color:var(--purple);transition:background .2s;font-size:1rem;}
+.accordion-header:hover{background:#f3e8ff;}
+.accordion-content{padding:0;max-height:0;overflow:hidden;transition:max-height .42s ease,padding .42s ease;}
+.accordion-content.active{padding:1.4rem;max-height:2000px;border-top:1px solid #e2e8f0;}
+.step{display:flex;gap:11px;align-items:flex-start;margin-bottom:.9rem;}
+.step-num{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--purple-mid);color:#fff;font-weight:800;font-size:.88rem;flex-shrink:0;margin-top:4px;}
+.step-content{flex:1;}
+
+/* QUIZ */
+.quiz-question{margin-bottom:1.8rem;padding:1.8rem;background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0;}
+.quiz-question-text{font-size:1.05rem;font-weight:700;margin-bottom:1.2rem;color:var(--purple);line-height:1.5;}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.quiz-option{background:#fff;border:2px solid #cbd5e1;padding:.9rem;border-radius:8px;cursor:pointer;display:flex;align-items:center;transition:all .2s;font-size:.96rem;}
+.quiz-option:hover:not(.disabled){border-color:var(--purple-mid);background:#faf5ff;}
+.quiz-option.disabled{cursor:not-allowed;opacity:.7;}
+.quiz-option .opt-label{width:28px;height:28px;background:var(--bg);border-radius:50%;display:flex;justify-content:center;align-items:center;margin-right:12px;font-weight:800;color:var(--muted);flex-shrink:0;font-size:.88rem;}
+.quiz-option.correct{border-color:var(--success)!important;background:#ecfdf5!important;opacity:1;}
+.quiz-option.correct .opt-label{background:var(--success);color:#fff;}
+.quiz-option.wrong{border-color:var(--danger)!important;background:#fef2f2!important;}
+.quiz-option.wrong .opt-label{background:var(--danger);color:#fff;}
+.quiz-explanation{margin-top:1.2rem;padding:.9rem 1rem;background:#fff;border-left:4px solid var(--purple-mid);border-radius:0 8px 8px 0;display:none;animation:fadeIn .45s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+
+/* SCORE BAR */
+#quiz-score-bar{position:sticky;bottom:1.3rem;background:var(--purple);color:#fff;border-radius:12px;padding:11px 20px;text-align:center;font-weight:700;font-size:1rem;box-shadow:0 4px 14px rgba(107,33,168,.38);z-index:99;transition:all .3s;display:none;}
+
+/* FOOTER */
+footer{background:var(--purple);color:#fff;text-align:center;padding:2.5rem;margin-top:3.5rem;}
+footer h3{color:#fff;margin-bottom:.7rem;}
+
+/* RESPONSIVE */
+@media(max-width:720px){
+  .quiz-options,.case-row{grid-template-columns:1fr;}
+  .section-card{padding:1.5rem;}
+  .dnd-row{flex-direction:column;text-align:center;}
+  header h1{font-size:2rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- ======== HEADER ======== -->
+<header>
+  <div class="header-badge"><i class="fa-solid fa-chart-line"></i> Toán học 10 — Chương trình GDPT 2018</div>
+  <h1>Giải Bất phương trình Bậc hai</h1>
+  <p>Tìm ra khoảng giá trị thỏa mãn bài toán — Khi nào kinh doanh có lãi?</p>
+</header>
+
+<div class="container">
+
+<!-- ======== I. KHỞI ĐỘNG ======== -->
+<div class="section-card reveal">
+  <h2 class="section-title"><i class="fa-solid fa-shop"></i> I. Khởi động: Bài toán bán gạo</h2>
+
+  <!-- SVG Rice shop illustration -->
+  <div style="text-align:center;margin:1rem 0 1.5rem;">
+    <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg" style="max-width:560px;width:100%;display:block;margin:0 auto;">
+      <!-- Shop background -->
+      <rect x="60" y="60" width="480" height="110" fill="#fef3c7" rx="8" stroke="#fde68a" stroke-width="2"/>
+      <!-- Roof -->
+      <polygon points="40,65 300,20 560,65" fill="#7c3aed" stroke="#6b21a8" stroke-width="2"/>
+      <!-- Shop sign -->
+      <rect x="160" y="22" width="280" height="36" fill="#fff" rx="6" stroke="#e9d5ff" stroke-width="1.5"/>
+      <text x="300" y="46" text-anchor="middle" font-size="16" font-weight="bold" fill="#6b21a8" font-family="sans-serif">CỬA HÀNG GẠO</text>
+      <!-- Door -->
+      <rect x="255" y="110" width="90" height="60" fill="#d8b4fe" rx="4" stroke="#9333ea" stroke-width="1.5"/>
+      <circle cx="255" cy="140" r="3" fill="#6b21a8"/>
+      <!-- Rice bags -->
+      <ellipse cx="130" cy="155" rx="35" ry="20" fill="#a7f3d0" stroke="#059669" stroke-width="1.5"/>
+      <text x="130" y="160" text-anchor="middle" font-size="12" fill="#065f46" font-weight="bold">GẠO</text>
+      <ellipse cx="470" cy="155" rx="35" ry="20" fill="#a7f3d0" stroke="#059669" stroke-width="1.5"/>
+      <text x="470" y="160" text-anchor="middle" font-size="12" fill="#065f46" font-weight="bold">GẠO</text>
+      <!-- Price tag -->
+      <rect x="360" y="75" width="110" height="54" fill="#fff" rx="8" stroke="#f59e0b" stroke-width="2"/>
+      <text x="415" y="96" text-anchor="middle" font-size="11" fill="#92400e">Giá bán:</text>
+      <text x="415" y="116" text-anchor="middle" font-size="15" font-weight="bold" fill="#7c3aed">x nghìn đ/kg</text>
+      <!-- Profit up arrow -->
+      <text x="138" y="95" font-size="22" fill="#059669">📈</text>
+      <text x="128" y="115" font-size="10" fill="#065f46" font-weight="bold">Lợi nhuận I</text>
+    </svg>
+    <p style="font-size:.8rem;color:var(--muted);margin-top:.3rem;">Cửa hàng cần xác định mức giá bán $x$ để có lợi nhuận dương</p>
+  </div>
+
+  <p>Lợi nhuận $I$ (nghìn đồng) trong một ngày phụ thuộc vào giá bán $x$ (nghìn đồng/kg):</p>
+  <div class="math-display">$$I = -3x^2 + 200x - 2325$$</div>
+  <p><strong>Câu hỏi:</strong> Cửa hàng có lãi ($I > 0$) khi giá $x$ nằm trong khoảng nào?</p>
+  <p>Đây là bài toán <strong>giải bất phương trình bậc hai</strong>: tìm $x$ để $-3x^2 + 200x - 2325 > 0$.</p>
+
+  <!-- Real-world applications -->
+  <div class="app-row" style="margin-top:1.2rem;">
+    <div class="app-card">
+      <span class="ai">🏪</span>
+      <strong>Kinh doanh</strong>
+      <p>Lợi nhuận dương khi giá nằm trong khoảng nào?</p>
+    </div>
+    <div class="app-card">
+      <span class="ai">🏀</span>
+      <strong>Thể thao</strong>
+      <p>Bóng còn ở trên mặt sàn trong khoảng thời gian nào?</p>
+    </div>
+    <div class="app-card">
+      <span class="ai">🛣️</span>
+      <strong>Xây dựng</strong>
+      <p>Tầm nắn của cầu đường nằm trong giới hạn cho phép?</p>
+    </div>
+    <div class="app-card">
+      <span class="ai">📊</span>
+      <strong>Kinh tế</strong>
+      <p>Khi nào cung vượt cầu — thị trường dư thừa?</p>
+    </div>
+  </div>
+</div>
+
+<!-- ======== II. LÝ THUYẾT ======== -->
+<div class="section-card reveal">
+  <h2 class="section-title"><i class="fa-solid fa-book-open"></i> II. Kiến thức Trọng tâm</h2>
+
+  <!-- CONCEPT 1: DEFINITION -->
+  <div class="concept-box">
+    <div class="concept-header">
+      <div class="concept-icon">1</div>
+      Bất phương trình bậc hai một ẩn
+    </div>
+    <p>Bất phương trình bậc hai một ẩn $x$ là bất phương trình có dạng:</p>
+    <div class="math-display" style="background:#faf5ff;border-color:#e9d5ff;">
+      $ax^2 + bx + c > 0 \;\;$ hoặc $\;\; ax^2 + bx + c < 0 \;\;$ hoặc $\;\; ax^2 + bx + c \ge 0 \;\;$ hoặc $\;\; ax^2 + bx + c \le 0$
+    </div>
+    <p>với $a, b, c \in \mathbb{R}$, $a \ne 0$. <strong>Giải bất phương trình</strong> là tìm tất cả giá trị $x$ thỏa mãn (Tập nghiệm $S$).</p>
+  </div>
+
+  <!-- CONCEPT 2: METHOD -->
+  <div class="concept-box">
+    <div class="concept-header">
+      <div class="concept-icon">2</div>
+      Phương pháp: Xét dấu tam thức bậc hai
+    </div>
+    <p>Giải BPT bậc hai chính là <strong>xét dấu</strong> của tam thức $f(x) = ax^2 + bx + c$:</p>
+    <div style="display:flex;gap:0;counter-reset:step;margin:.8rem 0;">
+      <div style="flex:1;background:#f8fafc;border-radius:10px 0 0 10px;padding:1rem;border:1px solid #e2e8f0;border-right:none;">
+        <div style="font-weight:800;color:var(--purple-mid);font-size:.95rem;">① Bước 1</div>
+        <div style="font-size:.88rem;margin-top:.3rem;">Tính $\Delta$ (hoặc $\Delta'$) và tìm nghiệm $x_1, x_2$ của $f(x)=0$</div>
+      </div>
+      <div style="flex:1;background:#f8fafc;padding:1rem;border:1px solid #e2e8f0;border-right:none;">
+        <div style="font-weight:800;color:var(--purple-mid);font-size:.95rem;">② Bước 2</div>
+        <div style="font-size:.88rem;margin-top:.3rem;">Xét dấu $a$ và áp dụng định lí (quy tắc <em>"Trong trái, Ngoài cùng"</em> khi $\Delta>0$)</div>
+      </div>
+      <div style="flex:1;background:#f8fafc;border-radius:0 10px 10px 0;padding:1rem;border:1px solid #e2e8f0;">
+        <div style="font-weight:800;color:var(--purple-mid);font-size:.95rem;">③ Bước 3</div>
+        <div style="font-size:.88rem;margin-top:.3rem;">Chọn các khoảng phù hợp với dấu của BPT ($>, <, \ge, \le$)</div>
+      </div>
+    </div>
+
+    <!-- 3 CASE DIAGRAMS -->
+    <p style="font-weight:700;color:var(--purple);margin:1.2rem 0 .5rem;">Trực quan 3 trường hợp (với $a > 0$):</p>
+    <div class="case-row">
+      <!-- Case Delta < 0 -->
+      <div class="case-card" style="border-color:#a7f3d0;">
+        <svg width="110" height="75" viewBox="0 0 110 75">
+          <line x1="5" y1="50" x2="105" y2="50" stroke="#94a3b8" stroke-width="1.5"/>
+          <line x1="55" y1="5" x2="55" y2="70" stroke="#94a3b8" stroke-width="1.5"/>
+          <!-- Parabola above axis -->
+          <path d="M 10 52 Q 55 8 100 52" stroke="#10b981" stroke-width="2.5" fill="none"/>
+          <!-- All positive shade -->
+          <text x="55" y="35" text-anchor="middle" fill="#10b981" font-size="14" font-weight="bold">+</text>
+          <text x="55" y="68" text-anchor="middle" fill="#10b981" font-size="10">toàn trục số</text>
+        </svg>
+        <div class="case-title" style="color:#065f46;">$\Delta < 0$, $a > 0$</div>
+        <div class="case-rule">$f(x) > 0$ với mọi $x$<br><span style="color:var(--muted);">(BPT $>0$: $S=\mathbb{R}$)</span></div>
+      </div>
+      <!-- Case Delta = 0 -->
+      <div class="case-card" style="border-color:#fde68a;">
+        <svg width="110" height="75" viewBox="0 0 110 75">
+          <line x1="5" y1="50" x2="105" y2="50" stroke="#94a3b8" stroke-width="1.5"/>
+          <line x1="55" y1="5" x2="55" y2="70" stroke="#94a3b8" stroke-width="1.5"/>
+          <path d="M 10 56 Q 55 14 100 56" stroke="#f59e0b" stroke-width="2.5" fill="none"/>
+          <circle cx="55" cy="50" r="4" fill="#f59e0b"/>
+          <text x="55" y="35" text-anchor="middle" fill="#f59e0b" font-size="14" font-weight="bold">+</text>
+          <text x="55" y="64" text-anchor="middle" fill="#64748b" font-size="9">x₀</text>
+        </svg>
+        <div class="case-title" style="color:#92400e;">$\Delta = 0$, $a > 0$</div>
+        <div class="case-rule">$f(x) \ge 0$ mọi $x$; $f(x_0)=0$<br><span style="color:var(--muted);">(BPT $>0$: $S=\mathbb{R}\setminus\{x_0\}$)</span></div>
+      </div>
+      <!-- Case Delta > 0 -->
+      <div class="case-card" style="border-color:#fca5a5;">
+        <svg width="110" height="75" viewBox="0 0 110 75">
+          <line x1="5" y1="38" x2="105" y2="38" stroke="#94a3b8" stroke-width="1.5"/>
+          <line x1="55" y1="5" x2="55" y2="72" stroke="#94a3b8" stroke-width="1.5"/>
+          <!-- Parabola crossing axis -->
+          <path d="M 5 12 Q 55 68 105 12" stroke="#ef4444" stroke-width="2.5" fill="none"/>
+          <path d="M 5 12 Q 22 38 30 38" stroke="#10b981" stroke-width="2.5" fill="none"/>
+          <path d="M 80 38 Q 88 38 105 12" stroke="#10b981" stroke-width="2.5" fill="none"/>
+          <circle cx="30" cy="38" r="4" fill="#1e293b"/>
+          <circle cx="80" cy="38" r="4" fill="#1e293b"/>
+          <text x="20" y="28" fill="#10b981" font-size="11" font-weight="bold">+</text>
+          <text x="55" y="65" text-anchor="middle" fill="#ef4444" font-size="11" font-weight="bold">−</text>
+          <text x="90" y="28" fill="#10b981" font-size="11" font-weight="bold">+</text>
+          <text x="30" y="52" text-anchor="middle" fill="#334155" font-size="9">x₁</text>
+          <text x="80" y="52" text-anchor="middle" fill="#334155" font-size="9">x₂</text>
+        </svg>
+        <div class="case-title" style="color:#991b1b;">$\Delta > 0$, $a > 0$</div>
+        <div class="case-rule"><em>Trong trái, ngoài cùng</em><br><span style="color:var(--muted);">(BPT $>0$: ngoài $x_1,x_2$)</span></div>
+      </div>
+    </div>
+
+    <!-- SUMMARY TABLE (accordion) -->
+    <div class="accordion" style="margin-top:1.2rem;">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <span><i class="fa-solid fa-table"></i> Bảng tổng hợp tập nghiệm (tất cả trường hợp)</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+      <div class="accordion-content">
+        <p style="font-size:.88rem;color:var(--muted);margin-bottom:.8rem;">Cho $f(x)=ax^2+bx+c$, $a\ne 0$, hai nghiệm (khi có): $x_1 \le x_2$.</p>
+        <div style="overflow-x:auto;">
+          <table class="sol-table">
+            <thead>
+              <tr>
+                <th rowspan="2" style="width:90px;font-size:.88rem;">Dấu BPT</th>
+                <th colspan="3" style="background:#4c1d95;">$a > 0$</th>
+                <th colspan="3" style="background:#581c87;">$a < 0$</th>
+              </tr>
+              <tr>
+                <th style="background:#6d28d9;font-size:.82rem;">$\Delta < 0$</th>
+                <th style="background:#6d28d9;font-size:.82rem;">$\Delta = 0$</th>
+                <th style="background:#6d28d9;font-size:.82rem;">$\Delta > 0$</th>
+                <th style="background:#7c3aed;font-size:.82rem;">$\Delta < 0$</th>
+                <th style="background:#7c3aed;font-size:.82rem;">$\Delta = 0$</th>
+                <th style="background:#7c3aed;font-size:.82rem;">$\Delta > 0$</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="row-hdr">$f > 0$</td>
+                <td class="cell-r">$\mathbb{R}$</td>
+                <td class="cell-r">$\mathbb{R}\!\setminus\!\{x_0\}$</td>
+                <td class="cell-r">$(-\infty;x_1)\cup(x_2;+\infty)$</td>
+                <td class="cell-empty">$\emptyset$</td>
+                <td class="cell-empty">$\emptyset$</td>
+                <td class="cell-r">$(x_1;x_2)$</td>
+              </tr>
+              <tr>
+                <td class="row-hdr">$f \ge 0$</td>
+                <td class="cell-r">$\mathbb{R}$</td>
+                <td class="cell-r">$\mathbb{R}$</td>
+                <td class="cell-r">$(-\infty;x_1]\cup[x_2;+\infty)$</td>
+                <td class="cell-empty">$\emptyset$</td>
+                <td class="cell-r">$\{x_0\}$</td>
+                <td class="cell-r">$[x_1;x_2]$</td>
+              </tr>
+              <tr>
+                <td class="row-hdr">$f < 0$</td>
+                <td class="cell-empty">$\emptyset$</td>
+                <td class="cell-empty">$\emptyset$</td>
+                <td class="cell-r">$(x_1;x_2)$</td>
+                <td class="cell-r">$\mathbb{R}$</td>
+                <td class="cell-r">$\mathbb{R}\!\setminus\!\{x_0\}$</td>
+                <td class="cell-r">$(-\infty;x_1)\cup(x_2;+\infty)$</td>
+              </tr>
+              <tr>
+                <td class="row-hdr">$f \le 0$</td>
+                <td class="cell-empty">$\emptyset$</td>
+                <td class="cell-r">$\{x_0\}$</td>
+                <td class="cell-r">$[x_1;x_2]$</td>
+                <td class="cell-r">$\mathbb{R}$</td>
+                <td class="cell-r">$\mathbb{R}$</td>
+                <td class="cell-r">$(-\infty;x_1]\cup[x_2;+\infty)$</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLET (keep from original, minor improvement) -->
+  <div class="applet-container">
+    <h3 style="color:var(--purple);margin-top:0;">🔬 Khám phá Tương tác: Trực quan hóa Tập nghiệm</h3>
+    <p style="color:var(--muted);font-size:.93rem;margin-bottom:1.2rem;">Thay đổi hệ số và dấu BPT. Đường cam = Tập nghiệm trên trục số. Parabol tím = đồ thị $f(x)$.</p>
+    <div class="controls-wrapper">
+      <div class="slider-group">
+        <label style="font-weight:700;">$a$: <span id="valA" style="color:var(--purple-mid);">1</span></label>
+        <input type="range" id="sliderA" min="-5" max="5" value="1" step="1" oninput="updateApplet()">
+      </div>
+      <div class="slider-group">
+        <label style="font-weight:700;">$b$: <span id="valB" style="color:var(--purple-mid);">-4</span></label>
+        <input type="range" id="sliderB" min="-10" max="10" value="-4" step="1" oninput="updateApplet()">
+      </div>
+      <div class="slider-group">
+        <label style="font-weight:700;">$c$: <span id="valC" style="color:var(--purple-mid);">3</span></label>
+        <input type="range" id="sliderC" min="-10" max="10" value="3" step="1" oninput="updateApplet()">
+      </div>
+      <div class="slider-group">
+        <label style="font-weight:700;">Dấu BPT:</label>
+        <select id="ineqSign" onchange="updateApplet()">
+          <option value=">"> > 0</option>
+          <option value="<"> &lt; 0</option>
+          <option value=">="> ≥ 0</option>
+          <option value="<="> ≤ 0</option>
+        </select>
+      </div>
+    </div>
+    <div style="font-size:1.15rem;font-weight:700;margin-bottom:12px;color:var(--purple);" id="funcText">x² - 4x + 3 > 0</div>
+    <canvas id="ineqCanvas" width="800" height="230"></canvas>
+    <div style="margin-top:12px;">
+      <div class="sol-badge" style="background:#eef2ff;color:#4c1d95;border:1px solid #c4b5fd;">
+        Tập nghiệm $S =$ <span id="solutionText"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== III. TÔ MÀU TẬP NGHIỆM (NEW) ======== -->
+<div class="section-card reveal">
+  <h2 class="section-title"><i class="fa-solid fa-paintbrush"></i> III. Hoạt động: Tô màu Tập nghiệm</h2>
+  <p>Nhấp vào các <strong>vùng</strong> hoặc <strong>điểm</strong> trên trục số để chọn tập nghiệm. Nhấp nhiều lần vào điểm để chọn trên các vùng. </p>
+
+  <div class="nl-wrap">
+    <p class="nl-problem">Giải bất phương trình: $f(x) = x^2 - 3x - 4 \ge 0$</p>
+    <p class="nl-sub">$a = 1 > 0$; phương trình $f(x)=0$ có nghiệm $x_1 = -1$ và $x_2 = 4$. Em hãy tô màu đúng Tập nghiệm trên trục số bên dưới.</p>
+
+    <!-- Number Line -->
+    <div class="nl-axis" id="nlAxis">
+      <div class="nl-arrow">←</div>
+      <div class="nl-seg nl-inf selected" id="nlLeft" onclick="toggleNLSeg('nlLeft')" title="x &lt; -1">$(-\infty;-1)$</div>
+      <div class="nl-point closed-sel" id="nlP1" onclick="cycleNLPoint('nlP1')" title="điểm x=-1">
+        −1
+        <span class="pt-label">x₁</span>
+      </div>
+      <div class="nl-seg" id="nlMid" onclick="toggleNLSeg('nlMid')" title="-1 &lt; x &lt; 4">$(−1;\;4)$</div>
+      <div class="nl-point closed-sel" id="nlP2" onclick="cycleNLPoint('nlP2')" title="điểm x=4">
+        4
+        <span class="pt-label">x₂</span>
+      </div>
+      <div class="nl-seg nl-inf-r selected" id="nlRight" onclick="toggleNLSeg('nlRight')" title="x &gt; 4">$(4;+\infty)$</div>
+      <div class="nl-arrow">→</div>
+    </div>
+
+    <div class="nl-legend">
+      <span>
+        <svg width="20" height="20"><rect width="20" height="20" rx="4" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1.5"/></svg>
+        Vùng được chọn
+      </span>
+      <span>
+        <svg width="20" height="20"><circle cx="10" cy="10" r="8" fill="white" stroke="#7c3aed" stroke-width="2"/></svg>
+        Không lấy tại hai đầu mút
+      </span>
+      <span>
+        <svg width="20" height="20"><circle cx="10" cy="10" r="8" fill="#7c3aed" stroke="#7c3aed" stroke-width="2"/></svg>
+        Lấy tại hai đầu mút
+      </span>
+    </div>
+
+    <div style="text-align:center;margin-top:1rem;">
+      <button class="btn" onclick="checkNL()">✅ Kiểm tra</button>
+      <button class="btn btn-reset" onclick="resetNL()">↺ Làm lại</button>
+      <p id="nl-feedback" style="margin-top:.8rem;font-weight:700;font-size:1rem;"></p>
+    </div>
+
+    <div class="success-box" style="margin-top:1rem;">
+      <strong>Gợi ý:</strong> $a=1>0$, $\Delta>0$. BPT $\ge 0$ → lấy phần "ngoài cùng" <em>và bằng 0</em>.<br>
+      Kết quả: $S = (-\infty;\,-1] \cup [4;\,+\infty)$ — hai đoạn bên ngoài, <em>lấy cả</em> tại $x_1$ và $x_2$.
+    </div>
+  </div>
+</div>
+
+<!-- ======== IV. KÉO THẢ (GIỮ NGUYÊN, SỬA BUG) ======== -->
+<div class="section-card reveal">
+  <h2 class="section-title"><i class="fa-solid fa-puzzle-piece"></i> IV. Thử thách Kéo - Thả Tập nghiệm</h2>
+  <p>Cho $f(x)=ax^2+bx+c$ với $a>0$ và 2 nghiệm phân biệt $x_1 < x_2$. Kéo tập nghiệm đúng vào từng bất phương trình.</p>
+  <div class="dnd-wrapper" id="dnd-container">
+    <div class="dnd-row">
+      <span>1. $f(x) < 0$ — lấy phần <em>"Trong trái"</em> (không lấy đầu mút)</span>
+      <span class="drop-zone" data-answer="(x_1; x_2)"></span>
+    </div>
+    <div class="dnd-row">
+      <span>2. $f(x) \le 0$ — lấy phần âm và bằng 0 (lấy cả đầu mút)</span>
+      <span class="drop-zone" data-answer="[x_1; x_2]"></span>
+    </div>
+    <div class="dnd-row">
+      <span>3. $f(x) > 0$ — lấy phần <em>"Ngoài cùng"</em> (không lấy đầu mút)</span>
+      <span class="drop-zone" data-answer="(-inf; x_1) U (x_2; +inf)"></span>
+    </div>
+    <div class="dnd-row">
+      <span>4. $f(x) \ge 0$ — lấy phần dương và bằng 0 (lấy cả đầu mút)</span>
+      <span class="drop-zone" data-answer="(-inf; x_1] U [x_2; +inf)"></span>
+    </div>
+    <div class="drag-pool" id="drag-pool">
+      <div class="draggable-item" draggable="true" data-val="(-inf; x_1) U (x_2; +inf)">$(-\infty; x_1) \cup (x_2; +\infty)$</div>
+      <div class="draggable-item" draggable="true" data-val="[x_1; x_2]">$[x_1; x_2]$</div>
+      <div class="draggable-item" draggable="true" data-val="(x_1; x_2)">$(x_1; x_2)$</div>
+      <div class="draggable-item" draggable="true" data-val="(-inf; x_1] U [x_2; +inf)">$(-\infty; x_1] \cup [x_2; +\infty)$</div>
+    </div>
+    <div style="text-align:center;margin-top:1.3rem;">
+      <button class="btn" onclick="checkDnD()">✅ Kiểm tra kết quả</button>
+      <button class="btn btn-reset" onclick="resetDnD()">↺ Làm lại</button>
+      <p id="dnd-feedback" style="margin-top:.8rem;font-weight:700;font-size:1rem;"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ======== V. VÍ DỤ (GIỮ NGUYÊN) ======== -->
+<div class="section-card reveal">
+  <h2 class="section-title"><i class="fa-solid fa-chalkboard-user"></i> V. Ví dụ Phân tích Từng bước</h2>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAccordion(this)">
+      <span><i class="fa-solid fa-pen-nib"></i> Ví dụ 1: Giải $6x^2 + 7x - 5 > 0$</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </div>
+    <div class="accordion-content">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Giải $f(x)=0$:</strong> $\Delta = 49 + 120 = 169 > 0$.<br>Hai nghiệm: $x_1 = -\dfrac{5}{3}$, $x_2 = \dfrac{1}{2}$.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><strong>Dấu $a$:</strong> $a = 6 > 0$.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><strong>Kết luận:</strong> Cần $f(x) > 0$ (cùng dấu $a$) → lấy phần "Ngoài":<br>$S = \left(-\infty;\,-\dfrac{5}{3}\right) \cup \left(\dfrac{1}{2};\,+\infty\right)$.</div></div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAccordion(this)">
+      <span><i class="fa-solid fa-ban"></i> Ví dụ 2: Giải $-x^2 + 4x - 5 \ge 0$ (Vô nghiệm)</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </div>
+    <div class="accordion-content">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Giải $f(x)=0$:</strong> $\Delta' = 4 - 5 = -1 < 0$ → Vô nghiệm.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><strong>Dấu $a$:</strong> $a = -1 < 0$. Vì $\Delta < 0$ nên $f(x)$ luôn cùng dấu $a$ → $f(x) < 0 \;\forall x$.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><strong>Kết luận:</strong> BPT yêu cầu $f(x) \ge 0$ nhưng $f(x) < 0$ mọi $x$ → <strong>Vô nghiệm</strong> ($S = \emptyset$).</div></div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAccordion(this)">
+      <span><i class="fa-solid fa-shop"></i> Ví dụ 3: Trở lại bài toán bán gạo</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </div>
+    <div class="accordion-content">
+      <p>Giải $-3x^2 + 200x - 2325 > 0$.</p>
+      <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Giải $f(x)=0$:</strong> $\Delta = 200^2 - 4(-3)(-2325) = 40000 - 27900 = 12100 > 0$.<br>Hai nghiệm: $x_1 = \dfrac{200-110}{6} = 15$ và $x_2 = \dfrac{200+110}{6} = \dfrac{155}{3} \approx 51{,}67$.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><strong>Dấu $a$:</strong> $a = -3 < 0$.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><strong>Kết luận:</strong> Cần $f(x) > 0$ → trái dấu $a$ → lấy phần "Trong":<br>$S = \left(15;\,\dfrac{155}{3}\right) \approx (15;\;51{,}67)$.<br><em>Vậy cửa hàng có lãi khi giá bán $x$ nằm trong khoảng $(15;\;51{,}67)$ nghìn đồng/kg.</em></div></div>
+    </div>
+  </div>
+
+  <div class="note-box" style="margin-top:1.5rem;">
+    <strong><i class="fa-solid fa-calculator"></i> Giải BPT bằng máy tính cầm tay (Casio fx-580VN X)</strong>
+    <ol style="margin:.6rem 0 0 1.2rem;line-height:2;">
+      <li><strong>MENU</strong> → chọn <strong>Inequality</strong></li>
+      <li>Chọn <strong>Degree 2</strong> → chọn dấu BPT ($>, <, \ge, \le$)</li>
+      <li>Nhập hệ số $a, b, c$ → ấn $=$</li>
+    </ol>
+    <p style="margin-top:.5rem;font-size:.88rem;"><em>Lưu ý: Nắm vững bản chất "xét dấu" rất quan trọng để giải bài toán có tham số $m$.</em></p>
+  </div>
+</div>
+
+<!-- ======== VI. TRẮC NGHIỆM (GIỮ NGUYÊN, SỬA Q7) ======== -->
+<div class="section-card reveal" id="quiz-section">
+  <h2 class="section-title"><i class="fa-solid fa-list-check"></i> VI. Bài tập Trắc nghiệm (10 câu)</h2>
+  <p style="margin-bottom:1.5rem;color:var(--muted);">Chọn đáp án đúng nhất. Kết quả và giải thích hiển thị ngay sau khi em chọn.</p>
+  <div id="quiz-container"></div>
+</div>
+
+<div id="quiz-score-bar">📊 Điểm: <span id="score-correct">0</span> / <span id="score-total">0</span> câu đúng</div>
+
+</div><!-- /container -->
+
+<footer>
+  <h3>Học liệu Toán học Mở</h3>
+  <p>Biên soạn bởi Lê Nguyễn Hồng Linh</p>
+  <p style="opacity:.65;font-size:.85rem;margin-top:.8rem;">© Bản thiết kế tương tác theo chuẩn GDPT 2018 · Phiên bản 2.0</p>
+</footer>
+
+<script>
+/* ===== SCROLL REVEAL ===== */
+const ro=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+/* ===== ACCORDION ===== */
+function toggleAccordion(h){
+  const c=h.nextElementSibling,ic=h.querySelector('i.fa-chevron-down');
+  if(c.classList.contains('active')){c.classList.remove('active');ic.style.transform='rotate(0deg)';}
+  else{c.classList.add('active');ic.style.transform='rotate(180deg)';ic.style.transition='transform .3s';if(window.MathJax)MathJax.typesetPromise([c]).catch(e=>console.log(e));}
+}
+
+/* ===== APPLET ===== */
+function formatNum(n){return Number.isInteger(n)?n.toString():n.toFixed(2);}
+
+function updateApplet(){
+  let a=parseFloat(document.getElementById('sliderA').value);
+  let b=parseFloat(document.getElementById('sliderB').value);
+  let c=parseFloat(document.getElementById('sliderC').value);
+  let sign=document.getElementById('ineqSign').value;
+  if(a===0){a=1;document.getElementById('sliderA').value=1;}
+  document.getElementById('valA').textContent=a;
+  document.getElementById('valB').textContent=b;
+  document.getElementById('valC').textContent=c;
+
+  // Build display text
+  let sA=a===1?'x²':(a===-1?'-x²':a+'x²');
+  let sB=b>0?'+ '+b+'x':(b<0?'- '+Math.abs(b)+'x':'');
+  if(b===1)sB='+ x';if(b===-1)sB='- x';if(b===0)sB='';
+  let sC=c>0?'+ '+c:(c<0?'- '+Math.abs(c):'');
+  let sgTxt=sign.replace('>=','≥').replace('<=','≤');
+  document.getElementById('funcText').textContent=`${sA} ${sB} ${sC} ${sgTxt} 0`;
+
+  let delta=b*b-4*a*c;
+  let roots=[];
+  if(delta>0){roots.push((-b-Math.sqrt(delta))/(2*a));roots.push((-b+Math.sqrt(delta))/(2*a));roots.sort((x,y)=>x-y);}
+  else if(delta===0){roots.push(-b/(2*a));}
+
+  // Solution set text
+  let sol='';
+  const fn=formatNum;
+  if(a>0){
+    if(delta<0){sol=(sign==='>'||sign==='>=')? '\\mathbb{R}':'\\emptyset';}
+    else if(delta===0){
+      if(sign==='>')sol=`\\mathbb{R}\\setminus\\{${fn(roots[0])}\\}`;
+      else if(sign==='>=')sol='\\mathbb{R}';
+      else if(sign==='<')sol='\\emptyset';
+      else sol=`\\{${fn(roots[0])}\\}`;
+    } else {
+      if(sign==='>')sol=`(-\\infty;\\,${fn(roots[0])})\\cup(${fn(roots[1])};\\,+\\infty)`;
+      else if(sign==='>=')sol=`(-\\infty;\\,${fn(roots[0])}]\\cup[${fn(roots[1])};\\,+\\infty)`;
+      else if(sign==='<')sol=`(${fn(roots[0])};\\,${fn(roots[1])})`;
+      else sol=`[${fn(roots[0])};\\,${fn(roots[1])}]`;
+    }
+  } else {
+    if(delta<0){sol=(sign==='<'||sign==='<=')? '\\mathbb{R}':'\\emptyset';}
+    else if(delta===0){
+      if(sign==='<')sol=`\\mathbb{R}\\setminus\\{${fn(roots[0])}\\}`;
+      else if(sign==='<=')sol='\\mathbb{R}';
+      else if(sign==='>')sol='\\emptyset';
+      else sol=`\\{${fn(roots[0])}\\}`;
+    } else {
+      if(sign==='<')sol=`(-\\infty;\\,${fn(roots[0])})\\cup(${fn(roots[1])};\\,+\\infty)`;
+      else if(sign==='<=')sol=`(-\\infty;\\,${fn(roots[0])}]\\cup[${fn(roots[1])};\\,+\\infty)`;
+      else if(sign==='>')sol=`(${fn(roots[0])};\\,${fn(roots[1])})`;
+      else sol=`[${fn(roots[0])};\\,${fn(roots[1])}]`;
+    }
+  }
+
+  const solEl=document.getElementById('solutionText');
+  solEl.innerHTML=`$${sol}$`;
+  if(window.MathJax)MathJax.typesetPromise([solEl]).catch(e=>console.log(e));
+  drawAppletGraph(a,b,c,sign,delta,roots);
+}
+
+function drawAppletGraph(a,b,c,sign,delta,roots){
+  const cv=document.getElementById('ineqCanvas');
+  const ctx=cv.getContext('2d');
+  const W=cv.width,H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  const sX=35,sY=12,oX=W/2,oY=H/2+20;
+  // Grid
+  ctx.strokeStyle='#f1f5f9';ctx.lineWidth=1;
+  for(let i=-12;i<=12;i++){let px=oX+i*sX;ctx.beginPath();ctx.moveTo(px,0);ctx.lineTo(px,H);ctx.stroke();}
+  // Axes
+  ctx.strokeStyle='#94a3b8';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(0,oY);ctx.lineTo(W,oY);ctx.moveTo(oX,0);ctx.lineTo(oX,H);ctx.stroke();
+  // Ticks
+  ctx.fillStyle='#64748b';ctx.font='11px Nunito';ctx.textAlign='center';
+  for(let i=-12;i<=12;i++){if(i===0)continue;let px=oX+i*sX;if(i%3!==0)continue;ctx.beginPath();ctx.moveTo(px,oY-4);ctx.lineTo(px,oY+4);ctx.strokeStyle='#94a3b8';ctx.lineWidth=1.5;ctx.stroke();ctx.fillText(i,px,oY+16);}
+  // Solution highlight on x-axis
+  ctx.lineWidth=8;
+  for(let px=0;px<=W;px++){
+    let x=(px-oX)/sX;let y=a*x*x+b*x+c;
+    let ok=(sign==='>'&&y>0)||(sign==='<'&&y<0)||(sign==='>='&&y>=0)||(sign==='<='&&y<=0);
+    if(ok){ctx.beginPath();ctx.moveTo(px,oY-1);ctx.lineTo(px+1,oY-1);ctx.strokeStyle='#f59e0b';ctx.lineWidth=8;ctx.stroke();}
+  }
+  // Parabola
+  ctx.beginPath();let first=true;
+  for(let px=0;px<=W;px+=2){let x=(px-oX)/sX;let y=a*x*x+b*x+c;let py=oY-y*sY;if(first){ctx.moveTo(px,py);first=false;}else ctx.lineTo(px,py);}
+  ctx.strokeStyle='#7c3aed';ctx.lineWidth=2.5;ctx.stroke();
+  // Root markers
+  if(delta>=0){roots.forEach(r=>{let px=oX+r*sX;ctx.beginPath();ctx.arc(px,oY,6,0,2*Math.PI);ctx.fillStyle='#1e293b';ctx.fill();ctx.fillStyle='#334155';ctx.font='bold 11px Nunito';ctx.textAlign='center';ctx.fillText(formatNum(r),px,oY+22);});}
+  // Labels
+  ctx.fillStyle='#334155';ctx.font='italic 13px Merriweather';ctx.textAlign='center';ctx.fillText('x',W-12,oY-8);
+  ctx.textAlign='left';ctx.fillText('y',oX+8,14);
+  // Legend
+  ctx.beginPath();ctx.moveTo(20,14);ctx.lineTo(50,14);ctx.strokeStyle='#f59e0b';ctx.lineWidth=5;ctx.stroke();
+  ctx.fillStyle='#92400e';ctx.font='11px Nunito';ctx.textAlign='left';ctx.fillText('= Tập nghiệm',55,18);
+  ctx.beginPath();ctx.moveTo(20,30);ctx.lineTo(50,30);ctx.strokeStyle='#7c3aed';ctx.lineWidth=2.5;ctx.stroke();
+  ctx.fillStyle='#334155';ctx.fillText('= Đồ thị f(x)',55,34);
+}
+
+window.addEventListener('load',()=>{updateApplet();});
+
+/* ===== NUMBER LINE GAME ===== */
+// Correct answer: left=selected, P1=closed, mid=not selected, P2=closed, right=selected
+const NL_CORRECT={nlLeft:true,nlP1:'closed',nlMid:false,nlP2:'closed',nlRight:true};
+const NL_POINT_STATES=['none','open','closed'];
+
+function toggleNLSeg(id){
+  const el=document.getElementById(id);
+  el.classList.toggle('selected');
+  el.style.outline='';
+}
+
+function cycleNLPoint(id){
+  const el=document.getElementById(id);
+  const cur=NL_POINT_STATES.findIndex(s=>el.classList.contains(s+'-sel'));
+  const next=(cur+1)%NL_POINT_STATES.length;
+  NL_POINT_STATES.forEach(s=>el.classList.remove(s+'-sel'));
+  if(NL_POINT_STATES[next]!=='none')el.classList.add(NL_POINT_STATES[next]+'-sel');
+  el.style.outline='';
+}
+
+function checkNL(){
+  let ok=0,total=5;
+  // Check segments
+  const segCheck=(id,correct)=>{
+    const el=document.getElementById(id);
+    const selected=el.classList.contains('selected');
+    if(selected===correct){el.style.outline='2px solid var(--success)';ok++;}
+    else el.style.outline='2px solid var(--danger)';
+  };
+  const ptCheck=(id,correct)=>{
+    const el=document.getElementById(id);
+    const state=NL_POINT_STATES.find(s=>el.classList.contains(s+'-sel'))||'none';
+    if(state===correct){el.style.outline='2px solid var(--success)';ok++;}
+    else el.style.outline='2px solid var(--danger)';
+  };
+  segCheck('nlLeft',true);ptCheck('nlP1','closed');segCheck('nlMid',false);ptCheck('nlP2','closed');segCheck('nlRight',true);
+  const fb=document.getElementById('nl-feedback');
+  if(ok===total){fb.textContent='🎉 Hoàn toàn chính xác! Tập nghiệm $S=(-\\infty;-1]\\cup[4;+\\infty)$.';fb.style.color='var(--success)';}
+  else{fb.textContent=`⚠️ Đúng ${ok}/${total} phần. Viền đỏ = cần xem lại.`;fb.style.color='var(--danger)';}
+  if(window.MathJax)MathJax.typesetPromise([fb]).catch(e=>console.log(e));
+}
+
+function resetNL(){
+  ['nlLeft','nlRight'].forEach(id=>{document.getElementById(id).classList.add('selected');document.getElementById(id).style.outline='';});
+  document.getElementById('nlMid').classList.remove('selected');document.getElementById('nlMid').style.outline='';
+  ['nlP1','nlP2'].forEach(id=>{const el=document.getElementById(id);NL_POINT_STATES.forEach(s=>el.classList.remove(s+'-sel'));el.classList.add('closed-sel');el.style.outline='';});
+  document.getElementById('nl-feedback').textContent='';
+}
+
+/* ===== DRAG & DROP ===== */
+const dragPool=document.getElementById('drag-pool');
+let draggedItem=null,initialPoolHTML='';
+window.addEventListener('DOMContentLoaded',()=>{initialPoolHTML=dragPool.innerHTML;initializeDnD();});
+function initializeDnD(){
+  document.querySelectorAll('.draggable-item').forEach(item=>{
+    item.addEventListener('dragstart',function(){draggedItem=this;setTimeout(()=>this.style.opacity='.45',0);});
+    item.addEventListener('dragend',function(){setTimeout(()=>this.style.opacity='1',0);draggedItem=null;});
+  });
+  document.querySelectorAll('.drop-zone').forEach(zone=>{
+    const nz=zone.cloneNode(true);zone.parentNode.replaceChild(nz,zone);
+    nz.addEventListener('dragover',e=>{e.preventDefault();nz.classList.add('drag-over');});
+    nz.addEventListener('dragleave',()=>nz.classList.remove('drag-over'));
+    nz.addEventListener('drop',function(e){
+      e.preventDefault();this.classList.remove('drag-over');
+      if(draggedItem){
+        if(this.children.length>0){const old=this.children[0];old.classList.remove('in-zone');dragPool.appendChild(old);}
+        draggedItem.parentNode.removeChild(draggedItem);this.appendChild(draggedItem);draggedItem.classList.add('in-zone');
+        this.childNodes.forEach(n=>{if(n.nodeType===3)n.remove();});
+        if(window.MathJax)MathJax.typesetPromise([this]).catch(e=>console.log(e));
+      }
+    });
+  });
+  dragPool.addEventListener('dragover',e=>e.preventDefault());
+  dragPool.addEventListener('drop',function(e){e.preventDefault();if(draggedItem){draggedItem.parentNode.removeChild(draggedItem);this.appendChild(draggedItem);draggedItem.classList.remove('in-zone');}});
+}
+function checkDnD(){
+  let ok=0;
+  document.querySelectorAll('.drop-zone').forEach(zone=>{
+    const ans=zone.getAttribute('data-answer');
+    if(zone.children.length>0){const val=zone.children[0].getAttribute('data-val');if(val===ans){zone.style.borderColor='var(--success)';zone.style.backgroundColor='#d1fae5';ok++;}else{zone.style.borderColor='var(--danger)';zone.style.backgroundColor='#fee2e2';}}
+    else{zone.style.borderColor='var(--danger)';zone.style.backgroundColor='#fee2e2';}
+  });
+  const total=document.querySelectorAll('.drop-zone').length;
+  const fb=document.getElementById('dnd-feedback');
+  if(ok===total){fb.textContent='🎉 Tuyệt vời! Em đã ghép đúng tất cả.';fb.style.color='var(--success)';}
+  else{fb.textContent=`⚠️ Em ghép đúng ${ok}/${total}. Xem lại ô màu đỏ nhé.`;fb.style.color='var(--danger)';}
+}
+function resetDnD(){
+  dragPool.innerHTML=initialPoolHTML;
+  document.querySelectorAll('.drop-zone').forEach(z=>{z.innerHTML='';z.style.borderColor='var(--purple-mid)';z.style.backgroundColor='#e2e8f0';});
+  document.getElementById('dnd-feedback').textContent='';
+  initializeDnD();
+  if(window.MathJax)MathJax.typesetPromise([dragPool]).catch(e=>console.log(e));
+}
+
+/* ===== QUIZ (Q7 fixed: 51.67 not 51.6) ===== */
+const quizData=[
+  {q:"Bất phương trình nào sau đây là bất phương trình bậc hai một ẩn?",options:["$x^2+x-3\\ge 0$","$3x^3+x^2-1\\le 0$","$x+2>0$","$\\dfrac{1}{x^2}+x<0$"],correct:0,explain:"Bất phương trình bậc hai có dạng $ax^2+bx+c\\ge 0$ (hoặc $>,<,\\le$) với $a\\ne 0$. Đáp án A thỏa mãn."},
+  {q:"Cho BPT $x^2+x-6\\le 0$. Số nào sau đây là nghiệm?",options:["$x=3$","$x=-4$","$x=2$","$x=4$"],correct:2,explain:"Thay $x=2$: $4+2-6=0\\le 0$ ✓. Thay $x=3$: $9+3-6=6>0$ ✗."},
+  {q:"Tập nghiệm của $x^2-4x+3<0$ là:",options:["$(-\\infty;1)\\cup(3;+\\infty)$","$(1;3)$","$[1;3]$","$(-\\infty;1]\\cup[3;+\\infty)$"],correct:1,explain:"Nghiệm $x_1=1,x_2=3$; $a=1>0$. BPT $<0$ → lấy phần 'Trong': $(1;3)$."},
+  {q:"Giải $-2x^2+5x-2\\ge 0$:",options:["$[\\frac{1}{2};2]$","$(\\frac{1}{2};2)$","$(-\\infty;\\frac{1}{2}]\\cup[2;+\\infty)$","$(-\\infty;\\frac{1}{2})\\cup(2;+\\infty)$"],correct:0,explain:"Nghiệm $\\frac{1}{2}$ và $2$; $a=-2<0$. BPT $\\ge 0$ → trái dấu $a$ → lấy đoạn trong: $[\\frac{1}{2};2]$."},
+  {q:"Tập nghiệm của $x^2+x+1>0$ là:",options:["$\\emptyset$","$(0;+\\infty)$","$\\mathbb{R}\\setminus\\{-1\\}$","$\\mathbb{R}$"],correct:3,explain:"$\\Delta=-3<0$; $a=1>0$ → $f(x)>0$ mọi $x$ → tập nghiệm là $\\mathbb{R}$."},
+  {q:"BPT $x^2-4x+4\\le 0$ có tập nghiệm là:",options:["$(-\\infty;2]$","$\\{2\\}$","$\\emptyset$","$\\mathbb{R}$"],correct:1,explain:"$(x-2)^2\\le 0$; bình phương luôn $\\ge 0$ nên chỉ bằng 0 khi $x=2$. Tập nghiệm: $\\{2\\}$."},
+  {q:"Lợi nhuận $I=-3x^2+200x-2325>0$. Cửa hàng có lãi khi $x$ thuộc:",options:["$(15;\\frac{155}{3})$","$(0;15)$","$(\\frac{155}{3};+\\infty)$","$(-\\infty;15)$"],correct:0,explain:"Nghiệm $x_1=15$, $x_2=\\frac{155}{3}\\approx 51{,}67$; $a=-3<0$ → lấy phần 'Trong': $x\\in(15;\\frac{155}{3})\\approx(15;51{,}67)$."},
+  {q:"BPT $-0{,}006x^2\\ge -0{,}15$ có tập nghiệm là:",options:["$[-5;5]$","$(-\\infty;-5]\\cup[5;+\\infty)$","$(-5;5)$","$\\emptyset$"],correct:0,explain:"$-0{,}006x^2+0{,}15\\ge 0\\Leftrightarrow x^2\\le 25\\Leftrightarrow -5\\le x\\le 5$. Tập nghiệm: $[-5;5]$."},
+  {q:"Parabol nằm hoàn toàn dưới trục hoành. BPT $f(x)\\ge 0$ có nghiệm là:",options:["$\\mathbb{R}$","$\\emptyset$","Tùy đỉnh parabol","$\\mathbb{R}\\setminus\\{0\\}$"],correct:1,explain:"Parabol dưới $Ox$ → $f(x)<0$ mọi $x$ → không có $x$ nào để $f(x)\\ge 0$ → $S=\\emptyset$."},
+  {q:"Máy tính Casio hiển thị 'All Real Numbers' khi giải BPT bậc hai có nghĩa là:",options:["Mọi số thực đều là nghiệm","Phương trình vô nghiệm","Cần nhập lại hệ số","Kết quả lỗi"],correct:0,explain:"'All Real Numbers' = tập nghiệm là toàn bộ $\\mathbb{R}$, xảy ra khi tam thức luôn cùng dấu với dấu BPT với mọi $x$."}
+];
+
+let sC=0,sA=0;
+const qCont=document.getElementById('quiz-container');
+quizData.forEach((item,idx)=>{
+  const qDiv=document.createElement('div');qDiv.className='quiz-question';
+  const qT=document.createElement('div');qT.className='quiz-question-text';
+  qT.innerHTML=`<span style="color:var(--purple-mid);margin-right:6px;font-size:.88rem;">Câu ${idx+1}/10</span>${item.q}`;
+  qDiv.appendChild(qT);
+  const og=document.createElement('div');og.className='quiz-options';
+  const exDiv=document.createElement('div');exDiv.className='quiz-explanation';
+  exDiv.innerHTML=`<strong>💡 Giải thích:</strong> ${item.explain}`;
+  item.options.forEach((opt,oi)=>{
+    const btn=document.createElement('div');btn.className='quiz-option';
+    btn.innerHTML=`<div class="opt-label">${String.fromCharCode(65+oi)}</div><span>${opt}</span>`;
+    btn.addEventListener('click',function(){
+      if(this.classList.contains('disabled'))return;
+      og.querySelectorAll('.quiz-option').forEach(b=>b.classList.add('disabled'));
+      sA++;
+      if(oi===item.correct){this.classList.add('correct');exDiv.style.borderLeftColor='var(--success)';sC++;}
+      else{this.classList.add('wrong');og.querySelectorAll('.quiz-option')[item.correct].classList.add('correct');exDiv.style.borderLeftColor='var(--danger)';}
+      exDiv.style.display='block';
+      if(window.MathJax)MathJax.typesetPromise([exDiv]).catch(e=>console.log(e));
+      const bar=document.getElementById('quiz-score-bar');
+      document.getElementById('score-correct').textContent=sC;
+      document.getElementById('score-total').textContent=sA;
+      bar.style.display='block';
+      bar.style.background=sC===sA?'linear-gradient(90deg,#059669,#10b981)':'linear-gradient(90deg,var(--purple),var(--purple-mid))';
+    });
+    og.appendChild(btn);
+  });
+  qDiv.appendChild(og);qDiv.appendChild(exDiv);qCont.appendChild(qDiv);
+});
+window.addEventListener('load',()=>{if(window.MathJax)MathJax.typesetPromise().catch(e=>console.log(e));});
+</script>
+</body>
+</html>
