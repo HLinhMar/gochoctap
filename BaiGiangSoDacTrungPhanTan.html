@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học liệu Tương tác: Các số đặc trưng đo mức độ phân tán (v2)</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                tags: 'ams'
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #4338ca;
+            --secondary: #8b5cf6;
+            --accent: #10b981;
+            --bg-body: #eef2ff;
+            --bg-card: #ffffff;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.7;
+            margin: 0; padding: 0;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Merriweather', serif;
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #312e81 100%);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="50" r="3" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="50" r="8" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="50" r="3" fill="rgba(255,255,255,0.1)"/><line x1="10" y1="50" x2="90" y2="50" stroke="rgba(255,255,255,0.05)" stroke-width="2"/></svg>') repeat;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: rgba(139,92,246,0.3);
+            border: 1px solid rgba(167,139,250,0.5);
+            color: #ddd6fe;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        header h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #c7d2fe;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 6px;
+            height: 100%;
+            background-color: var(--secondary);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 1rem;
+        }
+
+        .section-title i { color: var(--secondary); }
+
+        /* --- Concept boxes --- */
+        .concept-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .concept-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-family: 'Merriweather', serif;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 10px;
+        }
+
+        .concept-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .note-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .alert-box {
+            background-color: #fff1f2;
+            border-left: 4px solid var(--danger);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .warning-box {
+            background-color: #fffbeb;
+            border-left: 4px solid var(--warning);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .math-display {
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-size: 1.25rem;
+            text-align: center;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px dashed #cbd5e1;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        table.stat-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: white;
+        }
+        table.stat-table th, table.stat-table td {
+            border: 1px solid #cbd5e1;
+            padding: 12px;
+            text-align: center;
+        }
+        table.stat-table th {
+            background-color: #eef2ff;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        table.stat-table tr:nth-child(even) td {
+            background-color: #f8fafc;
+        }
+
+        /* ---- Summary Comparison Table ---- */
+        table.compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+        }
+        table.compare-table th, table.compare-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 14px;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+        table.compare-table th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        table.compare-table td:first-child {
+            font-weight: 700;
+            color: var(--secondary);
+            background-color: #f5f3ff;
+        }
+        table.compare-table tr:hover td { background-color: #f0fdf4; }
+        table.compare-table .tag-good { background: #d1fae5; color: #065f46; border-radius: 6px; padding: 2px 8px; font-size: 0.85rem; display: inline-block; }
+        table.compare-table .tag-bad  { background: #fee2e2; color: #991b1b; border-radius: 6px; padding: 2px 8px; font-size: 0.85rem; display: inline-block; }
+
+        /* --- Applet --- */
+        .applet-container {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .slider-container {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        input[type="range"] {
+            width: 60%;
+            cursor: pointer;
+            accent-color: var(--secondary);
+        }
+        #dispersionCanvas {
+            max-width: 100%;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            margin: 10px 0;
+        }
+        .stat-value {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin: 5px 10px;
+            font-size: 1.1rem;
+        }
+        .var-val { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
+        .std-val { background: #d1fae5; color: #059669; border: 1px solid #6ee7b7; }
+        .range-val { background: #dbeafe; color: #1d4ed8; border: 1px solid #93c5fd; }
+
+        /* --- Drag & Drop --- */
+        .dnd-wrapper {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .dnd-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            gap: 10px;
+        }
+
+        .dnd-row span:first-child {
+            flex: 1;
+        }
+
+        .drop-zone {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 130px;
+            min-height: 45px;
+            background: #e2e8f0;
+            border: 2px dashed var(--secondary);
+            border-radius: 6px;
+            font-weight: 600;
+            color: var(--primary);
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .drop-zone.drag-over {
+            background: #ede9fe;
+            border-color: var(--secondary);
+            transform: scale(1.05);
+        }
+
+        .drag-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .draggable-item {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+            font-size: 1.1rem;
+            transition: transform 0.1s, box-shadow 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .draggable-item:hover { box-shadow: 0 4px 12px rgba(67,56,202,0.35); transform: translateY(-1px); }
+        .draggable-item:active { cursor: grabbing; transform: scale(0.95); }
+        .draggable-item.in-zone { background: transparent; color: var(--primary); padding: 0; box-shadow: none; }
+
+        .btn {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn:hover { background: #6d28d9; }
+        .btn-reset { background: #64748b; margin-left: 10px; }
+        .btn-reset:hover { background: #475569; }
+
+        /* --- Accordion --- */
+        .accordion {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            background: white;
+        }
+        .accordion-header {
+            background: #f8fafc;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--primary);
+            transition: background 0.2s;
+        }
+        .accordion-header:hover { background: #eef2ff; }
+        .accordion-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+        .accordion-content.active {
+            padding: 1.5rem;
+            max-height: 1200px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* Worked example table inside accordion */
+        table.worked-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+        table.worked-table th, table.worked-table td {
+            border: 1px solid #cbd5e1;
+            padding: 10px 12px;
+            text-align: center;
+        }
+        table.worked-table th { background: #4338ca; color: white; }
+        table.worked-table tr:nth-child(even) td { background: #f8fafc; }
+        table.worked-table td.total { background: #eef2ff; font-weight: 700; }
+
+        /* Step-by-step numbering */
+        .step {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        .step-num {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--secondary);
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+        .step-content { flex: 1; }
+
+        /* --- Quiz --- */
+        .quiz-question {
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .quiz-question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            line-height: 1.5;
+        }
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .quiz-option {
+            background: white;
+            border: 2px solid #cbd5e1;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+        .quiz-option:hover:not(.disabled) {
+            border-color: var(--secondary);
+            background: #f5f3ff;
+        }
+        .quiz-option.disabled { cursor: not-allowed; opacity: 0.7; }
+        .quiz-option .opt-label {
+            width: 30px;
+            height: 30px;
+            background: var(--bg-body);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-weight: bold;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+        .quiz-option.correct { border-color: var(--success) !important; background: #ecfdf5 !important; opacity: 1; }
+        .quiz-option.correct .opt-label { background: var(--success); color: white; }
+        .quiz-option.wrong { border-color: var(--danger) !important; background: #fef2f2 !important; }
+        .quiz-option.wrong .opt-label { background: var(--danger); color: white; }
+
+        .quiz-explanation {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #fff;
+            border-left: 4px solid var(--secondary);
+            border-radius: 0 8px 8px 0;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Progress bar for quiz score */
+        #quiz-score-bar {
+            position: sticky;
+            bottom: 1.5rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.05rem;
+            box-shadow: 0 4px 14px rgba(67,56,202,0.4);
+            z-index: 99;
+            transition: all 0.3s;
+            display: none;
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 3rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .quiz-options { grid-template-columns: 1fr; }
+            .section-card { padding: 1.5rem; }
+            .dnd-row { flex-direction: column; text-align: center; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-badge"><i class="fa-solid fa-arrows-left-right"></i> Toán học 10 — Chương trình 2018</div>
+    <h1>Các số đặc trưng đo<br>Mức độ phân tán</h1>
+    <p>Hai học sinh có cùng điểm trung bình, nhưng ai học đều hơn ai? Hãy dùng độ phân tán để giải mã!</p>
+</header>
+
+<div class="container">
+
+    <div class="section-card">
+        <h2 class="section-title"><i class="fa-solid fa-question-circle"></i> I. Tại sao Trung bình là chưa đủ?</h2>
+
+        <p>Xét điểm kiểm tra toán (thang điểm 12 câu trắc nghiệm) trong 5 bài của hai bạn A và B:</p>
+        <ul>
+            <li><strong>Bạn A:</strong> 7; 7; 7; 7; 7 &nbsp;$\Rightarrow$&nbsp; Điểm trung bình là <strong>7,0</strong></li>
+            <li><strong>Bạn B:</strong> 3; 4; 7; 10; 11 &nbsp;$\Rightarrow$&nbsp; Điểm trung bình cũng là <strong>7,0</strong></li>
+        </ul>
+        <p>Mặc dù số trung bình giống hệt nhau, nhưng phong độ học tập của hai bạn hoàn toàn khác biệt! Bạn A học cực kỳ ổn định, trong khi bạn B học rất bấp bênh (lúc cực cao, lúc cực thấp). Để đo lường sự "bấp bênh" đó, Toán học Thống kê sử dụng các <strong>Đại lượng đo mức độ phân tán</strong>.</p>
+
+        <div class="note-box">
+            <strong><i class="fa-solid fa-lightbulb"></i> Có 4 đại lượng phân tán cần nắm:</strong>
+            Khoảng biến thiên $R$, Khoảng tứ phân vị $\Delta_Q$, Phương sai $S^2$ và Độ lệch chuẩn $S$.
+        </div>
+    </div>
+
+    <div class="section-card">
+        <h2 class="section-title"><i class="fa-solid fa-book-open"></i> II. Bốn Đại lượng Phân tán</h2>
+
+        <div class="concept-box">
+            <div class="concept-header">
+                <div class="concept-icon">1</div>
+                Khoảng biến thiên &amp; Khoảng tứ phân vị
+            </div>
+            <p>Sau khi sắp xếp mẫu số liệu theo thứ tự không giảm: $x_1 \le x_2 \le \dots \le x_n$</p>
+
+            <h4 style="color: var(--secondary); margin-top: 1.5rem;">Khoảng biến thiên ($R$)</h4>
+            <p>Là hiệu giữa giá trị lớn nhất và giá trị nhỏ nhất của mẫu số liệu.</p>
+            <div class="math-display">$$ R = x_{\max} - x_{\min} = x_n - x_1 $$</div>
+            <p><em>Ý nghĩa:</em> Đo khoảng cách dàn trải của <strong>toàn bộ</strong> dữ liệu. Ưu điểm: rất dễ tính. Nhược điểm: cực kỳ dễ bị làm sai lệch bởi các giá trị bất thường (chỉ cần một outlier cũng làm $R$ phình to).</p>
+
+            <h4 style="color: var(--secondary); margin-top: 1.5rem;">Khoảng tứ phân vị ($\Delta_Q$)</h4>
+            <p>Là hiệu giữa tứ phân vị thứ ba ($Q_3$) và tứ phân vị thứ nhất ($Q_1$).</p>
+            <div class="math-display">$$ \Delta_Q = Q_3 - Q_1 $$</div>
+            <p><em>Ý nghĩa:</em> Đo độ phân tán của <strong>50% số liệu nằm ở giữa</strong> mẫu. Rất bền vững, không bị ảnh hưởng bởi các giá trị quá lớn hoặc quá bé.</p>
+        </div>
+
+        <div class="concept-box" style="border-color: #fca5a5;">
+            <div class="concept-header" style="color: var(--danger); border-bottom-color: #fca5a5;">
+                <div class="concept-icon" style="background: var(--danger);">!</div>
+                Phát hiện Giá trị ngoại lệ (Outlier) — Ứng dụng của $\Delta_Q$
+            </div>
+            <p>Khoảng tứ phân vị được dùng làm "thước đo" để bắt các giá trị lạc loài. Một giá trị $x$ bị coi là <strong>giá trị ngoại lệ</strong> nếu nó vi phạm 1 trong 2 điều kiện dưới đây (quy tắc hàng rào Tukey):</p>
+            <div class="math-display" style="background: #fff1f2; border-color: #fca5a5; color: var(--danger);">
+                $$ x < Q_1 - 1{,}5\,\Delta_Q \quad \text{HOẶC} \quad x > Q_3 + 1{,}5\,\Delta_Q $$
+            </div>
+            <div class="accordion" style="margin-top: 1rem;">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span><i class="fa-solid fa-magnifying-glass"></i> Ví dụ minh hoạ: Phát hiện outlier</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Cho mẫu số liệu (điểm số đã sắp xếp): <strong>2; 5; 6; 7; 8; 9; 10; 45</strong></p>
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-content">Tìm $Q_1$, $Q_3$ và $\Delta_Q$: Nửa dưới là 2, 5, 6, 7 nên $Q_1 = \dfrac{5+6}{2} = 5{,}5$; nửa trên là 8, 9, 10, 45 nên $Q_3 = \dfrac{9+10}{2} = 9{,}5$. Vậy $\Delta_Q = 9{,}5 - 5{,}5 = 4$.</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-content">Xác định hàng rào:
+                            $$\text{Hàng rào dưới: } Q_1 - 1{,}5\,\Delta_Q = 5{,}5 - 6 = -0{,}5$$
+                            $$\text{Hàng rào trên: } Q_3 + 1{,}5\,\Delta_Q = 9{,}5 + 6 = 15{,}5$$
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-content">Kiểm tra: Giá trị $\mathbf{45} > 15{,}5$ — vượt hàng rào trên, nên <strong style="color: var(--danger);">45 là giá trị ngoại lệ</strong>. Nếu tính $R$ bình thường: $R = 45 - 2 = 43$ — con số này không phản ánh đúng thực tế. Trong khi đó $\Delta_Q = 4$ vẫn rất ổn định.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="applet-container">
+            <h3 style="color: var(--primary); margin-top: 0;">Trải nghiệm Tương tác: Ai ổn định hơn?</h3>
+            <p style="text-align: justify; margin-bottom: 1.5rem;">Điểm trung bình $\bar{x}$ luôn cố định là <strong>7,0</strong>. Hãy kéo thanh trượt để thay đổi "Độ biến động". Quan sát $S^2$, $S$ và $R$ thay đổi như thế nào!</p>
+
+            <div class="slider-container">
+                <label style="font-weight: bold;"><i class="fa-solid fa-arrows-left-right"></i> Độ biến động:</label>
+                <input type="range" id="spreadSlider" min="0" max="4" value="1" step="0.5" oninput="updateDispersion()">
+                <span id="spreadLabel" style="font-weight:bold; color: var(--secondary); min-width: 40px;">Thấp</span>
+            </div>
+
+            <canvas id="dispersionCanvas" width="800" height="230"></canvas>
+
+            <div style="margin-top: 15px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;">
+                <div class="stat-value std-val">Độ lệch chuẩn $S \approx$ <span id="stdText">1.00</span></div>
+                <div class="stat-value var-val">Phương sai $S^2 \approx$ <span id="varText">1.00</span></div>
+                <div class="stat-value range-val">Khoảng biến thiên $R =$ <span id="rangeText">3.00</span></div>
+            </div>
+
+            <div class="note-box" style="text-align: left; margin-top: 20px;">
+                <i class="fa-solid fa-lightbulb"></i> <strong>Bài học rút ra:</strong> $S^2$, $S$ và $R$ đều tăng khi dữ liệu rải rộng hơn. Tuy nhiên $R$ tăng nhanh và mạnh hơn nhiều vì nó phụ thuộc vào đúng 2 điểm cực trị.
+            </div>
+        </div>
+
+        <div class="concept-box">
+            <div class="concept-header">
+                <div class="concept-icon">2</div>
+                Phương sai ($S^2$) &amp; Độ lệch chuẩn ($S$)
+            </div>
+
+            <p><strong>Phương sai</strong> là trung bình cộng của các bình phương độ lệch từ mỗi giá trị của mẫu số liệu đến số trung bình.</p>
+            <div class="math-display">
+                $$ S^2 = \frac{1}{n} \left[ (x_1 - \bar{x})^2 + (x_2 - \bar{x})^2 + \dots + (x_n - \bar{x})^2 \right] $$
+            </div>
+
+            <p>Trong tính toán, ta thường dùng <strong>công thức rút gọn</strong> sau cho nhanh:</p>
+            <div class="math-display">
+                $$ S^2 = \frac{1}{n} (x_1^2 + x_2^2 + \dots + x_n^2) - \bar{x}^2 $$
+            </div>
+
+            <div class="warning-box">
+                <strong><i class="fa-solid fa-table"></i> Mở rộng: Phương sai cho bảng tần số</strong><br>
+                Khi số liệu cho dưới dạng bảng tần số (giá trị $x_i$ xuất hiện $n_i$ lần, tổng tần số $n = n_1 + n_2 + \dots + n_k$), công thức phương sai là:
+                <div class="math-display" style="background: #fffbeb; border-color: #fcd34d; font-size: 1.1rem; margin-top: 0.8rem;">
+                    $$ S^2 = \frac{1}{n} \left[ n_1 (x_1 - \bar{x})^2 + n_2 (x_2 - \bar{x})^2 + \dots + n_k (x_k - \bar{x})^2 \right] $$
+                </div>
+                Hoặc dạng rút gọn: $\displaystyle S^2 = \frac{1}{n}(n_1 x_1^2 + n_2 x_2^2 + \dots + n_k x_k^2) - \bar{x}^2$
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span><i class="fa-solid fa-magnifying-glass"></i> Xem chứng minh công thức rút gọn</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Ta khai triển hằng đẳng thức của phương sai ban đầu:</p>
+                    <p>$$ S^2 = \frac{1}{n} \left[ (x_1 - \bar{x})^2 + (x_2 - \bar{x})^2 + \dots + (x_n - \bar{x})^2 \right] $$</p>
+                    <p>$$ = \frac{1}{n} \left[ (x_1^2 - 2x_1\bar{x} + \bar{x}^2) + (x_2^2 - 2x_2\bar{x} + \bar{x}^2) + \dots + (x_n^2 - 2x_n\bar{x} + \bar{x}^2) \right] $$</p>
+                    <p>Nhóm các số hạng lại với nhau:</p>
+                    <p>$$ = \frac{1}{n} \left[ (x_1^2 + x_2^2 + \dots + x_n^2) - 2\bar{x}(x_1 + x_2 + \dots + x_n) + n\bar{x}^2 \right] $$</p>
+                    <p>Ta biết rằng $\frac{x_1 + x_2 + \dots + x_n}{n} = \bar{x}$ nên $(x_1 + x_2 + \dots + x_n) = n\bar{x}$. Thay vào phương trình, ta được:</p>
+                    <p>$$ = \frac{1}{n} \left[ (x_1^2 + x_2^2 + \dots + x_n^2) - 2\bar{x}(n\bar{x}) + n\bar{x}^2 \right] $$</p>
+                    <p>$$ = \frac{1}{n} \left[ (x_1^2 + x_2^2 + \dots + x_n^2) - n\bar{x}^2 \right] = \frac{1}{n}(x_1^2 + x_2^2 + \dots + x_n^2) - \bar{x}^2 \quad \blacksquare $$</p>
+                </div>
+            </div>
+
+            <div class="accordion" style="margin-top: 1rem;">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span><i class="fa-solid fa-calculator"></i> Ví dụ tính $S^2$ và $S$ từng bước (Bấm để xem)</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p><strong>Đề:</strong> Tính phương sai và độ lệch chuẩn của mẫu điểm số bạn B: $\{3;\; 4;\; 7;\; 10;\; 11\}$.</p>
+
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-content">Tính số trung bình: $\bar{x} = \dfrac{3 + 4 + 7 + 10 + 11}{5} = \dfrac{35}{5} = 7$</div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-content">Lập bảng tính độ lệch và bình phương độ lệch:
+                            <table class="worked-table">
+                                <thead>
+                                    <tr>
+                                        <th>$x_i$</th>
+                                        <th>$x_i - \bar{x}$</th>
+                                        <th>$(x_i - \bar{x})^2$</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>3</td><td>$3 - 7 = -4$</td><td>$16$</td></tr>
+                                    <tr><td>4</td><td>$4 - 7 = -3$</td><td>$9$</td></tr>
+                                    <tr><td>7</td><td>$7 - 7 = 0$</td><td>$0$</td></tr>
+                                    <tr><td>10</td><td>$10 - 7 = 3$</td><td>$9$</td></tr>
+                                    <tr><td>11</td><td>$11 - 7 = 4$</td><td>$16$</td></tr>
+                                    <tr><td class="total">Tổng</td><td class="total">$0$ (luôn đúng!)</td><td class="total">$\mathbf{50}$</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            Tính phương sai: $S^2 = \dfrac{1}{n} \left[ (x_1 - \bar{x})^2 + \dots + (x_5 - \bar{x})^2 \right] = \dfrac{50}{5} = \mathbf{10}$
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            Tính độ lệch chuẩn: $S = \sqrt{S^2} = \sqrt{10} \approx \mathbf{3{,}16}$
+                        </div>
+                    </div>
+
+                    <div class="note-box" style="margin-top: 0.5rem;">
+                        <strong>So sánh:</strong> Bạn A (toàn điểm 7) có $S^2 = 0$, $S = 0$. Bạn B có $S \approx 3{,}16$. Kết luận: Bạn A ổn định hơn hẳn.
+                    </div>
+
+                    <p style="margin-top:1rem;"><strong>Kiểm tra bằng công thức rút gọn:</strong></p>
+                    <p>$\dfrac{1}{n}(x_1^2 + x_2^2 + \dots + x_5^2) = \dfrac{3^2 + 4^2 + 7^2 + 10^2 + 11^2}{5} = \dfrac{9 + 16 + 49 + 100 + 121}{5} = \dfrac{295}{5} = 59$</p>
+                    <p>$S^2 = 59 - 7^2 = 59 - 49 = \mathbf{10}$ ✔</p>
+                </div>
+            </div>
+
+            <p style="margin-top: 1.5rem;"><strong>Độ lệch chuẩn</strong> là căn bậc hai của phương sai, đưa đơn vị đo trở về giống với đơn vị của số liệu gốc.</p>
+            <div class="math-display" style="background: #ecfdf5; border-color: #6ee7b7; color: var(--success);">
+                $$ S = \sqrt{S^2} $$
+            </div>
+
+            <div class="alert-box">
+                <strong>Lưu ý: Phương sai mẫu hiệu chỉnh ($\hat{s}^2$)</strong><br>
+                Trong thống kê học nâng cao (và một số lệnh bấm máy tính), người ta chia cho $n-1$ thay vì $n$ để ước lượng chính xác hơn cho tổng thể. Kí hiệu là $\hat{s}^2$:
+                $$ \hat{s}^2 = \frac{1}{n-1} \left[ (x_1 - \bar{x})^2 + (x_2 - \bar{x})^2 + \dots + (x_n - \bar{x})^2 \right] $$
+                <em>Chương trình THPT dùng $S^2$ chia $n$. Khi tra máy tính, kiểm tra kĩ xem máy dùng $n$ hay $n-1$.</em>
+            </div>
+        </div>
+
+        <div class="concept-box" style="background: linear-gradient(135deg, #f5f3ff, #f0fdf4); border-color: #a5b4fc;">
+            <div class="concept-header" style="color: var(--primary); border-color: #c4b5fd;">
+                <div class="concept-icon" style="background: var(--accent);"><i class="fa-solid fa-table-list"></i></div>
+                Bảng so sánh tổng hợp 4 đại lượng
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>Đại lượng</th>
+                            <th>Công thức</th>
+                            <th>Đo lường</th>
+                            <th>Ưu điểm</th>
+                            <th>Nhược điểm</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>$R$ (Khoảng biến thiên)</td>
+                            <td>$x_{\max} - x_{\min}$</td>
+                            <td>Toàn bộ mẫu</td>
+                            <td><span class="tag-good">Dễ tính</span></td>
+                            <td><span class="tag-bad">Nhạy với outlier</span></td>
+                        </tr>
+                        <tr>
+                            <td>$\Delta_Q$ (Khoảng tứ phân vị)</td>
+                            <td>$Q_3 - Q_1$</td>
+                            <td>50% giữa mẫu</td>
+                            <td><span class="tag-good">Bền với outlier</span></td>
+                            <td><span class="tag-bad">Bỏ qua 50% đầu/cuối</span></td>
+                        </tr>
+                        <tr>
+                            <td>$S^2$ (Phương sai)</td>
+                            <td>$\dfrac{1}{n} [ (x_1-\bar{x})^2 + \dots + (x_n-\bar{x})^2 ]$</td>
+                            <td>Toàn bộ, quanh $\bar{x}$</td>
+                            <td><span class="tag-good">Dùng mọi giá trị</span></td>
+                            <td><span class="tag-bad">Đơn vị bình phương</span></td>
+                        </tr>
+                        <tr>
+                            <td>$S$ (Độ lệch chuẩn)</td>
+                            <td>$\sqrt{S^2}$</td>
+                            <td>Toàn bộ, quanh $\bar{x}$</td>
+                            <td><span class="tag-good">Cùng đơn vị gốc</span></td>
+                            <td><span class="tag-bad">Nhạy hơn $\Delta_Q$</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;"><em>Quy tắc chọn: Dữ liệu có outlier hoặc phân phối lệch → dùng $\Delta_Q$. Dữ liệu đối xứng, cần so sánh ổn định → dùng $S$.</em></p>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <h2 class="section-title"><i class="fa-solid fa-puzzle-piece"></i> III. Thử thách Ghép Ký hiệu &amp; Công thức (Kéo - Thả)</h2>
+        <p>Em hãy <strong>kéo</strong> thẻ ký hiệu/công thức ở bên dưới và <strong>thả</strong> vào mô tả tương ứng. Chú ý: có 2 hàng ghép theo <em>tên</em> và 2 hàng ghép theo <em>công thức</em>.</p>
+
+        <div class="dnd-wrapper" id="dnd-container">
+            <div class="dnd-row">
+                <span><strong>[Tên]</strong> Độ lệch chuẩn — căn bậc hai của phương sai</span>
+                <span class="drop-zone" data-answer="S"></span>
+            </div>
+            <div class="dnd-row">
+                <span><strong>[Tên]</strong> Khoảng biến thiên — hiệu của Max và Min</span>
+                <span class="drop-zone" data-answer="R"></span>
+            </div>
+            <div class="dnd-row">
+                <span><strong>[Tên]</strong> Phương sai — trung bình của bình phương độ lệch</span>
+                <span class="drop-zone" data-answer="S²"></span>
+            </div>
+            <div class="dnd-row">
+                <span><strong>[Tên]</strong> Khoảng tứ phân vị — hiệu của $Q_3$ và $Q_1$</span>
+                <span class="drop-zone" data-answer="ΔQ"></span>
+            </div>
+            <div class="dnd-row" style="border-left: 4px solid var(--secondary);">
+                <span><strong>[Công thức]</strong> $\dfrac{1}{n}(x_1^2 + x_2^2 + \dots + x_n^2) - \bar{x}^2$</span>
+                <span class="drop-zone" data-answer="S²"></span>
+            </div>
+            <div class="dnd-row" style="border-left: 4px solid var(--secondary);">
+                <span><strong>[Công thức]</strong> $\sqrt{\dfrac{1}{n} [ (x_1 - \bar{x})^2 + \dots + (x_n - \bar{x})^2 ] }$</span>
+                <span class="drop-zone" data-answer="S"></span>
+            </div>
+
+            <div class="drag-pool" id="drag-pool">
+                <div class="draggable-item" draggable="true" data-val="R">$R$</div>
+                <div class="draggable-item" draggable="true" data-val="ΔQ">$\Delta_Q$</div>
+                <div class="draggable-item" draggable="true" data-val="S²">$S^2$</div>
+                <div class="draggable-item" draggable="true" data-val="S">$S$</div>
+                <div class="draggable-item" draggable="true" data-val="S²">$S^2$</div>
+                <div class="draggable-item" draggable="true" data-val="S">$S$</div>
+            </div>
+
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <button class="btn" onclick="checkDnD()">Kiểm tra kết quả</button>
+                <button class="btn btn-reset" onclick="resetDnD()">Làm lại</button>
+                <p id="dnd-feedback" style="margin-top: 1rem; font-weight: bold; font-size: 1.1rem;"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-card" id="quiz-section">
+        <h2 class="section-title"><i class="fa-solid fa-list-check"></i> IV. Bài tập Rèn luyện (20 câu Trắc nghiệm)</h2>
+        <p style="margin-bottom: 2rem;">Hãy chọn đáp án đúng nhất. Kết quả và lời giải thích sẽ hiển thị ngay sau khi em chọn.</p>
+        <div id="quiz-container"></div>
+    </div>
+
+    <div id="quiz-score-bar">📊 Điểm của em: <span id="score-correct">0</span> / <span id="score-total">0</span> câu đúng</div>
+
+</div>
+
+<footer>
+    <h3 style="color: white; margin-bottom: 10px;">Học liệu Toán học Mở</h3>
+    <p>Biên soạn bởi Lê Nguyễn Hồng Linh.</p>
+    <p style="opacity: 0.6; font-size: 0.9rem; margin-top: 20px;">© Cấu trúc và Mã nguồn AI được hiệu chỉnh cho GDPT 2018 · Phiên bản 2.1</p>
+</footer>
+
+<script>
+// ==========================================
+// 1. CANVAS MÔ PHỎNG
+// ==========================================
+let spreadFactor = 1;
+
+function updateDispersion() {
+    spreadFactor = parseFloat(document.getElementById('spreadSlider').value);
+    const labels = ['Không', 'Thấp', 'Trung bình', 'Cao', 'Rất cao', 'Cực cao', 'Tối đa'];
+    const labelEl = document.getElementById('spreadLabel');
+    const idx = Math.round(spreadFactor / 0.5);
+    labelEl.textContent = labels[Math.min(idx, labels.length - 1)];
+    drawDispersionCanvas();
+}
+
+function drawDispersionCanvas() {
+    const canvas = document.getElementById('dispersionCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    const cy = h / 2 + 20;
+
+    ctx.clearRect(0, 0, w, h);
+
+    const data = [
+        7 - spreadFactor * 1.5,
+        7 - spreadFactor * 0.5,
+        7,
+        7 + spreadFactor * 0.5,
+        7 + spreadFactor * 1.5
+    ];
+
+    let sumSq = 0;
+    data.forEach(v => { sumSq += Math.pow(v - 7, 2); });
+    const variance = sumSq / data.length;
+    const stdDev = Math.sqrt(variance);
+    const range = data[data.length - 1] - data[0];
+
+    document.getElementById('varText').textContent = variance.toFixed(2);
+    document.getElementById('stdText').textContent = stdDev.toFixed(2);
+    document.getElementById('rangeText').textContent = range.toFixed(2);
+
+    const minAxis = Math.min(data[0] - 1, 0);
+    const maxAxis = Math.max(data[data.length - 1] + 1, 14);
+    const scaleX = (w - 80) / (maxAxis - minAxis);
+    const padL = 40;
+    const getX = v => padL + (v - minAxis) * scaleX;
+
+    ctx.beginPath();
+    ctx.moveTo(padL, cy); ctx.lineTo(w - 20, cy);
+    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 3; ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(w - 20, cy - 6); ctx.lineTo(w - 10, cy); ctx.lineTo(w - 20, cy + 6);
+    ctx.fillStyle = '#94a3b8'; ctx.fill();
+
+    ctx.fillStyle = '#64748b'; ctx.font = '13px Arial'; ctx.textAlign = 'center';
+    for (let i = Math.ceil(minAxis); i <= Math.floor(maxAxis); i += 2) {
+        let xp = getX(i);
+        if (xp < padL || xp > w - 20) continue;
+        ctx.beginPath(); ctx.moveTo(xp, cy - 5); ctx.lineTo(xp, cy + 5);
+        ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1.5; ctx.stroke();
+        ctx.fillText(i, xp, cy + 22);
+    }
+
+    const meanX = getX(7);
+    ctx.beginPath();
+    ctx.moveTo(meanX, cy - 55); ctx.lineTo(meanX, cy + 15);
+    ctx.strokeStyle = '#ef4444'; ctx.setLineDash([5, 5]); ctx.lineWidth = 2; ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#ef4444'; ctx.textAlign = 'center'; ctx.font = 'bold 13px Arial';
+    ctx.fillText('x̄ = 7', meanX, cy - 62);
+
+    if (range > 0) {
+        const x0 = getX(data[0]), x1 = getX(data[data.length - 1]);
+        const ry = cy + 38;
+        ctx.beginPath();
+        ctx.moveTo(x0, ry); ctx.lineTo(x1, ry);
+        ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 2; ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x0 + 8, ry - 5); ctx.lineTo(x0, ry); ctx.lineTo(x0 + 8, ry + 5);
+        ctx.moveTo(x1 - 8, ry - 5); ctx.lineTo(x1, ry); ctx.lineTo(x1 - 8, ry + 5);
+        ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = '#2563eb'; ctx.textAlign = 'center'; ctx.font = 'bold 12px Arial';
+        ctx.fillText('R = ' + range.toFixed(1), (x0 + x1) / 2, ry - 8);
+    }
+
+    if (stdDev > 0) {
+        const sLeft = getX(7 - stdDev), sRight = getX(7 + stdDev);
+        ctx.fillStyle = 'rgba(16,185,129,0.15)';
+        ctx.fillRect(sLeft, cy - 50, sRight - sLeft, 48);
+        ctx.beginPath();
+        ctx.moveTo(meanX, cy - 20); ctx.lineTo(sRight, cy - 20);
+        ctx.strokeStyle = '#059669'; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = '#047857'; ctx.textAlign = 'center'; ctx.font = 'bold 12px Arial';
+        ctx.fillText('S', meanX + (sRight - meanX) / 2, cy - 26);
+    }
+
+    data.forEach(v => {
+        const xp = getX(v);
+        ctx.beginPath(); ctx.arc(xp, cy, 10, 0, 2 * Math.PI);
+        ctx.fillStyle = '#4338ca'; ctx.fill();
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = '#1e1b4b'; ctx.textAlign = 'center'; ctx.font = 'bold 12px Arial';
+        ctx.fillText(v.toFixed(1), xp, cy - 16);
+    });
+}
+
+window.addEventListener('load', () => {
+    updateDispersion();
+});
+
+// ==========================================
+// 2. ACCORDION
+// ==========================================
+function toggleAccordion(headerEl) {
+    const content = headerEl.nextElementSibling;
+    const icon = headerEl.querySelector('i.fa-chevron-down');
+    if (content.classList.contains('active')) {
+        content.classList.remove('active');
+        icon.style.transform = 'rotate(0deg)';
+    } else {
+        content.classList.add('active');
+        icon.style.transform = 'rotate(180deg)';
+        icon.style.transition = 'transform 0.3s';
+        if (window.MathJax) MathJax.typesetPromise([content]).catch(e => console.log(e));
+    }
+}
+
+// ==========================================
+// 3. DRAG & DROP
+// ==========================================
+const dragPool = document.getElementById('drag-pool');
+let draggedItem = null;
+let initialPoolHTML = '';
+
+window.addEventListener('DOMContentLoaded', () => {
+    initialPoolHTML = dragPool.innerHTML;
+    initializeDnD();
+});
+
+function initializeDnD() {
+    const currentDraggables = document.querySelectorAll('.draggable-item');
+    const dropZones = document.querySelectorAll('.drop-zone');
+
+    currentDraggables.forEach(item => {
+        item.addEventListener('dragstart', function() {
+            draggedItem = this;
+            setTimeout(() => this.style.opacity = '0.5', 0);
+        });
+        item.addEventListener('dragend', function() {
+            setTimeout(() => this.style.opacity = '1', 0);
+            draggedItem = null;
+        });
+    });
+
+    dropZones.forEach(zone => {
+        const newZone = zone.cloneNode(true);
+        zone.parentNode.replaceChild(newZone, zone);
+
+        newZone.addEventListener('dragover', e => { e.preventDefault(); newZone.classList.add('drag-over'); });
+        newZone.addEventListener('dragleave', () => { newZone.classList.remove('drag-over'); });
+        newZone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            if (draggedItem) {
+                if (this.children.length > 0) {
+                    const old = this.children[0];
+                    old.classList.remove('in-zone');
+                    dragPool.appendChild(old);
+                }
+                draggedItem.parentNode.removeChild(draggedItem);
+                this.appendChild(draggedItem);
+                draggedItem.classList.add('in-zone');
+                this.childNodes.forEach(n => { if (n.nodeType === 3) n.remove(); });
+                if (window.MathJax) MathJax.typesetPromise([this]).catch(e => console.log(e));
+            }
+        });
+    });
+
+    dragPool.addEventListener('dragover', e => e.preventDefault());
+    dragPool.addEventListener('drop', function(e) {
+        e.preventDefault();
+        if (draggedItem) {
+            draggedItem.parentNode.removeChild(draggedItem);
+            this.appendChild(draggedItem);
+            draggedItem.classList.remove('in-zone');
+        }
+    });
+}
+
+function checkDnD() {
+    let correct = 0;
+    const zones = document.querySelectorAll('.drop-zone');
+    zones.forEach(zone => {
+        const ans = zone.getAttribute('data-answer');
+        if (zone.children.length > 0) {
+            const val = zone.children[0].getAttribute('data-val');
+            if (val === ans) {
+                zone.style.borderColor = 'var(--success)'; zone.style.backgroundColor = '#d1fae5'; correct++;
+            } else {
+                zone.style.borderColor = 'var(--danger)'; zone.style.backgroundColor = '#fee2e2';
+            }
+        } else {
+            zone.style.borderColor = 'var(--danger)'; zone.style.backgroundColor = '#fee2e2';
+        }
+    });
+    const fb = document.getElementById('dnd-feedback');
+    if (correct === zones.length) {
+        fb.textContent = '🎉 Hoàn toàn chính xác! Em đã nhớ đúng tất cả ký hiệu và công thức.';
+        fb.style.color = 'var(--success)';
+    } else {
+        fb.textContent = `⚠️ Em ghép đúng ${correct}/${zones.length} vị trí. Hãy xem lại các ô màu đỏ.`;
+        fb.style.color = 'var(--danger)';
+    }
+}
+
+function resetDnD() {
+    dragPool.innerHTML = initialPoolHTML;
+    const zones = document.querySelectorAll('.drop-zone');
+    zones.forEach(zone => {
+        zone.innerHTML = '';
+        zone.style.borderColor = 'var(--secondary)';
+        zone.style.backgroundColor = '#e2e8f0';
+    });
+    document.getElementById('dnd-feedback').textContent = '';
+    initializeDnD();
+    if (window.MathJax) MathJax.typesetPromise([dragPool]).catch(e => console.log(e));
+}
+
+// ==========================================
+// 4. TRẮC NGHIỆM 20 CÂU + thanh điểm
+// ==========================================
+const quizData = [
+    {
+        q: "Khoảng biến thiên của mẫu số liệu được kí hiệu là $R$, được tính bằng công thức nào?",
+        options: ["$R = x_n + x_1$", "$R = x_n - x_1$", "$R = Q_3 - Q_1$", "$R = S^2$"],
+        correct: 1,
+        explain: "Khoảng biến thiên $R$ là hiệu giữa giá trị lớn nhất và giá trị nhỏ nhất: $R = x_{\\max} - x_{\\min}$."
+    },
+    {
+        q: "Khoảng biến thiên đặc trưng cho điều gì của mẫu số liệu?",
+        options: ["Độ tập trung của các số liệu", "Giá trị trung bình của mẫu", "Độ phân tán của toàn bộ mẫu số liệu", "Giá trị xuất hiện nhiều nhất"],
+        correct: 2,
+        explain: "Khoảng biến thiên dùng để đo độ phân tán (sự dàn trải) của toàn bộ các giá trị trong mẫu số liệu."
+    },
+    {
+        q: "Khoảng tứ phân vị được kí hiệu là $\\Delta_Q$, công thức tính là:",
+        options: ["$\\Delta_Q = Q_3 + Q_1$", "$\\Delta_Q = Q_3 - Q_1$", "$\\Delta_Q = Q_2 - Q_1$", "$\\Delta_Q = Q_3 - Q_2$"],
+        correct: 1,
+        explain: "Khoảng tứ phân vị là hiệu giữa tứ phân vị thứ ba và thứ nhất: $\\Delta_Q = Q_3 - Q_1$."
+    },
+    {
+        q: "Ưu điểm lớn nhất của khoảng tứ phân vị so với khoảng biến thiên là gì?",
+        options: ["Dễ tính toán hơn", "Sử dụng toàn bộ các giá trị của mẫu", "Không bị ảnh hưởng bởi các giá trị bất thường (outliers)", "Luôn là một số nguyên"],
+        correct: 2,
+        explain: "Khoảng tứ phân vị chỉ đo độ phân tán của 50% số liệu ở giữa, nên nó không bị nhiễu bởi các giá trị quá lớn hoặc quá bé."
+    },
+    {
+        q: "Đại lượng nào dùng để đo mức độ phân tán của các số liệu quanh số trung bình?",
+        options: ["Số trung vị", "Mốt", "Phương sai và độ lệch chuẩn", "Cỡ mẫu"],
+        correct: 2,
+        explain: "Phương sai và độ lệch chuẩn đặc trưng cho độ phân tán của các giá trị so với số trung bình cộng."
+    },
+    {
+        q: "Độ lệch chuẩn ($S$) liên hệ với phương sai ($S^2$) như thế nào?",
+        options: ["$S = S^2 / 2$", "$S = 2S^2$", "$S$ là căn bậc hai của phương sai", "$S$ là bình phương của phương sai"],
+        correct: 2,
+        explain: "Độ lệch chuẩn là căn bậc hai của phương sai: $S = \\sqrt{S^2}$."
+    },
+    {
+        q: "Trong các đại lượng sau, đại lượng nào có cùng đơn vị đo với số liệu gốc?",
+        options: ["Phương sai", "Độ lệch chuẩn", "Bình phương độ lệch", "Tần số"],
+        correct: 1,
+        explain: "Vì phương sai có đơn vị là bình phương đơn vị gốc, nên độ lệch chuẩn (căn bậc hai) sẽ trả về cùng đơn vị với số liệu gốc."
+    },
+    {
+        q: "Nếu phương sai của mẫu số liệu A lớn hơn phương sai của mẫu số liệu B thì:",
+        options: ["Số trung bình của A lớn hơn B", "Mẫu A có độ phân tán lớn hơn mẫu B", "Mẫu B có độ phân tán lớn hơn mẫu A", "Hai mẫu có độ phân tán như nhau"],
+        correct: 1,
+        explain: "Phương sai càng lớn thì các giá trị trong mẫu càng rời xa số trung bình, tức là độ phân tán càng lớn."
+    },
+    {
+        q: "Một giá trị $x$ được coi là giá trị ngoại lệ (outlier) nếu nó nằm ngoài khoảng nào?",
+        options: ["$(Q_1 ; Q_3)$", "$(Q_1 - 1{,}5\\Delta_Q \\;; Q_3 + 1{,}5\\Delta_Q)$", "$(Q_1 - \\Delta_Q \\;; Q_3 + \\Delta_Q)$", "$(x_{\\min} \\;; x_{\\max})$"],
+        correct: 1,
+        explain: "Theo quy tắc hàng rào Tukey, giá trị ngoại lệ bé hơn $Q_1 - 1{,}5\\Delta_Q$ hoặc lớn hơn $Q_3 + 1{,}5\\Delta_Q$."
+    },
+    {
+        q: "Cho mẫu số liệu: 2; 5; 8; 10; 15. Khoảng biến thiên $R$ bằng bao nhiêu?",
+        options: ["$R = 15$", "$R = 13$", "$R = 8$", "$R = 10$"],
+        correct: 1,
+        explain: "$R = x_{\\max} - x_{\\min} = 15 - 2 = 13$."
+    },
+    {
+        q: "Cho mẫu số liệu: 10; 10; 10; 10. Phương sai $S^2$ của mẫu này là:",
+        options: ["$S^2 = 10$", "$S^2 = 1$", "$S^2 = 0$", "$S^2 = 100$"],
+        correct: 2,
+        explain: "Khi tất cả các số liệu bằng nhau, chúng không có sự sai lệch so với số trung bình $\\bar{x} = 10$, nên phương sai bằng 0."
+    },
+    {
+        q: "Khoảng tứ phân vị đặc trưng cho độ phân tán của bao nhiêu % số liệu ở giữa mẫu?",
+        options: ["25%", "50%", "75%", "100%"],
+        correct: 1,
+        explain: "Khoảng tứ phân vị đo độ phân tán của nửa số liệu từ tứ phân vị thứ nhất đến thứ ba (tức 50% ở trung tâm)."
+    },
+    {
+        q: "Nếu đơn vị của số liệu là (cm) thì đơn vị của phương sai là gì?",
+        options: ["cm", "cm²", "$\\sqrt{\\text{cm}}$", "không có đơn vị"],
+        correct: 1,
+        explain: "Phương sai là trung bình của bình phương các độ lệch, nên đơn vị là bình phương đơn vị gốc (cm²)."
+    },
+    {
+        q: "Cho mẫu số liệu đã sắp xếp có $Q_1 = 12$ và $Q_3 = 20$. Khoảng tứ phân vị là:",
+        options: ["8", "16", "32", "15"],
+        correct: 0,
+        explain: "$\\Delta_Q = Q_3 - Q_1 = 20 - 12 = 8$."
+    },
+    {
+        q: "Công thức tính phương sai mẫu hiệu chỉnh thường dùng mẫu số là:",
+        options: ["$n$", "$n + 1$", "$n - 1$", "$n^2$"],
+        correct: 2,
+        explain: "Trong thống kê, phương sai hiệu chỉnh ($\\hat{s}^2$) chia cho $n-1$ để kết quả ước lượng chính xác hơn cho tổng thể."
+    },
+    {
+        q: "Độ phân tán của mẫu số liệu càng nhỏ thì:",
+        options: ["Các giá trị càng tập trung gần số trung bình", "Các giá trị càng xa số trung bình", "Số trung bình càng lớn", "Số trung bình càng nhỏ"],
+        correct: 0,
+        explain: "Độ phân tán nhỏ (phương sai thấp) nghĩa là các số liệu tập trung sít sao quanh giá trị trung tâm."
+    },
+    {
+        q: "Để tìm khoảng tứ phân vị cho mẫu số liệu liệt kê, bước đầu tiên cần làm là:",
+        options: ["Tính số trung bình", "Sắp xếp mẫu số liệu theo thứ tự không giảm", "Tìm giá trị lớn nhất", "Tính phương sai"],
+        correct: 1,
+        explain: "Tất cả các số đo vị trí (trung vị, tứ phân vị, $\\Delta_Q$) đều yêu cầu mẫu phải được sắp xếp từ nhỏ đến lớn trước."
+    },
+    {
+        q: "Khi so sánh độ ổn định về kết quả điểm số của hai học sinh, ta nên dùng đại lượng nào?",
+        options: ["Số trung bình", "Khoảng biến thiên", "Độ lệch chuẩn", "Mốt"],
+        correct: 2,
+        explain: "Độ lệch chuẩn cho biết sự ổn định; độ lệch chuẩn càng thấp thì điểm số càng ổn định (ít biến động)."
+    },
+    {
+        q: "Nếu một mẫu số liệu có chứa giá trị ngoại lệ rất lớn, đại lượng nào sau đây sẽ bị tăng mạnh nhất?",
+        options: ["Số trung vị", "Khoảng tứ phân vị", "Khoảng biến thiên", "Tất cả như nhau"],
+        correct: 2,
+        explain: "Khoảng biến thiên $R = x_{\\max} - x_{\\min}$ phụ thuộc trực tiếp vào giá trị cực đại nên sẽ bị kéo giãn ra mạnh nhất."
+    },
+    {
+        q: "Cho mẫu số liệu dưới dạng bảng tần số, phương sai được tính bằng công thức nào?",
+        options: [
+            "Lấy tổng của các $(x_i - \\bar{x})^2$ chia cho $n$",
+            "Lấy tổng của các $x_i^2$ chia cho $n$",
+            "Lấy tổng của $n_i(x_i - \\bar{x})^2$ chia cho $n$",
+            "Lấy tổng của $n_i(x_i - \\bar{x})$ chia cho $n$"
+        ],
+        correct: 2,
+        explain: "Công thức phương sai cho bảng tần số là $S^2 = \\dfrac{n_1(x_1 - \\bar{x})^2 + n_2(x_2 - \\bar{x})^2 + \\dots + n_k(x_k - \\bar{x})^2}{n}$."
+    }
+];
+
+let scoreCorrect = 0;
+let scoreAnswered = 0;
+
+const container = document.getElementById('quiz-container');
+
+quizData.forEach((item, index) => {
+    const qDiv = document.createElement('div');
+    qDiv.className = 'quiz-question';
+
+    const qTitle = document.createElement('div');
+    qTitle.className = 'quiz-question-text';
+    qTitle.innerHTML = `<span style="color: var(--secondary); margin-right: 8px;">Câu ${index + 1}:</span> ${item.q}`;
+    qDiv.appendChild(qTitle);
+
+    const optionsGrid = document.createElement('div');
+    optionsGrid.className = 'quiz-options';
+
+    const explainDiv = document.createElement('div');
+    explainDiv.className = 'quiz-explanation';
+    explainDiv.innerHTML = `<strong>💡 Giải thích:</strong> ${item.explain}`;
+
+    item.options.forEach((optText, optIndex) => {
+        const btn = document.createElement('div');
+        btn.className = 'quiz-option';
+        btn.innerHTML = `<div class="opt-label">${String.fromCharCode(65 + optIndex)}</div> <span>${optText}</span>`;
+
+        btn.addEventListener('click', function () {
+            if (this.classList.contains('disabled')) return;
+
+            const allBtns = optionsGrid.querySelectorAll('.quiz-option');
+            allBtns.forEach(b => b.classList.add('disabled'));
+
+            scoreAnswered++;
+            if (optIndex === item.correct) {
+                this.classList.add('correct');
+                explainDiv.style.borderLeftColor = 'var(--success)';
+                scoreCorrect++;
+            } else {
+                this.classList.add('wrong');
+                allBtns[item.correct].classList.add('correct');
+                explainDiv.style.borderLeftColor = 'var(--danger)';
+            }
+
+            explainDiv.style.display = 'block';
+            if (window.MathJax) MathJax.typesetPromise([explainDiv]).catch(e => console.log(e));
+
+            // Cập nhật thanh điểm
+            const bar = document.getElementById('quiz-score-bar');
+            document.getElementById('score-correct').textContent = scoreCorrect;
+            document.getElementById('score-total').textContent = scoreAnswered;
+            bar.style.display = 'block';
+            bar.style.background = scoreCorrect === scoreAnswered
+                ? 'linear-gradient(90deg, #059669, #10b981)'
+                : 'linear-gradient(90deg, var(--primary), var(--secondary))';
+        });
+
+        optionsGrid.appendChild(btn);
+    });
+
+    qDiv.appendChild(optionsGrid);
+    qDiv.appendChild(explainDiv);
+    container.appendChild(qDiv);
+});
+
+window.addEventListener('load', () => {
+    if (window.MathJax) MathJax.typesetPromise().catch(e => console.log(e));
+});
+</script>
+</body>
+</html>
