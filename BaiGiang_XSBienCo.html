@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xác suất của Biến cố — Học liệu Tương tác v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script>
+window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']],processEscapes:true,tags:'ams'},svg:{fontCache:'global'}};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+:root{
+  --teal:#0f766e; --teal-dark:#042f2e; --amber:#d97706; --amber-light:#fef3c7;
+  --sky:#0284c7; --rose:#e11d48; --violet:#7c3aed; --emerald:#059669;
+  --bg:#f0fdfa; --card:#fff; --text:#334155; --muted:#64748b;
+  --success:#10b981; --danger:#ef4444; --warn:#f59e0b;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden;}
+h1,h2,h3,h4{font-family:'Merriweather',serif;color:var(--teal);margin-top:0;}
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+/* HEADER */
+header{background:linear-gradient(135deg,var(--teal-dark) 0%,var(--teal) 60%,#0d9488 100%);color:#fff;padding:5rem 2rem;text-align:center;border-bottom:5px solid var(--amber);position:relative;overflow:hidden;}
+header::after{content:'';position:absolute;inset:0;background:url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 L90 50 L50 90 L10 50 Z" stroke="rgba(255,255,255,0.06)" stroke-width="2" fill="none"/><circle cx="50" cy="50" r="15" fill="rgba(255,255,255,0.04)"/></svg>') repeat;pointer-events:none;z-index:0;}
+header>*{position:relative;z-index:1;}
+.header-badge{display:inline-block;background:rgba(217,119,6,.3);border:1px solid rgba(245,158,11,.5);color:#fef3c7;padding:8px 20px;border-radius:30px;font-size:.95rem;font-weight:700;margin-bottom:1.5rem;letter-spacing:1.5px;text-transform:uppercase;}
+header h1{color:#fff;font-size:3rem;margin-bottom:.8rem;text-shadow:0 4px 10px rgba(0,0,0,.3);}
+header p{font-size:1.2rem;color:#ccfbf1;max-width:800px;margin:0 auto 1.5rem;}
+.header-pills{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin-top:1.5rem;}
+.header-pill{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.18);color:#ccfbf1;padding:8px 18px;border-radius:20px;font-size:.9rem;font-weight:700;}
+.header-pill i{margin-right:6px;color:var(--amber);}
+/* CONTAINER */
+.container{max-width:1020px;margin:3rem auto;padding:0 2rem;}
+/* SECTION CARD */
+.section-card{background:var(--card);border-radius:20px;padding:3rem;margin-bottom:3rem;box-shadow:0 10px 30px -8px rgba(15,118,110,.07);position:relative;overflow:hidden;}
+.section-card::before{content:'';position:absolute;top:0;left:0;width:6px;height:100%;background:var(--amber);}
+.section-title{font-size:1.9rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:14px;border-bottom:2px solid #e2e8f0;padding-bottom:1rem;}
+.section-title i{color:var(--amber);}
+/* CONCEPT BOX */
+.concept-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:2rem;margin-bottom:2rem;}
+.concept-header{display:flex;align-items:center;gap:12px;font-size:1.4rem;color:var(--teal);font-family:'Merriweather',serif;margin-bottom:1rem;border-bottom:1px solid #cbd5e1;padding-bottom:10px;}
+.concept-icon{display:flex;align-items:center;justify-content:center;width:42px;height:42px;background:var(--amber);color:#fff;border-radius:50%;font-size:1.2rem;flex-shrink:0;}
+/* INFO BOXES */
+.note-box{background:#f0fdf4;border-left:4px solid var(--success);padding:1.25rem 1.5rem;border-radius:0 10px 10px 0;margin:1.25rem 0;}
+.warn-box{background:#fffbeb;border-left:4px solid var(--warn);padding:1.25rem 1.5rem;border-radius:0 10px 10px 0;margin:1.25rem 0;}
+.danger-box{background:#fff1f2;border-left:4px solid var(--danger);padding:1.25rem 1.5rem;border-radius:0 10px 10px 0;margin:1.25rem 0;}
+.math-display{overflow-x:auto;margin:1rem 0;font-size:1.2rem;text-align:center;padding:1.5rem;background:#fff;border-radius:10px;border:1px dashed #cbd5e1;box-shadow:inset 0 2px 4px rgba(0,0,0,.02);color:var(--teal);}
+/* IMAGE CARDS */
+.img-row{display:flex;gap:18px;flex-wrap:wrap;margin:1.5rem 0;justify-content:center;}
+.img-card{flex:1;min-width:180px;max-width:260px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.08);border:1px solid #e2e8f0;text-align:center;transition:transform .3s,box-shadow .3s;}
+.img-card:hover{transform:translateY(-5px);box-shadow:0 12px 28px rgba(15,118,110,.15);}
+.img-card .img-icon{font-size:3.5rem;padding:1.2rem .5rem .5rem;}
+.img-card strong{display:block;font-size:.95rem;color:var(--teal);padding:.3rem .8rem;}
+.img-card p{font-size:.82rem;color:var(--muted);padding:.4rem .8rem .8rem;margin:0;}
+/* FORMULA CARD */
+.formula-hero{background:linear-gradient(135deg,var(--teal-dark),var(--teal));border-radius:16px;padding:2rem;text-align:center;color:#fff;margin:1.5rem 0;box-shadow:0 8px 24px rgba(15,118,110,.25);}
+.formula-hero .big-formula{font-size:2rem;font-family:'Merriweather',serif;margin:1rem 0;color:#fff;}
+.formula-hero .formula-desc{font-size:.95rem;color:#ccfbf1;display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-top:.8rem;}
+.formula-hero .formula-desc span{background:rgba(255,255,255,.12);border-radius:8px;padding:4px 12px;}
+/* PROPERTIES GRID */
+.prop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:1.5rem 0;}
+.prop-item{background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:1.2rem;text-align:center;transition:border-color .25s,transform .25s;}
+.prop-item:hover{border-color:var(--teal);transform:translateY(-2px);}
+.prop-emoji{font-size:2rem;display:block;margin-bottom:.4rem;}
+.prop-formula{font-size:1.1rem;font-weight:700;color:var(--teal);}
+.prop-label{font-size:.85rem;color:var(--muted);margin-top:.3rem;}
+/* APPLET */
+.applet-container{background:#fff;border:2px solid #e2e8f0;border-radius:14px;padding:2rem;margin:2rem 0;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.04);}
+.slider-wrapper{display:flex;justify-content:space-around;flex-wrap:wrap;margin:16px 0;gap:18px;}
+.slider-group{display:flex;flex-direction:column;align-items:center;width:42%;min-width:180px;}
+input[type="range"]{width:100%;cursor:pointer;margin-top:8px;}
+#blueSlider{accent-color:#0284c7;}
+#redSlider{accent-color:#ef4444;}
+#probCanvas{max-width:100%;border-radius:50%;margin:10px auto;box-shadow:0 4px 14px rgba(0,0,0,.12);display:block;}
+/* MONTE CARLO */
+.monte-controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:1rem 0;}
+.mc-btn{padding:9px 20px;border:none;border-radius:10px;cursor:pointer;font-weight:700;font-size:.95rem;font-family:'Nunito',sans-serif;transition:transform .15s,box-shadow .15s;}
+.mc-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.15);}
+.mc-btn:active{transform:scale(.96);}
+#mcCanvas{max-width:100%;border-radius:10px;border:1px solid #e2e8f0;display:block;margin:0 auto;}
+.mc-stats{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:1rem 0;}
+.mc-stat{padding:8px 16px;border-radius:10px;font-weight:700;font-size:1rem;}
+/* NUMBER LINE GAME */
+.numline-wrap{background:#f8fafc;border:2px dashed #cbd5e1;border-radius:14px;padding:2rem;margin:2rem 0;}
+.numline-events{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:1.5rem;}
+.numline-event{background:var(--teal);color:#fff;padding:8px 16px;border-radius:10px;cursor:grab;user-select:none;font-size:.9rem;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.15);transition:transform .1s,box-shadow .1s;}
+.numline-event:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.2);}
+.numline-event:active{cursor:grabbing;}
+.numline-event.placed{opacity:.5;pointer-events:none;}
+.numline-svg-wrap{position:relative;margin:1rem 0;user-select:none;}
+.numline-drop{position:absolute;width:60px;height:40px;transform:translateX(-50%);top:10px;border:2px dashed var(--teal);border-radius:8px;background:rgba(15,118,110,.07);display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.numline-drop.drag-over{background:rgba(15,118,110,.2);}
+.numline-drop.correct{background:#d1fae5;border-color:var(--success);}
+.numline-drop.wrong{background:#fee2e2;border-color:var(--danger);}
+.numline-placed-item{font-size:.75rem;font-weight:800;color:var(--teal);text-align:center;padding:2px;}
+/* DnD */
+.dnd-wrapper{background:#f8fafc;border:2px dashed #cbd5e1;border-radius:14px;padding:2rem;margin:2rem 0;}
+.dnd-row{display:flex;align-items:center;justify-content:space-between;background:#fff;padding:14px 16px;margin-bottom:10px;border-radius:10px;border:1px solid #e2e8f0;box-shadow:0 2px 4px rgba(0,0,0,.02);gap:14px;}
+.dnd-row span:first-child{flex:1;font-size:1rem;}
+.drop-zone{display:inline-flex;align-items:center;justify-content:center;min-width:155px;min-height:46px;background:#e2e8f0;border:2px dashed var(--amber);border-radius:8px;font-weight:700;color:var(--teal);transition:all .2s;flex-shrink:0;padding:0 10px;}
+.drop-zone.drag-over{background:#fef3c7;border-color:var(--amber);transform:scale(1.04);}
+.drag-pool{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:1.5rem;padding:1.5rem;background:#fff;border-radius:10px;border:1px solid #cbd5e1;}
+.draggable-item{background:var(--teal);color:#fff;padding:10px 18px;border-radius:10px;cursor:grab;user-select:none;font-size:1rem;transition:transform .12s,box-shadow .12s;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(15,118,110,.2);}
+.draggable-item:hover{transform:translateY(-2px);box-shadow:0 5px 14px rgba(15,118,110,.3);}
+.draggable-item:active{cursor:grabbing;transform:scale(.95);}
+.draggable-item.in-zone{background:transparent;color:var(--teal);padding:0;box-shadow:none;font-weight:800;}
+/* BUTTONS */
+.btn{display:inline-block;background:var(--amber);color:#fff;padding:11px 22px;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;transition:background .25s,transform .1s;font-family:'Nunito',sans-serif;}
+.btn:hover{background:#b45309;transform:translateY(-1px);}
+.btn-reset{background:#64748b;margin-left:10px;}
+.btn-reset:hover{background:#475569;}
+.btn-sky{background:var(--sky);}
+.btn-sky:hover{background:#0369a1;}
+/* ACCORDION */
+.accordion{border:1px solid #e2e8f0;border-radius:12px;margin-bottom:1rem;overflow:hidden;background:#fff;}
+.accordion-header{background:#f8fafc;padding:1rem 1.5rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;color:var(--teal);transition:background .2s;font-size:1.05rem;}
+.accordion-header:hover{background:#ccfbf1;}
+.accordion-content{padding:0;max-height:0;overflow:hidden;transition:max-height .45s ease,padding .45s ease;}
+.accordion-content.active{padding:1.5rem;max-height:1800px;border-top:1px solid #e2e8f0;}
+.step{display:flex;gap:12px;align-items:flex-start;margin-bottom:1rem;}
+.step-num{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--amber);color:#fff;font-weight:800;font-size:.9rem;flex-shrink:0;margin-top:4px;}
+.step-content{flex:1;}
+/* QUIZ */
+.quiz-question{margin-bottom:2rem;padding:2rem;background:#f8fafc;border-radius:14px;border:1px solid #e2e8f0;}
+.quiz-question-text{font-size:1.1rem;font-weight:700;margin-bottom:1.5rem;color:var(--teal);line-height:1.5;}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.quiz-option{background:#fff;border:2px solid #cbd5e1;padding:1rem;border-radius:10px;cursor:pointer;display:flex;align-items:center;transition:all .2s;font-size:.97rem;}
+.quiz-option:hover:not(.disabled){border-color:var(--amber);background:#fffbeb;}
+.quiz-option.disabled{cursor:not-allowed;opacity:.7;}
+.quiz-option .opt-label{width:30px;height:30px;background:var(--bg);border-radius:50%;display:flex;justify-content:center;align-items:center;margin-right:14px;font-weight:800;color:var(--muted);flex-shrink:0;}
+.quiz-option.correct{border-color:var(--success)!important;background:#ecfdf5!important;opacity:1;}
+.quiz-option.correct .opt-label{background:var(--success);color:#fff;}
+.quiz-option.wrong{border-color:var(--danger)!important;background:#fef2f2!important;}
+.quiz-option.wrong .opt-label{background:var(--danger);color:#fff;}
+.quiz-explanation{margin-top:1.5rem;padding:1rem;background:#fff;border-left:4px solid var(--amber);border-radius:0 10px 10px 0;display:none;animation:fadeIn .5s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+/* SCORE BAR */
+#quiz-score-bar{position:sticky;bottom:1.5rem;background:var(--teal);color:#fff;border-radius:14px;padding:12px 22px;text-align:center;font-weight:700;font-size:1.05rem;box-shadow:0 6px 20px rgba(15,118,110,.35);z-index:99;transition:all .3s;display:none;}
+/* FOOTER */
+footer{background:var(--teal-dark);color:#fff;text-align:center;padding:3rem;margin-top:4rem;}
+footer h3{color:#fff;margin-bottom:.8rem;}
+/* RESPONSIVE */
+@media(max-width:768px){.quiz-options,.prop-grid{grid-template-columns:1fr;}.section-card{padding:1.5rem;}.dnd-row{flex-direction:column;text-align:center;}.img-card{min-width:140px;}}
+/* BALL ANIMATION */
+@keyframes ballPop{0%{transform:scale(0);opacity:0;}60%{transform:scale(1.2);}100%{transform:scale(1);opacity:1;}}
+.ball-anim{animation:ballPop .3s ease;}
+</style>
+</head>
+<body>
+
+<!-- ========== HEADER ========== -->
+<header>
+  <div class="header-badge"><i class="fa-solid fa-percent"></i> Toán học 10 — Chương trình GDPT 2018</div>
+  <h1>Xác suất của Biến cố</h1>
+  <p>Đo lường "cơ hội" và sự "may rủi" bằng ngôn ngữ Toán học chính xác</p>
+  <div class="header-pills">
+    <div class="header-pill"><i class="fa-solid fa-book-open"></i>2 Khái niệm</div>
+    <div class="header-pill"><i class="fa-solid fa-flask"></i>Monte Carlo</div>
+    <div class="header-pill"><i class="fa-solid fa-gamepad"></i>Trục số XS</div>
+    <div class="header-pill"><i class="fa-solid fa-puzzle-piece"></i>Kéo &amp; Thả</div>
+    <div class="header-pill"><i class="fa-solid fa-list-check"></i>10 câu TN</div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- ========== I. KHỞI ĐỘNG ========== -->
+<div class="section-card reveal">
+  <h2 class="section-title"><i class="fa-solid fa-lightbulb"></i> I. Khởi động: Cái nào dễ xảy ra hơn?</h2>
+
+  <!-- IMAGE ROW -->
+  <div class="img-row">
+    <div class="img-card">
+      <div class="img-icon">🎲</div>
+      <strong>Gieo xúc xắc</strong>
+      <p>Mặt chẵn hay mặt lẻ — cái nào dễ ra hơn?</p>
+    </div>
+    <div class="img-card">
+      <div class="img-icon">🔴🔵</div>
+      <strong>Lấy bi ngẫu nhiên</strong>
+      <p>Cùng màu hay khác màu — cái nào nhiều cách hơn?</p>
+    </div>
+    <div class="img-card">
+      <div class="img-icon">🃏</div>
+      <strong>Rút bài tây</strong>
+      <p>Lá Át hay lá bất kỳ — xác suất là bao nhiêu?</p>
+    </div>
+    <div class="img-card">
+      <div class="img-icon">🪙</div>
+      <strong>Tung đồng xu</strong>
+      <p>Sau 1000 lần tung, tần suất ra Sấp là bao nhiêu?</p>
+    </div>
+  </div>
+
+  <p>Lấy ngẫu nhiên đồng thời <strong>2 viên bi</strong> từ hộp có <strong>5 bi xanh</strong> và <strong>5 bi đỏ</strong>.</p>
+  <ul style="margin:1rem 0 1rem 1.5rem;">
+    <li><strong>Số cách lấy 2 bi cùng màu:</strong> $C_5^2 + C_5^2 = 10 + 10 = 20$ cách.</li>
+    <li><strong>Số cách lấy 2 bi khác màu:</strong> $C_5^1 \times C_5^1 = 5 \times 5 = 25$ cách.</li>
+  </ul>
+  <p>Khác màu có nhiều cách hơn! Để <em>đo chính xác</em> mức độ "dễ xảy ra" này, ta dùng công cụ mang tên <strong>Xác suất</strong>.</p>
+
+  <div class="note-box">
+    <i class="fa-solid fa-calculator"></i> <strong>Tính thử:</strong> Tổng số cách lấy 2 bi bất kỳ là $C_{10}^2 = 45$.
+    Vậy P(cùng màu) = 20/45 ≈ 0,44 &lt; P(khác màu) = 25/45 ≈ 0,56. Khác màu xác suất cao hơn!
+  </div>
+</div>
+
+<!-- ========== II. LÝ THUYẾT ========== -->
+<div class="section-card reveal">
+  <h2 class="section-title"><i class="fa-solid fa-book-open"></i> II. Các Khái niệm Nền tảng</h2>
+
+  <!-- CONCEPT 1: FORMULA -->
+  <div class="concept-box">
+    <div class="concept-header">
+      <div class="concept-icon">1</div>
+      Xác suất của Biến cố — Công thức Cổ điển
+    </div>
+
+    <p>Giả sử phép thử có không gian mẫu $\Omega$ gồm <em>hữu hạn</em> các kết quả <strong>có cùng khả năng xảy ra</strong>. Khi đó xác suất của biến cố $A$ là:</p>
+
+    <!-- FORMULA HERO CARD -->
+    <div class="formula-hero">
+      <div style="font-size:.9rem;color:#99f6e4;letter-spacing:1px;text-transform:uppercase;margin-bottom:.5rem;">Công thức Xác suất Cổ điển</div>
+      <div class="big-formula">$$P(A) = \dfrac{n(A)}{n(\Omega)}$$</div>
+      <div class="formula-desc">
+        <span>$n(A)$ = số kết quả thuận lợi cho $A$</span>
+        <span>$n(\Omega)$ = tổng số kết quả đồng khả năng</span>
+      </div>
+    </div>
+
+    <!-- PROPERTIES GRID -->
+    <p style="font-weight:700;color:var(--teal);margin:.8rem 0 .5rem;">Ba tính chất quan trọng:</p>
+    <div class="prop-grid">
+      <div class="prop-item">
+        <span class="prop-emoji">📏</span>
+        <div class="prop-formula">$0 \le P(A) \le 1$</div>
+        <div class="prop-label">Xác suất luôn từ 0 đến 1</div>
+      </div>
+      <div class="prop-item" style="border-color:#bbf7d0;">
+        <span class="prop-emoji">✅</span>
+        <div class="prop-formula">$P(\Omega) = 1$</div>
+        <div class="prop-label">Biến cố chắc chắn</div>
+      </div>
+      <div class="prop-item" style="border-color:#fecaca;">
+        <span class="prop-emoji">❌</span>
+        <div class="prop-formula">$P(\emptyset) = 0$</div>
+        <div class="prop-label">Biến cố không thể</div>
+      </div>
+    </div>
+
+    <!-- VISUAL: Probability as fraction of circle -->
+    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.5rem;margin-top:1.2rem;">
+      <p style="font-weight:700;color:var(--teal);text-align:center;margin-bottom:1rem;">🎯 Trực quan: Xác suất = Phần thuận lợi / Toàn bộ</p>
+      <svg viewBox="0 0 760 220" xmlns="http://www.w3.org/2000/svg" style="max-width:640px;width:100%;display:block;margin:0 auto;">
+        <!-- 36 cells for 2 dice -->
+        <text x="10" y="18" font-size="12" fill="#334155" font-weight="bold">Ví dụ: Gieo 2 xúc xắc, tổng = 9?</text>
+        <!-- Grid 6x6 = 36 cells -->
+        <g transform="translate(10,28)">
+          <!-- Row-by-row cells, highlight (3,6),(4,5),(5,4),(6,3) -->
+          <!-- We'll draw 36 tiny squares and color the favorable ones -->
+          <script type="text/fake"><!-- SVG rect loop --></script>
+          <!-- 36 squares: 6 cols × 6 rows -->
+          <!-- col i, row j => sum = i+j; highlight if i+j=9 i.e. (3,6)(4,5)(5,4)(6,3) -->
+        </g>
+        <!-- Draw manually for clarity -->
+        <!-- 6 columns (dice1=1..6), 6 rows (dice2=1..6) -->
+        <g transform="translate(10,28)">
+          <!-- We highlight pairs where sum=9: (3,6),(4,5),(5,4),(6,3) -->
+          <!-- cell size=13px, col=dice1-1, row=dice2-1 -->
+          <!-- Gray cells (not favorable) -->
+          <rect x="0" y="0" width="84" height="84" rx="3" fill="#e2e8f0"/>
+          <!-- Draw all cells -->
+          <!-- This is a static SVG approximation -->
+          <!-- Row of 6x6 = 36 cells 13x13 each with 1px gap -->
+          <!-- Just show schematic -->
+          <g font-size="8" text-anchor="middle" fill="#334155">
+            <text x="7" y="-5">1</text><text x="21" y="-5">2</text><text x="35" y="-5">3</text>
+            <text x="49" y="-5">4</text><text x="63" y="-5">5</text><text x="77" y="-5">6</text>
+            <text x="-5" y="10" text-anchor="end">1</text>
+            <text x="-5" y="24" text-anchor="end">2</text>
+            <text x="-5" y="38" text-anchor="end">3</text>
+            <text x="-5" y="52" text-anchor="end">4</text>
+            <text x="-5" y="66" text-anchor="end">5</text>
+            <text x="-5" y="80" text-anchor="end">6</text>
+          </g>
+          <!-- All 36 cells -->
+          <!-- row0(dice2=1): sum=(2,3,4,5,6,7) -->
+          <rect x="0"  y="0"  width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="14" y="0"  width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="28" y="0"  width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="42" y="0"  width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="56" y="0"  width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="70" y="0"  width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <!-- row1: sum=(3,4,5,6,7,8) -->
+          <rect x="0"  y="14" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="14" y="14" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="28" y="14" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="42" y="14" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="56" y="14" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="70" y="14" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <!-- row2: sum=(4,5,6,7,8,9) → (6,3) favorable: dice1=6,dice2=3 → col5,row2 -->
+          <rect x="0"  y="28" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="14" y="28" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="28" y="28" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="42" y="28" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="56" y="28" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="70" y="28" width="12" height="12" rx="1" fill="#0f766e" stroke="#fff" stroke-width="1"/><!-- (6,3) sum=9 -->
+          <!-- row3: sum=(5,6,7,8,9,10) → (5,4): dice1=5,dice2=4 → col4,row3 -->
+          <rect x="0"  y="42" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="14" y="42" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="28" y="42" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="42" y="42" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="56" y="42" width="12" height="12" rx="1" fill="#0f766e" stroke="#fff" stroke-width="1"/><!-- (5,4) sum=9 -->
+          <rect x="70" y="42" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <!-- row4: sum=(6,7,8,9,10,11) → (4,5): dice1=4,dice2=5 → col3,row4 -->
+          <rect x="0"  y="56" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="14" y="56" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="28" y="56" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="42" y="56" width="12" height="12" rx="1" fill="#0f766e" stroke="#fff" stroke-width="1"/><!-- (4,5) sum=9 -->
+          <rect x="56" y="56" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="70" y="56" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <!-- row5: sum=(7,8,9,10,11,12) → (3,6): dice1=3,dice2=6 → col2,row5 -->
+          <rect x="0"  y="70" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="14" y="70" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="28" y="70" width="12" height="12" rx="1" fill="#0f766e" stroke="#fff" stroke-width="1"/><!-- (3,6) sum=9 -->
+          <rect x="42" y="70" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="56" y="70" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+          <rect x="70" y="70" width="12" height="12" rx="1" fill="#f1f5f9" stroke="#fff" stroke-width="1"/>
+        </g>
+        <!-- Annotation -->
+        <g transform="translate(10,115)">
+          <rect width="30" height="14" rx="3" fill="#0f766e"/><text x="15" y="11" font-size="9" text-anchor="middle" fill="#fff">4 ô</text>
+          <text x="38" y="11" font-size="11" fill="#334155">= kết quả thuận lợi $n(A)=4$</text>
+          <rect y="22" width="30" height="14" rx="3" fill="#e2e8f0"/><text x="15" y="33" font-size="9" text-anchor="middle" fill="#334155">32 ô</text>
+          <text x="38" y="33" font-size="11" fill="#334155">= kết quả không thuận lợi</text>
+          <line x1="0" y1="50" x2="200" y2="50" stroke="#e2e8f0" stroke-width="1"/>
+          <text x="0" y="68" font-size="12" fill="#0f766e" font-weight="bold">$P(A) = \dfrac{4}{36} = \dfrac{1}{9} \approx 0{,}111$</text>
+        </g>
+        <!-- Bar representing P(A) -->
+        <g transform="translate(380,115)">
+          <text x="0" y="14" font-size="11" fill="#334155" font-weight="bold">Mức độ:</text>
+          <rect x="60" y="4" width="200" height="16" rx="8" fill="#e2e8f0"/>
+          <rect x="60" y="4" width="22" height="16" rx="8" fill="#0f766e"/>
+          <text x="60" y="36" font-size="10" fill="#0f766e">0</text>
+          <text x="258" y="36" font-size="10" fill="#334155">1</text>
+          <text x="155" y="52" font-size="10" fill="#334155" text-anchor="middle">P(A)=1/9≈0,11</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- CONCEPT 2: COMPLEMENTARY EVENT -->
+  <div class="concept-box">
+    <div class="concept-header">
+      <div class="concept-icon">2</div>
+      Biến cố đối &amp; Mẹo "Ít nhất"
+    </div>
+
+    <p>Biến cố <em>"Không xảy ra $A$"</em> gọi là <strong>biến cố đối</strong> của $A$, kí hiệu $\overline{A}$. Về mặt tập hợp: $\overline{A} = \Omega \setminus A$.</p>
+
+    <div class="math-display" style="background:#fffbeb;border-color:#fcd34d;">
+      $$ P(\overline{A}) = 1 - P(A) \qquad \Leftrightarrow \qquad P(A) + P(\overline{A}) = 1 $$
+    </div>
+
+    <!-- COMPLEMENT VISUAL -->
+    <svg viewBox="0 0 500 100" xmlns="http://www.w3.org/2000/svg" style="max-width:480px;width:100%;display:block;margin:1rem auto;">
+      <rect x="20" y="20" width="460" height="60" rx="12" fill="#e2e8f0"/>
+      <rect x="20" y="20" width="138" height="60" rx="12" fill="#0f766e"/>
+      <text x="89" y="56" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">P(A) = 0,3</text>
+      <rect x="158" y="20" width="322" height="60" rx="0" fill="#d97706" rx="12"/>
+      <text x="319" y="56" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">P(Ā) = 0,7</text>
+      <text x="250" y="12" text-anchor="middle" fill="#334155" font-size="11">Tổng luôn = 1</text>
+    </svg>
+
+    <div class="warn-box">
+      <strong><i class="fa-solid fa-wand-magic-sparkles"></i> Mẹo "Ít nhất":</strong> Khi biến cố $A$ chứa cụm <em>"có ít nhất..."</em>, tính $P(\overline{A})$ — biến cố "không có cái nào..." — thường đơn giản hơn rất nhiều, rồi dùng $P(A) = 1 - P(\overline{A})$.
+    </div>
+  </div>
+
+  <!-- APPLET: Pie chart -->
+  <div class="applet-container">
+    <h3 style="color:var(--teal);margin-top:0;">🎡 Trải nghiệm 1: Bánh xe Xác suất &amp; Biến cố đối</h3>
+    <p style="margin-bottom:1.2rem;">Kéo thanh trượt để thay đổi số bi xanh/đỏ. Quan sát $P(A)$ và $P(\overline{A})$ thay đổi — nhưng tổng luôn bằng 1!</p>
+    <div class="slider-wrapper">
+      <div class="slider-group">
+        <label style="font-weight:700;color:#0284c7;">🔵 Số Bi Xanh: <span id="blueVal">5</span></label>
+        <input type="range" id="blueSlider" min="0" max="20" value="5" oninput="updateProb()">
+      </div>
+      <div class="slider-group">
+        <label style="font-weight:700;color:#ef4444;">🔴 Số Bi Đỏ: <span id="redVal">5</span></label>
+        <input type="range" id="redSlider" min="0" max="20" value="5" oninput="updateProb()">
+      </div>
+    </div>
+    <canvas id="probCanvas" width="220" height="220"></canvas>
+    <div style="margin-top:14px;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;">
+      <div style="padding:10px 18px;border-radius:10px;font-weight:700;background:#e0f2fe;color:#0369a1;border:1px solid #7dd3fc;">$P(A)$ Xanh = <span id="pA">0.50</span></div>
+      <div style="padding:10px 18px;border-radius:10px;font-weight:700;background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;">$P(\overline{A})$ Đỏ = <span id="pAbar">0.50</span></div>
+    </div>
+    <p style="margin-top:12px;font-weight:700;font-size:1.1rem;color:var(--amber);">Tổng $P(A) + P(\overline{A}) = 1$ — <em>Luôn luôn đúng!</em></p>
+  </div>
+
+  <!-- CONCEPT 3: SMALL PROBABILITY PRINCIPLE -->
+  <div class="concept-box" style="border-color:#fca5a5;">
+    <div class="concept-header" style="color:var(--danger);border-bottom-color:#fca5a5;">
+      <div class="concept-icon" style="background:var(--danger);">!</div>
+      Nguyên lí Xác suất bé
+    </div>
+    <p><strong>Nguyên lí:</strong> <em>Nếu xác suất của biến cố rất bé, trong một phép thử duy nhất, biến cố đó gần như chắc chắn không xảy ra.</em></p>
+    <div class="warn-box" style="border-color:#f59e0b;background:#fffbeb;">
+      <strong><i class="fa-solid fa-triangle-exclamation"></i> Lưu ý quan trọng:</strong> Đây là nguyên lí thực hành, <em>không phải định lí toán học</em>. Khi áp dụng cho quy mô lớn (hàng triệu người, hàng tỉ thử nghiệm), không thể chủ quan bỏ qua một xác suất "nhỏ" — vì tích lũy lại vẫn tạo ra nhiều sự kiện xảy ra thực tế.
+    </div>
+  </div>
+</div>
+
+<!-- ========== III. MONTE CARLO SIMULATION (NEW) ========== -->
+<div class="section-card reveal">
+  <h2 class="section-title"><i class="fa-solid fa-rotate"></i> III. Trải nghiệm 2: Mô phỏng Monte Carlo</h2>
+  <p>Tại sao $P(A) = \dfrac{n(A)}{n(\Omega)}$ lại đúng? Hãy tự <em>chạy thí nghiệm</em> và quan sát tần suất thực nghiệm hội tụ về xác suất lý thuyết!</p>
+
+  <div class="applet-container" style="text-align:left;">
+    <h3 style="color:var(--teal);margin-top:0;text-align:center;">🎲 Tung đồng xu nhiều lần — Tần suất hội tụ về 0,5?</h3>
+
+    <div style="background:#f0fdf4;border-radius:10px;padding:1rem;margin-bottom:1rem;font-size:.9rem;">
+      <strong>Nguyên tắc:</strong> Ta tung đồng xu nhiều lần. Về lý thuyết, $P(\text{Sấp}) = \frac{1}{2} = 0{,}5$. Thực tế, sau đủ nhiều lần tung, tỉ lệ Sấp sẽ tiến gần về 0,5. Đây là nền tảng của <em>Định luật Số lớn</em>.
+    </div>
+
+    <div class="monte-controls">
+      <button class="mc-btn" style="background:#0f766e;color:#fff;" onclick="mcRun(1)">Tung 1 lần</button>
+      <button class="mc-btn" style="background:#0284c7;color:#fff;" onclick="mcRun(10)">Tung 10 lần</button>
+      <button class="mc-btn" style="background:#7c3aed;color:#fff;" onclick="mcRun(100)">Tung 100 lần</button>
+      <button class="mc-btn" style="background:#d97706;color:#fff;" onclick="mcRun(1000)">Tung 1000 lần</button>
+      <button class="mc-btn" style="background:#64748b;color:#fff;" onclick="mcReset()">↺ Làm lại</button>
+    </div>
+
+    <canvas id="mcCanvas" width="860" height="280"></canvas>
+
+    <div class="mc-stats">
+      <div class="mc-stat" style="background:#e0f2fe;color:#0369a1;border:1px solid #7dd3fc;">Tổng lần tung: <strong id="mcTotal">0</strong></div>
+      <div class="mc-stat" style="background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;">Số Sấp (S): <strong id="mcHeads">0</strong></div>
+      <div class="mc-stat" style="background:#fce7f3;color:#be185d;border:1px solid #f9a8d4;">Số Ngửa (N): <strong id="mcTails">0</strong></div>
+      <div class="mc-stat" style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d;">Tần suất S: <strong id="mcFreq">—</strong></div>
+      <div class="mc-stat" style="background:#f0fdf4;color:#0f766e;border:1px solid #86efac;">Lý thuyết P(S): <strong>0.500</strong></div>
+    </div>
+
+    <div class="note-box" style="margin-top:1rem;">
+      <i class="fa-solid fa-lightbulb"></i> <strong>Quan sát:</strong> Sau vài lần tung, tần suất dao động lớn. Nhưng sau 1000 lần, đường tần suất (cam) gần như chồng lên đường lý thuyết (đứt nét xanh) ở mức 0,5. Đây chính là lý do công thức $P(A)=\dfrac{n(A)}{n(\Omega)}$ phản ánh thực tế!
+    </div>
+  </div>
+</div>
+
+<!-- ========== IV. TRỤC SỐ XÁC SUẤT (NEW GAME) ========== -->
+<div class="section-card reveal">
+  <h2 class="section-title"><i class="fa-solid fa-gamepad"></i> IV. Trò chơi: Đặt Biến cố lên Trục số Xác suất</h2>
+  <p>Kéo từng biến cố và thả vào vùng trục số thích hợp. Hãy ước lượng xác suất của mỗi biến cố!</p>
+
+  <div class="numline-wrap" id="numlineWrap">
+    <p style="font-weight:700;color:var(--teal);margin-bottom:.8rem;">Các biến cố cần đặt:</p>
+    <div class="numline-events" id="numlinePool">
+      <div class="numline-event" draggable="true" data-val="0" id="ne0">❌ Tổng 2 xúc xắc = 13</div>
+      <div class="numline-event" draggable="true" data-val="0.5" id="ne1">🪙 Tung xu ra Sấp</div>
+      <div class="numline-event" draggable="true" data-val="1" id="ne2">✅ Tổng 2 xúc xắc ≤ 12</div>
+      <div class="numline-event" draggable="true" data-val="0.5" id="ne3">🎲 Gieo 1 xúc xắc ra chẵn</div>
+      <div class="numline-event" draggable="true" data-val="0.167" id="ne4">🎯 Gieo 1 xúc xắc ra mặt 6</div>
+    </div>
+
+    <!-- Number line SVG -->
+    <div style="position:relative;margin:1.5rem 0 0.5rem;padding:0 20px;">
+      <svg id="numlineSVG" viewBox="0 0 800 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+        <!-- Axis -->
+        <line x1="40" y1="55" x2="760" y2="55" stroke="#334155" stroke-width="3"/>
+        <!-- Arrow -->
+        <polygon points="760,50 770,55 760,60" fill="#334155"/>
+        <!-- Ticks -->
+        <line x1="40"  y1="48" x2="40"  y2="62" stroke="#334155" stroke-width="2"/>
+        <line x1="184" y1="48" x2="184" y2="62" stroke="#94a3b8" stroke-width="1.5"/>
+        <line x1="328" y1="48" x2="328" y2="62" stroke="#94a3b8" stroke-width="1.5"/>
+        <line x1="472" y1="48" x2="472" y2="62" stroke="#94a3b8" stroke-width="1.5"/>
+        <line x1="616" y1="48" x2="616" y2="62" stroke="#94a3b8" stroke-width="1.5"/>
+        <line x1="750" y1="48" x2="750" y2="62" stroke="#334155" stroke-width="2"/>
+        <!-- Labels -->
+        <text x="40"  y="78" text-anchor="middle" font-size="13" fill="#334155" font-weight="bold">0</text>
+        <text x="184" y="78" text-anchor="middle" font-size="12" fill="#64748b">0,25</text>
+        <text x="328" y="78" text-anchor="middle" font-size="12" fill="#64748b">0,5</text>
+        <text x="472" y="78" text-anchor="middle" font-size="12" fill="#64748b">0,75</text>
+        <text x="750" y="78" text-anchor="middle" font-size="13" fill="#334155" font-weight="bold">1</text>
+        <!-- Zone labels -->
+        <text x="40"  y="20" text-anchor="middle" font-size="10" fill="#ef4444">Không thể</text>
+        <text x="328" y="20" text-anchor="middle" font-size="10" fill="#0284c7">Ngẫu nhiên</text>
+        <text x="750" y="20" text-anchor="middle" font-size="10" fill="#059669">Chắc chắn</text>
+        <!-- Drop zones at 0, 1/6≈0.167, 0.5, 1 -->
+        <!-- zone at x=40 (val=0) -->
+        <rect id="nlz0" x="14" y="38" width="52" height="34" rx="8" fill="rgba(15,118,110,0.07)" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <!-- zone at x=184 (val=0.167 → 1/6) : x = 40 + 0.167*710 = 40+118=158, but let's say 155-->
+        <rect id="nlz1" x="155" y="38" width="58" height="34" rx="8" fill="rgba(15,118,110,0.07)" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <!-- zone at x=328 (val=0.5) -->
+        <rect id="nlz2" x="302" y="38" width="52" height="34" rx="8" fill="rgba(15,118,110,0.07)" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <!-- zone at x=328 duplicate (second val=0.5) -->
+        <rect id="nlz3" x="360" y="38" width="52" height="34" rx="8" fill="rgba(15,118,110,0.07)" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <!-- zone at x=750 (val=1) -->
+        <rect id="nlz4" x="724" y="38" width="52" height="34" rx="8" fill="rgba(15,118,110,0.07)" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5 3"/>
+      </svg>
+    </div>
+
+    <div style="text-align:center;margin-top:1rem;">
+      <button class="btn" onclick="checkNumline()">✅ Kiểm tra</button>
+      <button class="btn btn-reset" onclick="resetNumline()">↺ Làm lại</button>
+      <p id="nl-feedback" style="margin-top:.8rem;font-weight:700;font-size:1.05rem;"></p>
+    </div>
+  </div>
+
+  <div class="note-box">
+    <strong>Đáp án tham khảo:</strong>
+    "Tổng = 13" → $P=0$ (không thể) &nbsp;|&nbsp;
+    "Tung xu Sấp" → $P=0{,}5$ &nbsp;|&nbsp;
+    "Tổng ≤ 12" → $P=1$ (chắc chắn) &nbsp;|&nbsp;
+    "Xúc xắc ra chẵn" → $P=0{,}5$ &nbsp;|&nbsp;
+    "Xúc xắc ra mặt 6" → $P=\frac{1}{6}\approx 0{,}167$
+  </div>
+</div>
+
+<!-- ========== V. KÉO THẢ ========== -->
+<div class="section-card reveal">
+  <h2 class="section-title"><i class="fa-solid fa-puzzle-piece"></i> V. Thử thách Kéo - Thả Ký hiệu</h2>
+  <p>Kéo thẻ công thức ở dưới và thả vào mô tả tương ứng.</p>
+  <div class="dnd-wrapper" id="dnd-container">
+    <div class="dnd-row">
+      <span>1. Xác suất của biến cố $A$ tính bằng công thức nào?</span>
+      <span class="drop-zone" data-answer="n(A)/n(Omega)"></span>
+    </div>
+    <div class="dnd-row">
+      <span>2. Xác suất của <strong>Biến cố chắc chắn</strong> $\Omega$ bằng bao nhiêu?</span>
+      <span class="drop-zone" data-answer="1"></span>
+    </div>
+    <div class="dnd-row">
+      <span>3. Xác suất của <strong>Biến cố không thể</strong> $\emptyset$ bằng bao nhiêu?</span>
+      <span class="drop-zone" data-answer="0"></span>
+    </div>
+    <div class="dnd-row">
+      <span>4. Nếu biết $P(A)$, cách tính xác suất biến cố đối $\overline{A}$ là?</span>
+      <span class="drop-zone" data-answer="1-P(A)"></span>
+    </div>
+    <div class="drag-pool" id="drag-pool">
+      <div class="draggable-item" draggable="true" data-val="1-P(A)">$1 - P(A)$</div>
+      <div class="draggable-item" draggable="true" data-val="0">$0$</div>
+      <div class="draggable-item" draggable="true" data-val="n(A)/n(Omega)">$\dfrac{n(A)}{n(\Omega)}$</div>
+      <div class="draggable-item" draggable="true" data-val="1">$1$</div>
+    </div>
+    <div style="text-align:center;margin-top:1.5rem;">
+      <button class="btn" onclick="checkDnD()">✅ Kiểm tra kết quả</button>
+      <button class="btn btn-reset" onclick="resetDnD()">↺ Làm lại</button>
+      <p id="dnd-feedback" style="margin-top:1rem;font-weight:700;font-size:1.1rem;"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== VI. VÍ DỤ ========== -->
+<div class="section-card reveal">
+  <h2 class="section-title"><i class="fa-solid fa-chalkboard-user"></i> VI. Các Ví dụ Phân tích Từng bước</h2>
+  <p><strong>Bí quyết 2 bước:</strong> ① Tìm $n(\Omega)$ &nbsp;→&nbsp; ② Tìm $n(A)$ &nbsp;→&nbsp; ③ Lập tỉ số $P(A)=\dfrac{n(A)}{n(\Omega)}$.</p>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAccordion(this)">
+      <span>🎲 Ví dụ 1: Gieo hai xúc xắc — Tổng bằng 9</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </div>
+    <div class="accordion-content">
+      <p><strong>Bài toán:</strong> Gieo 2 xúc xắc cân đối. Tính $P(A)$: "Tổng số chấm bằng 9".</p>
+      <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Không gian mẫu:</strong> $n(\Omega) = 6 \times 6 = 36$.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><strong>Biến cố A:</strong> Các cặp $(i,j)$ có $i+j=9$: $(3,6);(4,5);(5,4);(6,3)$. Vậy $n(A)=4$.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><strong>Kết quả:</strong> $P(A) = \dfrac{4}{36} = \dfrac{1}{9} \approx 0{,}111$.</div></div>
+    </div>
+  </div>
+
+  <div class="accordion" style="margin-top:1rem;">
+    <div class="accordion-header" onclick="toggleAccordion(this)">
+      <span>🔵 Ví dụ 2: Lấy bi — Dùng Tổ hợp</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </div>
+    <div class="accordion-content">
+      <p><strong>Bài toán:</strong> Hộp có 5 bi xanh và 7 bi trắng. Lấy ngẫu nhiên 2 viên. Tính $P(A)$: "Cả 2 bi đều trắng".</p>
+      <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Không gian mẫu:</strong> Lấy 2 bi từ 12 bi, không tính thứ tự: $n(\Omega)=C_{12}^2=66$.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><strong>Biến cố A:</strong> Lấy 2 bi trắng từ 7 bi trắng: $n(A)=C_7^2=21$.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><strong>Kết quả:</strong> $P(A)=\dfrac{21}{66}=\dfrac{7}{22}\approx 0{,}318$.</div></div>
+    </div>
+  </div>
+
+  <div class="accordion" style="margin-top:1rem;">
+    <div class="accordion-header" onclick="toggleAccordion(this)">
+      <span>⚡ Ví dụ 3: Dùng Biến cố đối — "Tích chẵn"</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </div>
+    <div class="accordion-content">
+      <p><strong>Bài toán:</strong> Gieo 3 xúc xắc. Tính $P(A)$: "Tích 3 mặt là số chẵn".</p>
+      <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Dùng biến cố đối:</strong> "Tích chẵn" xảy ra khi có ÍT NHẤT 1 mặt chẵn — rất khó liệt kê trực tiếp.<br>Biến cố đối $\overline{A}$: "Tích lẻ" — chỉ xảy ra khi CẢ BA mặt đều lẻ (1,3,5).</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content">$n(\Omega)=6^3=216$. Mỗi con có 3 mặt lẻ, nên $n(\overline{A})=3^3=27$.<br>$P(\overline{A})=\dfrac{27}{216}=\dfrac{1}{8}$.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><strong>Kết quả:</strong> $P(A)=1-P(\overline{A})=1-\dfrac{1}{8}=\boldsymbol{\dfrac{7}{8}}\approx 0{,}875$.</div></div>
+      <div class="note-box" style="margin-top:.5rem;">Nếu tính thẳng: phải cộng (1C,2L) + (2C,1L) + (3C,0L) — rất dài! Dùng biến cố đối tiết kiệm hơn nhiều.</div>
+    </div>
+  </div>
+
+  <div class="accordion" style="margin-top:1rem;">
+    <div class="accordion-header" onclick="toggleAccordion(this)">
+      <span>🃏 Ví dụ 4: Bộ bài tây — Rút lá Át</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </div>
+    <div class="accordion-content">
+      <p><strong>Bài toán:</strong> Lấy ngẫu nhiên 1 lá bài từ bộ 52 lá. Tính $P(A)$: "Lấy được lá Át (A)".</p>
+      <p style="margin:.5rem 0;">📋 Bộ bài tây có <strong>52 lá</strong>, chia thành 4 chất (♠ ♥ ♦ ♣), mỗi chất có <strong>13 lá</strong> từ 2 đến K và 1 lá Át. Tổng số lá Át: <strong>4 lá</strong>.</p>
+      <div class="step"><div class="step-num">1</div><div class="step-content">$n(\Omega)=52$.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content">$n(A)=4$ (4 lá Át của 4 chất).</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content">$P(A)=\dfrac{4}{52}=\dfrac{1}{13}\approx 0{,}077$.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== VII. TRẮC NGHIỆM ========== -->
+<div class="section-card reveal" id="quiz-section">
+  <h2 class="section-title"><i class="fa-solid fa-list-check"></i> VII. Bài tập Rèn luyện (10 câu Trắc nghiệm)</h2>
+  <p style="margin-bottom:2rem;">Chọn đáp án đúng nhất. Kết quả và giải thích hiển thị ngay sau khi em chọn.</p>
+  <div id="quiz-container"></div>
+</div>
+
+<div id="quiz-score-bar">📊 Điểm: <span id="score-correct">0</span> / <span id="score-total">0</span> câu đúng</div>
+
+</div><!-- /container -->
+
+<footer>
+  <h3>Học liệu Toán học Mở</h3>
+  <p>Biên soạn bởi Lê Nguyễn Hồng Linh</p>
+  <p style="opacity:.6;font-size:.85rem;margin-top:1rem;">© Bản thiết kế tương tác theo chuẩn GDPT 2018 · Phiên bản 2.0</p>
+</footer>
+
+<!-- ========== JAVASCRIPT ========== -->
+<script>
+// ===== SCROLL REVEAL =====
+const revEls=document.querySelectorAll('.reveal');
+new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.08}).observe
+=function(el){};
+const ro=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.08});
+revEls.forEach(el=>ro.observe(el));
+
+// ===== APPLET: PIE CHART =====
+function updateProb(){
+  const b=+document.getElementById('blueSlider').value;
+  const r=+document.getElementById('redSlider').value;
+  document.getElementById('blueVal').textContent=b;
+  document.getElementById('redVal').textContent=r;
+  const tot=b+r;
+  const pB=tot===0?0:b/tot, pR=tot===0?0:r/tot;
+  document.getElementById('pA').textContent=pB.toFixed(2);
+  document.getElementById('pAbar').textContent=pR.toFixed(2);
+  drawPie(pB,pR);
+}
+function drawPie(pB,pR){
+  const cv=document.getElementById('probCanvas');
+  const ctx=cv.getContext('2d');
+  const cx=cv.width/2, cy=cv.height/2, r=cv.width/2-14;
+  ctx.clearRect(0,0,cv.width,cv.height);
+  if(pB===0&&pR===0){ctx.beginPath();ctx.arc(cx,cy,r,0,2*Math.PI);ctx.fillStyle='#e2e8f0';ctx.fill();return;}
+  const endB=pB*2*Math.PI;
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+endB);ctx.fillStyle='#0284c7';ctx.fill();
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,-Math.PI/2+endB,-Math.PI/2+2*Math.PI);ctx.fillStyle='#ef4444';ctx.fill();
+  ctx.beginPath();ctx.arc(cx,cy,r,0,2*Math.PI);ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.stroke();
+  // Labels
+  if(pB>0.08){const a=-Math.PI/2+endB/2;ctx.fillStyle='#fff';ctx.font='bold 14px Nunito';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText((pB*100).toFixed(0)+'%',cx+Math.cos(a)*(r*.6),cy+Math.sin(a)*(r*.6));}
+  if(pR>0.08){const a=-Math.PI/2+endB+pR*Math.PI;ctx.fillStyle='#fff';ctx.font='bold 14px Nunito';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText((pR*100).toFixed(0)+'%',cx+Math.cos(a)*(r*.6),cy+Math.sin(a)*(r*.6));}
+}
+
+// ===== MONTE CARLO =====
+let mcData=[]; // array of {n,freq}
+let mcHeads=0,mcTotals=0;
+
+function mcRun(n){
+  for(let i=0;i<n;i++){
+    const flip=Math.random()<0.5;
+    if(flip)mcHeads++;
+    mcTotals++;
+    if(mcTotals<=2000) mcData.push(mcTotals===1?0.5:mcHeads/mcTotals);
+  }
+  document.getElementById('mcTotal').textContent=mcTotals;
+  document.getElementById('mcHeads').textContent=mcHeads;
+  document.getElementById('mcTails').textContent=mcTotals-mcHeads;
+  document.getElementById('mcFreq').textContent=(mcTotals>0?(mcHeads/mcTotals).toFixed(4):'—');
+  drawMC();
+}
+function mcReset(){mcData=[];mcHeads=0;mcTotals=0;document.getElementById('mcTotal').textContent=0;document.getElementById('mcHeads').textContent=0;document.getElementById('mcTails').textContent=0;document.getElementById('mcFreq').textContent='—';drawMC();}
+function drawMC(){
+  const cv=document.getElementById('mcCanvas');
+  const ctx=cv.getContext('2d');
+  const W=cv.width,H=cv.height;
+  const padL=60,padR=20,padT=20,padB=40;
+  const gW=W-padL-padR,gH=H-padT-padB;
+  ctx.clearRect(0,0,W,H);
+  // Background
+  ctx.fillStyle='#f8fafc';ctx.fillRect(0,0,W,H);
+  // Grid lines
+  ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1;
+  [0,.25,.5,.75,1].forEach(v=>{
+    const y=padT+gH*(1-v);
+    ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(padL+gW,y);ctx.stroke();
+    ctx.fillStyle='#64748b';ctx.font='12px Nunito';ctx.textAlign='right';ctx.textBaseline='middle';
+    ctx.fillText(v.toFixed(2),padL-6,y);
+  });
+  // Axes
+  ctx.strokeStyle='#334155';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(padL,padT);ctx.lineTo(padL,padT+gH);ctx.lineTo(padL+gW,padT+gH);ctx.stroke();
+  // Theoretical line at 0.5
+  const ty=padT+gH*.5;
+  ctx.setLineDash([8,5]);ctx.strokeStyle='#0f766e';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(padL,ty);ctx.lineTo(padL+gW,ty);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#0f766e';ctx.font='bold 12px Nunito';ctx.textAlign='left';ctx.fillText('Lý thuyết 0.5',padL+4,ty-8);
+  // Data
+  if(mcData.length>0){
+    const maxN=mcData.length;
+    ctx.strokeStyle='#d97706';ctx.lineWidth=2;ctx.beginPath();
+    mcData.forEach((freq,i)=>{
+      const x=padL+(i/maxN)*gW;
+      const y=padT+gH*(1-freq);
+      if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    // Last point
+    const lastX=padL+gW,lastY=padT+gH*(1-mcData[mcData.length-1]);
+    ctx.beginPath();ctx.arc(lastX,lastY,5,0,2*Math.PI);ctx.fillStyle='#d97706';ctx.fill();
+    // Axis label
+    ctx.fillStyle='#64748b';ctx.font='12px Nunito';ctx.textAlign='center';
+    ctx.fillText('Số lần tung → (hiện tại: '+mcTotals+')',padL+gW/2,padT+gH+30);
+  } else {
+    ctx.fillStyle='#94a3b8';ctx.font='16px Nunito';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('Nhấn nút để bắt đầu mô phỏng!',padL+gW/2,padT+gH/2);
+  }
+  // Y-axis label
+  ctx.save();ctx.translate(16,padT+gH/2);ctx.rotate(-Math.PI/2);ctx.fillStyle='#334155';ctx.font='12px Nunito';ctx.textAlign='center';ctx.fillText('Tần suất Sấp',0,0);ctx.restore();
+}
+
+// ===== NUMBER LINE GAME =====
+// Simple approach: click-to-assign (drag on SVG is complex, use pool click)
+let nlAnswers={}; // zone_id -> event_id
+const nlZoneAnswers=['0','0.167','0.5','0.5','1']; // what each zone expects
+const nlEventVals={'ne0':'0','ne1':'0.5','ne2':'1','ne3':'0.5','ne4':'0.167'};
+
+// Make events clickable to cycle through zones
+const nlZoneIds=['nlz0','nlz1','nlz2','nlz3','nlz4'];
+let nlPlaced={}; // eventId -> zoneIdx (-1=not placed)
+let nlZoneOccupied={}; // zoneIdx -> eventId
+
+function initNumline(){
+  nlPlaced={ne0:-1,ne1:-1,ne2:-1,ne3:-1,ne4:-1};
+  nlZoneOccupied={0:null,1:null,2:null,3:null,4:null};
+  document.querySelectorAll('.numline-event').forEach(el=>{
+    el.classList.remove('placed');
+    el.onclick=function(){nlPickEvent(this.id);};
+  });
+  nlSelectedEvent=null;
+  renderNumlineSVGLabels();
+  document.getElementById('nl-feedback').textContent='';
+}
+
+let nlSelectedEvent=null;
+
+function nlPickEvent(id){
+  if(nlPlaced[id]>=0){
+    // unplace
+    const zi=nlPlaced[id];
+    nlZoneOccupied[zi]=null;
+    nlPlaced[id]=-1;
+    document.getElementById(id).classList.remove('placed');
+    nlSelectedEvent=null;
+    renderNumlineSVGLabels();
+    return;
+  }
+  document.querySelectorAll('.numline-event').forEach(e=>e.style.outline='none');
+  document.getElementById(id).style.outline='3px solid var(--amber)';
+  nlSelectedEvent=id;
+}
+
+// Click on SVG zones
+function initSVGZones(){
+  nlZoneIds.forEach((zid,zi)=>{
+    const el=document.getElementById(zid);
+    if(!el)return;
+    el.style.cursor='pointer';
+    el.addEventListener('click',function(){
+      if(!nlSelectedEvent) return;
+      // If zone occupied, swap back
+      if(nlZoneOccupied[zi]){
+        const prev=nlZoneOccupied[zi];
+        nlPlaced[prev]=-1;
+        document.getElementById(prev).classList.remove('placed');
+      }
+      nlZoneOccupied[zi]=nlSelectedEvent;
+      nlPlaced[nlSelectedEvent]=zi;
+      document.getElementById(nlSelectedEvent).classList.add('placed');
+      document.getElementById(nlSelectedEvent).style.outline='none';
+      nlSelectedEvent=null;
+      renderNumlineSVGLabels();
+    });
+  });
+}
+
+function renderNumlineSVGLabels(){
+  // Remove old labels
+  document.querySelectorAll('.nl-svg-label').forEach(e=>e.remove());
+  const svg=document.getElementById('numlineSVG');
+  const zoneX=[14,155,302,360,724]; // x of each zone rect
+  const zoneW=[52,58,52,52,52];
+  Object.entries(nlZoneOccupied).forEach(([zi,eid])=>{
+    if(!eid)return;
+    const el=document.getElementById(eid);
+    if(!el)return;
+    const text=el.textContent.trim().substring(0,12);
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',zoneX[zi]+zoneW[zi]/2);
+    t.setAttribute('y',59);
+    t.setAttribute('text-anchor','middle');
+    t.setAttribute('font-size','8');
+    t.setAttribute('fill','#0f766e');
+    t.setAttribute('font-weight','bold');
+    t.setAttribute('class','nl-svg-label');
+    t.textContent=text;
+    svg.appendChild(t);
+  });
+}
+
+function checkNumline(){
+  let correct=0,total=0;
+  // Reset zone colors
+  nlZoneIds.forEach((zid,zi)=>{
+    const el=document.getElementById(zid);
+    if(!el)return;
+    const eid=nlZoneOccupied[zi];
+    if(!eid){el.setAttribute('fill','rgba(239,68,68,0.15)');el.setAttribute('stroke','#ef4444');total++;return;}
+    total++;
+    const expected=nlZoneAnswers[zi];
+    const actual=nlEventVals[eid];
+    if(actual===expected){el.setAttribute('fill','rgba(16,185,129,0.2)');el.setAttribute('stroke','#10b981');correct++;}
+    else{el.setAttribute('fill','rgba(239,68,68,0.15)');el.setAttribute('stroke','#ef4444');}
+  });
+  const fb=document.getElementById('nl-feedback');
+  if(correct===5){fb.textContent='🎉 Xuất sắc! Em đã đặt đúng tất cả các biến cố!';fb.style.color='var(--success)';}
+  else{fb.textContent=`⚠️ Em đặt đúng ${correct}/5 biến cố. Ô xanh = đúng, ô đỏ = sai.`;fb.style.color='var(--danger)';}
+}
+function resetNumline(){
+  nlZoneIds.forEach(zid=>{
+    const el=document.getElementById(zid);
+    if(!el)return;
+    el.setAttribute('fill','rgba(15,118,110,0.07)');el.setAttribute('stroke','#0f766e');
+  });
+  document.querySelectorAll('.nl-svg-label').forEach(e=>e.remove());
+  initNumline();
+}
+
+// ===== ACCORDION =====
+function toggleAccordion(h){
+  const c=h.nextElementSibling;
+  const ic=h.querySelector('i.fa-chevron-down');
+  if(c.classList.contains('active')){c.classList.remove('active');ic.style.transform='rotate(0deg)';}
+  else{c.classList.add('active');ic.style.transform='rotate(180deg)';ic.style.transition='transform .3s';if(window.MathJax)MathJax.typesetPromise([c]).catch(e=>console.log(e));}
+}
+
+// ===== DRAG & DROP =====
+const dragPool=document.getElementById('drag-pool');
+let draggedItem=null,initialPoolHTML='';
+window.addEventListener('DOMContentLoaded',()=>{
+  initialPoolHTML=dragPool.innerHTML;
+  initializeDnD();
+  initNumline();
+  initSVGZones();
+  drawMC();
+  updateProb();
+});
+function initializeDnD(){
+  document.querySelectorAll('.draggable-item').forEach(item=>{
+    item.addEventListener('dragstart',function(){draggedItem=this;setTimeout(()=>this.style.opacity='.45',0);});
+    item.addEventListener('dragend',function(){setTimeout(()=>this.style.opacity='1',0);draggedItem=null;});
+  });
+  document.querySelectorAll('.drop-zone').forEach(zone=>{
+    const nz=zone.cloneNode(true);zone.parentNode.replaceChild(nz,zone);
+    nz.addEventListener('dragover',e=>{e.preventDefault();nz.classList.add('drag-over');});
+    nz.addEventListener('dragleave',()=>nz.classList.remove('drag-over'));
+    nz.addEventListener('drop',function(e){
+      e.preventDefault();this.classList.remove('drag-over');
+      if(draggedItem){
+        if(this.children.length>0){const old=this.children[0];old.classList.remove('in-zone');dragPool.appendChild(old);}
+        draggedItem.parentNode.removeChild(draggedItem);this.appendChild(draggedItem);draggedItem.classList.add('in-zone');
+        this.childNodes.forEach(n=>{if(n.nodeType===3)n.remove();});
+        if(window.MathJax)MathJax.typesetPromise([this]).catch(e=>console.log(e));
+      }
+    });
+  });
+  dragPool.addEventListener('dragover',e=>e.preventDefault());
+  dragPool.addEventListener('drop',function(e){e.preventDefault();if(draggedItem){draggedItem.parentNode.removeChild(draggedItem);this.appendChild(draggedItem);draggedItem.classList.remove('in-zone');}});
+}
+function checkDnD(){
+  let correct=0;
+  document.querySelectorAll('.drop-zone').forEach(zone=>{
+    const ans=zone.getAttribute('data-answer');
+    if(zone.children.length>0){const val=zone.children[0].getAttribute('data-val');if(val===ans){zone.style.borderColor='var(--success)';zone.style.backgroundColor='#d1fae5';correct++;}else{zone.style.borderColor='var(--danger)';zone.style.backgroundColor='#fee2e2';}}else{zone.style.borderColor='var(--danger)';zone.style.backgroundColor='#fee2e2';}
+  });
+  const total=document.querySelectorAll('.drop-zone').length;
+  const fb=document.getElementById('dnd-feedback');
+  if(correct===total){fb.textContent='🎉 Tuyệt vời! Em đã ghép đúng tất cả!';fb.style.color='var(--success)';}
+  else{fb.textContent=`⚠️ Em ghép đúng ${correct}/${total}. Hãy xem lại ô màu đỏ.`;fb.style.color='var(--danger)';}
+}
+function resetDnD(){
+  dragPool.innerHTML=initialPoolHTML;
+  document.querySelectorAll('.drop-zone').forEach(z=>{z.innerHTML='';z.style.borderColor='var(--amber)';z.style.backgroundColor='#e2e8f0';});
+  document.getElementById('dnd-feedback').textContent='';
+  initializeDnD();
+  if(window.MathJax)MathJax.typesetPromise([dragPool]).catch(e=>console.log(e));
+}
+
+// ===== QUIZ =====
+const quizData=[
+  {q:"Công thức nào sau đây là công thức tính xác suất cổ điển của biến cố A?",options:["$P(A)=\\dfrac{n(\\Omega)}{n(A)}$","$P(A)=n(A)\\times n(\\Omega)$","$P(A)=\\dfrac{n(A)}{n(\\Omega)}$","$P(A)=n(\\Omega)-n(A)$"],correct:2,explain:"Xác suất cổ điển: $P(A)=\\dfrac{n(A)}{n(\\Omega)}$ (số kết quả thuận lợi chia tổng số kết quả đồng khả năng). Lưu ý điều kiện áp dụng: các kết quả phải <em>đồng khả năng</em> xảy ra."},
+  {q:"Trong các số sau, số nào <strong>KHÔNG thể</strong> là xác suất của một biến cố?",options:["$0{,}01$","$1$","$1{,}5$","$0{,}99$"],correct:2,explain:"Xác suất luôn thỏa $0\\le P(A)\\le 1$. Số $1{,}5>1$ nên không hợp lệ. Lưu ý: $P=0$ và $P=1$ đều hợp lệ (biến cố không thể và chắc chắn)."},
+  {q:"Nếu $P(A)=\\dfrac{2}{5}$, thì xác suất biến cố đối $\\overline{A}$ là:",options:["$\\dfrac{2}{5}$","$\\dfrac{3}{5}$","$1$","$-\\dfrac{2}{5}$"],correct:1,explain:"$P(\\overline{A})=1-P(A)=1-\\dfrac{2}{5}=\\dfrac{3}{5}$."},
+  {q:"Gieo một con xúc xắc cân đối. Xác suất xuất hiện mặt số <strong>nguyên tố</strong> là:",options:["$\\dfrac{1}{2}$","$\\dfrac{1}{3}$","$\\dfrac{2}{3}$","$\\dfrac{1}{6}$"],correct:0,explain:"$\\Omega=\\{1,2,3,4,5,6\\}$. Số nguyên tố: $\\{2,3,5\\}$ — có 3 kết quả. $P(A)=\\dfrac{3}{6}=\\dfrac{1}{2}$. (Lưu ý: 1 không phải số nguyên tố.)"},
+  {q:"Tung ba đồng xu. Biến cố đối của \"Xuất hiện ba mặt Sấp\" là gì?",options:["Xuất hiện ba mặt Ngửa","Xuất hiện ít nhất một mặt Ngửa","Xuất hiện đúng một mặt Ngửa","Xuất hiện hai mặt Ngửa"],correct:1,explain:"\"Ba mặt Sấp\" = không có mặt Ngửa nào. Phần bù (biến cố đối) là \"Có ít nhất một mặt Ngửa\" — bao gồm 1N, 2N hoặc 3N."},
+  {q:"Hộp 1 có 3 thẻ (1,2,3). Hộp 2 có 2 thẻ (4,5). Lấy mỗi hộp 1 thẻ. $n(\\Omega)$ là bao nhiêu?",options:["5","6","9","4"],correct:1,explain:"Hộp 1 có 3 cách, hộp 2 có 2 cách. Quy tắc nhân: $n(\\Omega)=3\\times 2=6$ kết quả: $\\{(1,4),(1,5),(2,4),(2,5),(3,4),(3,5)\\}$."},
+  {q:"Gieo hai xúc xắc. Xác suất để <strong>tổng số chấm nhỏ hơn 10</strong> là:",options:["$\\dfrac{5}{6}$","$\\dfrac{1}{6}$","$\\dfrac{11}{12}$","$\\dfrac{31}{36}$"],correct:0,explain:"Biến cố đối (tổng $\\ge 10$): $(4,6),(6,4),(5,5),(5,6),(6,5),(6,6)$ — 6 kết quả. $P(\\text{tổng}\\ge10)=\\dfrac{6}{36}=\\dfrac{1}{6}$. Vậy $P(\\text{tổng}<10)=1-\\dfrac{1}{6}=\\dfrac{5}{6}$."},
+  {q:"Biết xác suất lấy 2 quả bóng <em>khác màu</em> là 0,6. Xác suất lấy 2 quả <em>cùng màu</em> là:",options:["$0{,}4$","$0{,}6$","$0{,}3$","$1{,}6$"],correct:0,explain:"\"Cùng màu\" và \"khác màu\" là hai biến cố đối nhau. Do đó $P(\\text{cùng màu})=1-0{,}6=0{,}4$."},
+  {q:"Lấy ngẫu nhiên một lá từ bộ bài tây 52 lá. Xác suất lấy được <strong>lá Át</strong> là:",options:["$\\dfrac{1}{52}$","$\\dfrac{1}{13}$","$\\dfrac{4}{13}$","$\\dfrac{1}{4}$"],correct:1,explain:"Bộ bài có 52 lá, 4 lá Át (mỗi chất 1 Át). $P=\\dfrac{4}{52}=\\dfrac{1}{13}$."},
+  {q:"Theo nguyên lí xác suất bé, nếu biến cố có $P=0{,}000001$, khi thực hiện <strong>1 phép thử</strong> ta có thể kết luận:",options:["Biến cố chắc chắn xảy ra","Biến cố gần như không xảy ra","Biến cố xảy ra với tỉ lệ 50%","Không thể kết luận gì"],correct:1,explain:"Nguyên lí xác suất bé: xác suất cực nhỏ → trong 1 lần thử, biến cố gần như chắc chắn không xảy ra. Lưu ý: nguyên lí này <em>không áp dụng máy móc</em> cho quy mô lớn (hàng triệu lần thử)."}
+];
+
+let scoreC=0,scoreA=0;
+const qContainer=document.getElementById('quiz-container');
+quizData.forEach((item,idx)=>{
+  const qDiv=document.createElement('div');qDiv.className='quiz-question';
+  const qT=document.createElement('div');qT.className='quiz-question-text';
+  qT.innerHTML=`<span style="color:var(--amber);margin-right:8px;font-size:.95rem;">Câu ${idx+1}/10</span>${item.q}`;
+  qDiv.appendChild(qT);
+  const og=document.createElement('div');og.className='quiz-options';
+  const exDiv=document.createElement('div');exDiv.className='quiz-explanation';
+  exDiv.innerHTML=`<strong>💡 Giải thích:</strong> ${item.explain}`;
+  item.options.forEach((opt,oi)=>{
+    const btn=document.createElement('div');btn.className='quiz-option';
+    btn.innerHTML=`<div class="opt-label">${String.fromCharCode(65+oi)}</div><span>${opt}</span>`;
+    btn.addEventListener('click',function(){
+      if(this.classList.contains('disabled'))return;
+      og.querySelectorAll('.quiz-option').forEach(b=>b.classList.add('disabled'));
+      scoreA++;
+      if(oi===item.correct){this.classList.add('correct');exDiv.style.borderLeftColor='var(--success)';scoreC++;}
+      else{this.classList.add('wrong');og.querySelectorAll('.quiz-option')[item.correct].classList.add('correct');exDiv.style.borderLeftColor='var(--danger)';}
+      exDiv.style.display='block';
+      if(window.MathJax)MathJax.typesetPromise([exDiv]).catch(e=>console.log(e));
+      const bar=document.getElementById('quiz-score-bar');
+      document.getElementById('score-correct').textContent=scoreC;
+      document.getElementById('score-total').textContent=scoreA;
+      bar.style.display='block';
+      bar.style.background=scoreC===scoreA?'linear-gradient(90deg,#059669,#10b981)':'linear-gradient(90deg,var(--teal),#0d9488)';
+    });
+    og.appendChild(btn);
+  });
+  qDiv.appendChild(og);qDiv.appendChild(exDiv);qContainer.appendChild(qDiv);
+});
+
+window.addEventListener('load',()=>{if(window.MathJax)MathJax.typesetPromise().catch(e=>console.log(e));});
+</script>
+</body>
+</html>
