@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dấu của Tam thức Bậc hai — Học liệu Tương tác v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script>
+window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']],processEscapes:true,tags:'ams'},svg:{fontCache:'global'}};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+/* ===== VARIABLES ===== */
+:root{
+  --green:#065f46; --green-mid:#047857; --green-light:#10b981;
+  --amber:#d97706; --amber-light:#fef3c7;
+  --bg:#f0fdf4; --card:#fff;
+  --text:#334155; --muted:#64748b;
+  --success:#10b981; --danger:#ef4444; --warn:#f59e0b;
+  --blue:#0284c7; --violet:#7c3aed;
+}
+
+/* ===== BASE ===== */
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden;}
+h1,h2,h3,h4{font-family:'Merriweather',serif;color:var(--green);margin-top:0;}
+
+/* ===== SCROLL REVEAL ===== */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .55s ease,transform .55s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ===== HEADER ===== */
+header{background:linear-gradient(135deg,var(--green) 0%,var(--green-mid) 100%);color:#fff;padding:4.5rem 2rem;text-align:center;border-bottom:5px solid var(--amber);position:relative;overflow:hidden;}
+header::after{content:'';position:absolute;inset:0;background:url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M 10 90 Q 50 10 90 90" stroke="rgba(255,255,255,0.05)" stroke-width="4" fill="none"/></svg>') repeat;pointer-events:none;z-index:0;}
+header>*{position:relative;z-index:1;}
+.header-badge{display:inline-block;background:rgba(217,119,6,.28);border:1px solid rgba(245,158,11,.45);color:#fef3c7;padding:7px 18px;border-radius:28px;font-size:.9rem;font-weight:700;margin-bottom:1.2rem;letter-spacing:1.2px;text-transform:uppercase;}
+header h1{color:#fff;font-size:2.7rem;margin-bottom:.7rem;text-shadow:0 3px 8px rgba(0,0,0,.28);}
+header p{font-size:1.1rem;color:#a7f3d0;max-width:760px;margin:0 auto;}
+
+/* ===== CONTAINER ===== */
+.container{max-width:980px;margin:2.5rem auto;padding:0 1.8rem;}
+
+/* ===== SECTION CARD ===== */
+.section-card{background:var(--card);border-radius:16px;padding:2.5rem;margin-bottom:2.5rem;box-shadow:0 8px 24px -6px rgba(0,0,0,.07);position:relative;overflow:hidden;}
+.section-card::before{content:'';position:absolute;top:0;left:0;width:5px;height:100%;background:var(--amber);}
+.section-title{font-size:1.75rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:12px;border-bottom:2px solid #e2e8f0;padding-bottom:.9rem;}
+.section-title i{color:var(--amber);}
+
+/* ===== CONCEPT BOX ===== */
+.concept-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1.75rem;margin-bottom:1.75rem;}
+.concept-header{display:flex;align-items:center;gap:10px;font-size:1.3rem;color:var(--green);font-family:'Merriweather',serif;margin-bottom:.9rem;border-bottom:1px solid #cbd5e1;padding-bottom:9px;}
+.concept-icon{display:flex;align-items:center;justify-content:center;width:38px;height:38px;background:var(--amber);color:#fff;border-radius:50%;font-size:1.1rem;flex-shrink:0;}
+
+/* ===== INFO BOXES ===== */
+.note-box{background:#f0fdf4;border-left:4px solid var(--success);padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;margin:1.2rem 0;}
+.warn-box{background:#fffbeb;border-left:4px solid var(--warn);padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;margin:1.2rem 0;}
+.danger-box{background:#fff1f2;border-left:4px solid var(--danger);padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;margin:1.2rem 0;}
+
+/* ===== MATH DISPLAY ===== */
+.math-display{overflow-x:auto;margin:.9rem 0;font-size:1.15rem;text-align:center;padding:1.2rem;background:#fff;border-radius:8px;border:1px dashed #cbd5e1;color:var(--green);}
+
+/* ===== PARABOL CASE CARDS ===== */
+.case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:1.2rem 0;}
+.case-card{background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:1.2rem;text-align:center;transition:transform .2s,box-shadow .2s;}
+.case-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(6,95,70,.12);}
+.case-card svg{display:block;margin:0 auto .6rem;}
+.case-label{font-size:.88rem;font-weight:700;margin:.5rem 0 .3rem;}
+.case-rule{font-size:.82rem;color:var(--muted);line-height:1.4;}
+.case-delta-neg{border-color:#a7f3d0;}
+.case-delta-zero{border-color:#fde68a;}
+.case-delta-pos{border-color:#fca5a5;}
+
+/* ===== BẢNG XÉT DẤU (Sign Table) ===== */
+.sign-table-wrap{overflow-x:auto;margin:1.2rem 0;}
+table.sign-tbl{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,.06);font-size:1rem;}
+table.sign-tbl th,table.sign-tbl td{border:1px solid #e2e8f0;padding:11px 12px;text-align:center;}
+table.sign-tbl th{background:var(--green);color:#fff;font-weight:700;}
+table.sign-tbl td.row-hdr{background:#fef3c7;font-weight:700;color:var(--amber);}
+table.sign-tbl .s-pos{color:var(--success);font-weight:800;font-size:1.15rem;}
+table.sign-tbl .s-neg{color:var(--danger);font-weight:800;font-size:1.15rem;}
+table.sign-tbl .s-zero{color:#64748b;font-weight:700;}
+table.sign-tbl .col-root{background:#ecfdf5;}
+
+/* ===== MEMORY CARD ===== */
+.memory-card{background:linear-gradient(135deg,var(--green),var(--green-mid));border-radius:14px;padding:1.6rem;text-align:center;color:#fff;margin:1.4rem 0;}
+.memory-card .tag{font-size:.8rem;letter-spacing:1px;text-transform:uppercase;color:#a7f3d0;margin-bottom:.4rem;}
+.memory-card .motto{font-family:'Merriweather',serif;font-size:1.8rem;font-style:italic;margin-bottom:.5rem;}
+.memory-card .sub{font-size:.9rem;color:#a7f3d0;}
+
+/* ===== APPLET ===== */
+.applet-container{background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:1.8rem;margin:1.8rem 0;text-align:center;}
+.slider-wrapper{display:flex;justify-content:space-around;flex-wrap:wrap;margin:16px 0;gap:16px;}
+.slider-group{display:flex;flex-direction:column;align-items:center;width:30%;min-width:140px;}
+input[type="range"]{width:100%;cursor:pointer;accent-color:var(--amber);margin-top:8px;}
+#graphCanvas{max-width:100%;background:#f8fafc;border-radius:8px;border:1px solid #cbd5e1;margin:10px 0;}
+.stat-badge{display:inline-block;padding:9px 18px;border-radius:8px;font-weight:700;margin:4px 8px;font-size:1rem;}
+
+/* ===== SIGN TABLE BUILDER (NEW) ===== */
+.stb-wrap{background:#f8fafc;border:2px dashed #cbd5e1;border-radius:12px;padding:1.8rem;margin:1.8rem 0;}
+.stb-instructions{font-size:.9rem;color:var(--muted);margin-bottom:1rem;}
+.stb-table{width:100%;border-collapse:collapse;margin:1rem 0;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.stb-table th,.stb-table td{border:1px solid #e2e8f0;padding:10px 14px;text-align:center;font-size:1.05rem;}
+.stb-table th{background:var(--green);color:#fff;font-weight:700;}
+.stb-table td.stb-hdr{background:#fef3c7;font-weight:700;color:var(--amber);width:80px;}
+.stb-table td.stb-root{background:#ecfdf5;}
+.stb-cell{cursor:pointer;border-radius:6px;padding:4px 10px;font-weight:800;font-size:1.2rem;display:inline-block;min-width:36px;transition:all .2s;user-select:none;}
+.stb-cell.plus{color:var(--success);}
+.stb-cell.minus{color:var(--danger);}
+.stb-cell.zero{color:var(--muted);}
+.stb-cell:hover{transform:scale(1.15);}
+
+/* ===== DRAG & DROP ===== */
+.dnd-wrapper{background:#f8fafc;border:2px dashed #cbd5e1;border-radius:12px;padding:1.8rem;margin:1.8rem 0;}
+.dnd-row{display:flex;align-items:center;justify-content:space-between;background:#fff;padding:13px 15px;margin-bottom:9px;border-radius:8px;border:1px solid #e2e8f0;gap:14px;}
+.dnd-row span:first-child{flex:1;font-size:1rem;}
+.drop-zone{display:inline-flex;align-items:center;justify-content:center;min-width:148px;min-height:44px;background:#e2e8f0;border:2px dashed var(--amber);border-radius:6px;font-weight:700;color:var(--green);transition:all .2s;flex-shrink:0;padding:0 10px;}
+.drop-zone.drag-over{background:var(--amber-light);border-color:var(--amber);transform:scale(1.04);}
+.drag-pool{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:1.3rem;padding:1.3rem;background:#fff;border-radius:8px;border:1px solid #cbd5e1;}
+.draggable-item{background:var(--green);color:#fff;padding:9px 18px;border-radius:8px;cursor:grab;user-select:none;font-size:1rem;transition:transform .1s,box-shadow .1s;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.14);}
+.draggable-item:hover{box-shadow:0 4px 12px rgba(6,95,70,.3);transform:translateY(-1px);}
+.draggable-item:active{cursor:grabbing;transform:scale(.95);}
+.draggable-item.in-zone{background:transparent;color:var(--green);padding:0;box-shadow:none;font-weight:800;}
+
+/* ===== BUTTON ===== */
+.btn{display:inline-block;background:var(--amber);color:#fff;padding:11px 22px;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;transition:background .25s,transform .1s;font-family:'Nunito',sans-serif;}
+.btn:hover{background:#b45309;transform:translateY(-1px);}
+.btn-reset{background:#64748b;margin-left:10px;}
+.btn-reset:hover{background:#475569;}
+
+/* ===== ACCORDION ===== */
+.accordion{border:1px solid #e2e8f0;border-radius:10px;margin-bottom:.9rem;overflow:hidden;background:#fff;}
+.accordion-header{background:#f8fafc;padding:.95rem 1.4rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;color:var(--green);transition:background .2s;font-size:1.02rem;}
+.accordion-header:hover{background:#d1fae5;}
+.accordion-content{padding:0;max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease;}
+.accordion-content.active{padding:1.4rem;max-height:1400px;border-top:1px solid #e2e8f0;}
+.step{display:flex;gap:11px;align-items:flex-start;margin-bottom:.9rem;}
+.step-num{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--amber);color:#fff;font-weight:800;font-size:.88rem;flex-shrink:0;margin-top:4px;}
+.step-content{flex:1;}
+
+/* ===== QUIZ ===== */
+.quiz-question{margin-bottom:1.8rem;padding:1.8rem;background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0;}
+.quiz-question-text{font-size:1.08rem;font-weight:700;margin-bottom:1.3rem;color:var(--green);line-height:1.5;}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.quiz-option{background:#fff;border:2px solid #cbd5e1;padding:.9rem;border-radius:8px;cursor:pointer;display:flex;align-items:center;transition:all .2s;font-size:.97rem;}
+.quiz-option:hover:not(.disabled){border-color:var(--amber);background:var(--amber-light);}
+.quiz-option.disabled{cursor:not-allowed;opacity:.7;}
+.quiz-option .opt-label{width:28px;height:28px;background:var(--bg);border-radius:50%;display:flex;justify-content:center;align-items:center;margin-right:12px;font-weight:800;color:var(--muted);flex-shrink:0;font-size:.9rem;}
+.quiz-option.correct{border-color:var(--success)!important;background:#ecfdf5!important;opacity:1;}
+.quiz-option.correct .opt-label{background:var(--success);color:#fff;}
+.quiz-option.wrong{border-color:var(--danger)!important;background:#fef2f2!important;}
+.quiz-option.wrong .opt-label{background:var(--danger);color:#fff;}
+.quiz-explanation{margin-top:1.3rem;padding:.9rem 1rem;background:#fff;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;display:none;animation:fadeIn .45s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ===== SCORE BAR ===== */
+#quiz-score-bar{position:sticky;bottom:1.3rem;background:var(--green);color:#fff;border-radius:12px;padding:11px 20px;text-align:center;font-weight:700;font-size:1.02rem;box-shadow:0 4px 14px rgba(6,95,70,.38);z-index:99;transition:all .3s;display:none;}
+
+/* ===== FOOTER ===== */
+footer{background:var(--green);color:#fff;text-align:center;padding:2.5rem;margin-top:3.5rem;}
+footer h3{color:#fff;margin-bottom:.7rem;}
+footer p{opacity:.78;font-size:.88rem;}
+
+/* ===== IMAGE CARD ROW ===== */
+.img-row{display:flex;gap:14px;flex-wrap:wrap;margin:1.3rem 0;justify-content:center;}
+.img-card{flex:1;min-width:160px;max-width:220px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.07);border:1px solid #e2e8f0;text-align:center;transition:transform .25s,box-shadow .25s;padding:1rem .8rem .8rem;}
+.img-card:hover{transform:translateY(-4px);box-shadow:0 10px 22px rgba(6,95,70,.14);}
+.img-card .ic-icon{font-size:2.8rem;display:block;margin-bottom:.4rem;}
+.img-card strong{display:block;font-size:.9rem;color:var(--green);margin-bottom:.2rem;}
+.img-card p{font-size:.78rem;color:var(--muted);margin:0;}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:720px){
+  .quiz-options,.case-grid{grid-template-columns:1fr;}
+  .section-card{padding:1.5rem;}
+  .dnd-row{flex-direction:column;text-align:center;}
+  header h1{font-size:2rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- ======== HEADER ======== -->
+<header>
+  <div class="header-badge"><i class="fa-solid fa-chart-area"></i> Toán học 10 — Chương trình GDPT 2018</div>
+  <h1>Dấu của Tam thức Bậc hai</h1>
+  <p>Giải mã sự biến thiên của Parabol và khám phá định lí "Trong trái, Ngoài cùng"</p>
+</header>
+
+<div class="container">
+
+<!-- ======== I. KHỞI ĐỘNG ======== -->
+<div class="section-card reveal">
+  <h2 class="section-title"><i class="fa-solid fa-bridge-water"></i> I. Khởi động: Bài toán Vòm cầu</h2>
+
+  <!-- SVG BRIDGE ILLUSTRATION -->
+  <div style="text-align:center;margin:1rem 0 1.5rem;">
+    <svg viewBox="0 0 620 200" xmlns="http://www.w3.org/2000/svg" style="max-width:580px;width:100%;display:block;margin:0 auto;">
+      <!-- Sky background -->
+      <rect width="620" height="200" fill="#f0f9ff"/>
+      <!-- Road deck -->
+      <rect x="0" y="140" width="620" height="14" fill="#94a3b8"/>
+      <rect x="0" y="150" width="620" height="4" fill="#64748b"/>
+      <!-- Road markings -->
+      <rect x="50" y="142" width="40" height="4" fill="#fef3c7" rx="2"/>
+      <rect x="150" y="142" width="40" height="4" fill="#fef3c7" rx="2"/>
+      <rect x="250" y="142" width="40" height="4" fill="#fef3c7" rx="2"/>
+      <rect x="350" y="142" width="40" height="4" fill="#fef3c7" rx="2"/>
+      <rect x="450" y="142" width="40" height="4" fill="#fef3c7" rx="2"/>
+      <rect x="530" y="142" width="40" height="4" fill="#fef3c7" rx="2"/>
+      <!-- Arch (parabola shape) -->
+      <path d="M 60 140 Q 310 20 560 140" stroke="#065f46" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <!-- Vertical hangers from arch to deck -->
+      <line x1="160" y1="73" x2="160" y2="140" stroke="#047857" stroke-width="2"/>
+      <line x1="210" y1="55" x2="210" y2="140" stroke="#047857" stroke-width="2"/>
+      <line x1="260" y1="44" x2="260" y2="140" stroke="#047857" stroke-width="2"/>
+      <line x1="310" y1="41" x2="310" y2="140" stroke="#047857" stroke-width="2"/>
+      <line x1="360" y1="44" x2="360" y2="140" stroke="#047857" stroke-width="2"/>
+      <line x1="410" y1="55" x2="410" y2="140" stroke="#047857" stroke-width="2"/>
+      <line x1="460" y1="73" x2="460" y2="140" stroke="#047857" stroke-width="2"/>
+      <!-- Pier columns -->
+      <rect x="50" y="140" width="18" height="55" fill="#475569" rx="2"/>
+      <rect x="552" y="140" width="18" height="55" fill="#475569" rx="2"/>
+      <!-- Water / ground -->
+      <rect x="0" y="155" width="620" height="45" fill="#bae6fd" rx="0"/>
+      <text x="310" y="178" text-anchor="middle" font-size="12" fill="#0369a1" font-style="italic">Mặt nước / Mặt đất</text>
+      <!-- h(x) > 0 label -->
+      <text x="310" y="95" text-anchor="middle" font-size="13" fill="#065f46" font-weight="bold">h(x) = vòm</text>
+      <text x="310" y="112" text-anchor="middle" font-size="11" fill="#047857">h(x) &gt; 0: vòm cao hơn mặt cầu ✓</text>
+      <!-- x1, x2 markers -->
+      <circle cx="60" cy="140" r="5" fill="#ef4444"/>
+      <text x="60" y="135" text-anchor="middle" font-size="11" fill="#ef4444" font-weight="bold">x₁</text>
+      <circle cx="560" cy="140" r="5" fill="#ef4444"/>
+      <text x="560" y="135" text-anchor="middle" font-size="11" fill="#ef4444" font-weight="bold">x₂</text>
+    </svg>
+    <p style="font-size:.82rem;color:var(--muted);margin-top:.3rem;">Minh hoạ: Vòm cầu hình parabol — cao nhất ở giữa, chạm mặt cầu tại x₁ và x₂</p>
+  </div>
+
+  <p>Trong hệ trục toạ độ, phương trình vòm cầu là:</p>
+  <div class="math-display">$$h(x) = -0{,}006x^2 + 1{,}2x - 30$$</div>
+  <p>Câu hỏi: Tại vị trí nào trên đoạn $[0; 200]$ vòm cầu <strong>cao hơn mặt cầu</strong>? Tức là $h(x) > 0$ với $x$ thuộc khoảng nào?</p>
+  <p>Để trả lời, ta cần <strong>xét dấu</strong> của tam thức bậc hai $h(x)$. Đây chính là nội dung bài học hôm nay!</p>
+
+  <!-- REAL WORLD EXAMPLES -->
+  <div class="img-row" style="margin-top:1.4rem;">
+    <div class="img-card">
+      <span class="ic-icon">🌉</span>
+      <strong>Vòm cầu</strong>
+      <p>Xét dấu h(x) để biết khi nào vòm cao hơn mặt cầu</p>
+    </div>
+    <div class="img-card">
+      <span class="ic-icon">🏀</span>
+      <strong>Quỹ đạo bóng</strong>
+      <p>Khi nào bóng còn ở trên mặt sàn? h(t) > 0</p>
+    </div>
+    <div class="img-card">
+      <span class="ic-icon">💰</span>
+      <strong>Lợi nhuận</strong>
+      <p>Sản xuất bao nhiêu sản phẩm để lợi nhuận dương?</p>
+    </div>
+    <div class="img-card">
+      <span class="ic-icon">📡</span>
+      <strong>Chảo parabol</strong>
+      <p>Tiêu điểm tập trung sóng — ứng dụng của parabol</p>
+    </div>
+  </div>
+</div>
+
+<!-- ======== II. LÝ THUYẾT ======== -->
+<div class="section-card reveal">
+  <h2 class="section-title"><i class="fa-solid fa-book-open"></i> II. Kiến thức Trọng tâm</h2>
+
+  <!-- CONCEPT 1 -->
+  <div class="concept-box">
+    <div class="concept-header">
+      <div class="concept-icon">1</div>
+      Tam thức bậc hai
+    </div>
+    <p>Đa thức bậc hai $f(x) = ax^2 + bx + c$ với $a, b, c \in \mathbb{R}$, $a \ne 0$ được gọi là <strong>tam thức bậc hai ẩn $x$</strong>.</p>
+    <ul style="margin:.7rem 0 .7rem 1.2rem;line-height:2;">
+      <li><strong>Nghiệm của tam thức:</strong> Là giá trị $x_0$ sao cho $f(x_0) = 0$.</li>
+      <li><strong>Biệt thức:</strong> $\Delta = b^2 - 4ac$.</li>
+    </ul>
+    <div class="note-box">
+      <i class="fa-solid fa-circle-info"></i> <strong>Nhắc lại:</strong> Parabol $y = ax^2 + bx + c$ giao trục $Ox$ tại bao nhiêu điểm phụ thuộc vào dấu của $\Delta$:
+      $\Delta > 0$ (2 điểm), $\Delta = 0$ (1 điểm tiếp xúc), $\Delta < 0$ (không giao).
+    </div>
+  </div>
+
+  <!-- CONCEPT 2 -->
+  <div class="concept-box">
+    <div class="concept-header">
+      <div class="concept-icon">2</div>
+      Định lí về dấu của tam thức bậc hai
+    </div>
+
+    <!-- 3 CASE CARDS WITH SVG PARABOLAS -->
+    <p style="margin-bottom:.8rem;">Dấu của $f(x)$ phụ thuộc vào $\Delta$ và $a$ theo <strong>3 trường hợp</strong>:</p>
+    <div class="case-grid">
+      <!-- Case 1: Delta < 0 -->
+      <div class="case-card case-delta-neg">
+        <svg width="120" height="80" viewBox="0 0 120 80">
+          <line x1="5" y1="55" x2="115" y2="55" stroke="#94a3b8" stroke-width="1.5"/>
+          <line x1="60" y1="5" x2="60" y2="75" stroke="#94a3b8" stroke-width="1.5"/>
+          <!-- Parabola above axis (a>0, Delta<0) -->
+          <path d="M 15 55 Q 60 5 105 55" stroke="#10b981" stroke-width="2.5" fill="none"/>
+          <!-- Shade all positive -->
+          <text x="60" y="35" text-anchor="middle" fill="#10b981" font-size="13" font-weight="bold">+</text>
+        </svg>
+        <div class="case-label" style="color:#065f46;">$\Delta < 0$, $a > 0$</div>
+        <div class="case-rule">$f(x) > 0$ với <strong>mọi</strong> $x$</div>
+      </div>
+      <!-- Case 2: Delta = 0 -->
+      <div class="case-card case-delta-zero">
+        <svg width="120" height="80" viewBox="0 0 120 80">
+          <line x1="5" y1="55" x2="115" y2="55" stroke="#94a3b8" stroke-width="1.5"/>
+          <line x1="60" y1="5" x2="60" y2="75" stroke="#94a3b8" stroke-width="1.5"/>
+          <!-- Parabola tangent (a>0, Delta=0) -->
+          <path d="M 15 60 Q 60 18 105 60" stroke="#f59e0b" stroke-width="2.5" fill="none"/>
+          <circle cx="60" cy="55" r="4" fill="#f59e0b"/>
+          <text x="60" y="38" text-anchor="middle" fill="#f59e0b" font-size="13" font-weight="bold">+</text>
+          <text x="60" y="70" text-anchor="middle" fill="#64748b" font-size="10">x₀</text>
+        </svg>
+        <div class="case-label" style="color:#92400e;">$\Delta = 0$, $a > 0$</div>
+        <div class="case-rule">$f(x) \ge 0$ với mọi $x$<br>$f(x_0) = 0$</div>
+      </div>
+      <!-- Case 3: Delta > 0 -->
+      <div class="case-card case-delta-pos">
+        <svg width="120" height="80" viewBox="0 0 120 80">
+          <line x1="5" y1="40" x2="115" y2="40" stroke="#94a3b8" stroke-width="1.5"/>
+          <line x1="60" y1="5" x2="60" y2="78" stroke="#94a3b8" stroke-width="1.5"/>
+          <!-- Parabola crossing (a>0, Delta>0) -->
+          <path d="M 10 10 Q 60 70 110 10" stroke="#ef4444" stroke-width="2.5" fill="none"/>
+          <!-- Positive parts -->
+          <path d="M 10 10 Q 30 40 38 40" stroke="#10b981" stroke-width="2.5" fill="none"/>
+          <path d="M 82 40 Q 90 40 110 10" stroke="#10b981" stroke-width="2.5" fill="none"/>
+          <circle cx="38" cy="40" r="4" fill="#0f172a"/>
+          <circle cx="82" cy="40" r="4" fill="#0f172a"/>
+          <text x="22" y="32" fill="#10b981" font-size="11" font-weight="bold">+</text>
+          <text x="60" y="68" text-anchor="middle" fill="#ef4444" font-size="11" font-weight="bold">−</text>
+          <text x="97" y="32" fill="#10b981" font-size="11" font-weight="bold">+</text>
+          <text x="38" y="55" text-anchor="middle" fill="#334155" font-size="9">x₁</text>
+          <text x="82" y="55" text-anchor="middle" fill="#334155" font-size="9">x₂</text>
+        </svg>
+        <div class="case-label" style="color:#991b1b;">$\Delta > 0$, $a > 0$</div>
+        <div class="case-rule">Trong $(x_1;x_2)$: dấu <span style="color:#ef4444">−</span><br>Ngoài khoảng: dấu <span style="color:#10b981">+</span></div>
+      </div>
+    </div>
+
+    <!-- BẢNG XÉT DẤU CHUẨN -->
+    <p style="font-weight:700;color:var(--green);margin:1.3rem 0 .5rem;">📋 Bảng tổng hợp dấu của $f(x) = ax^2 + bx + c$:</p>
+    <div class="sign-table-wrap">
+      <table class="sign-tbl">
+        <thead>
+          <tr>
+            <th style="width:18%;">Trường hợp</th>
+            <th style="width:24%;">Số nghiệm</th>
+            <th>Dấu của $f(x)$</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-hdr">$\Delta < 0$</td>
+            <td>Vô nghiệm</td>
+            <td>$f(x)$ <strong>cùng dấu với $a$</strong> với <em>mọi $x \in \mathbb{R}$</em></td>
+          </tr>
+          <tr>
+            <td class="row-hdr">$\Delta = 0$</td>
+            <td>Nghiệm kép $x_0 = -\dfrac{b}{2a}$</td>
+            <td>$f(x)$ <strong>cùng dấu với $a$</strong> với mọi $x \ne x_0$ &nbsp;·&nbsp; $f(x_0) = 0$</td>
+          </tr>
+          <tr>
+            <td class="row-hdr">$\Delta > 0$</td>
+            <td>$x_1 < x_2$ (2 nghiệm phân biệt)</td>
+            <td><strong>Trong</strong> $(x_1; x_2)$: trái dấu $a$ &nbsp;·&nbsp; <strong>Ngoài</strong> khoảng: cùng dấu $a$</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- BẢNG XÉT DẤU FORMAT CHUẨN cho Delta > 0 -->
+    <p style="font-weight:700;color:var(--green);margin:1.2rem 0 .4rem;">📌 Bảng xét dấu — Ví dụ $\Delta > 0$, $a > 0$, nghiệm $x_1 < x_2$:</p>
+    <div class="sign-table-wrap">
+      <table class="sign-tbl">
+        <thead>
+          <tr>
+            <th style="width:60px;">$x$</th>
+            <th>$-\infty$</th>
+            <th class="col-root">$x_1$</th>
+            <th></th>
+            <th class="col-root">$x_2$</th>
+            <th>$+\infty$</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-hdr">$f(x)$</td>
+            <td><span class="s-pos">+</span></td>
+            <td class="col-root s-zero">0</td>
+            <td><span class="s-neg">−</span></td>
+            <td class="col-root s-zero">0</td>
+            <td><span class="s-pos">+</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- MEMORY CARD -->
+    <div class="memory-card">
+      <div class="tag">Khẩu quyết ghi nhớ cho $\Delta > 0$</div>
+      <div class="motto">"TRONG TRÁI — NGOÀI CÙNG"</div>
+      <div class="sub">Trong khoảng hai nghiệm: f(x) <em>trái</em> dấu a &nbsp;·&nbsp; Ngoài khoảng: f(x) <em>cùng</em> dấu a</div>
+    </div>
+  </div>
+
+  <!-- APPLET: Interactive Parabola (GIỮ NGUYÊN, CẢI TIẾN NHẸ) -->
+  <div class="applet-container">
+    <h3 style="color:var(--green);margin-top:0;">🔬 Khám phá: Thay đổi hệ số — xem Parabol phản ứng thế nào</h3>
+    <p style="margin-bottom:1.2rem;color:var(--muted);font-size:.95rem;">Kéo thanh trượt để thay đổi $a, b, c$. Đường <span style="color:#10b981;font-weight:700;">xanh</span> = vùng $f(x) > 0$, <span style="color:#ef4444;font-weight:700;">đỏ</span> = vùng $f(x) < 0$.</p>
+    <div class="slider-wrapper">
+      <div class="slider-group">
+        <label style="font-weight:700;">Hệ số $a$: <span id="valA" style="color:var(--amber);">1</span></label>
+        <input type="range" id="sliderA" min="-5" max="5" value="1" step="0.5" oninput="updateGraph()">
+      </div>
+      <div class="slider-group">
+        <label style="font-weight:700;">Hệ số $b$: <span id="valB" style="color:var(--amber);">-3</span></label>
+        <input type="range" id="sliderB" min="-10" max="10" value="-3" step="1" oninput="updateGraph()">
+      </div>
+      <div class="slider-group">
+        <label style="font-weight:700;">Hệ số $c$: <span id="valC" style="color:var(--amber);">2</span></label>
+        <input type="range" id="sliderC" min="-10" max="10" value="2" step="1" oninput="updateGraph()">
+      </div>
+    </div>
+    <div style="font-size:1.1rem;font-weight:700;margin-bottom:8px;color:var(--green);">$f(x) =$ <span id="funcText">x² - 3x + 2</span></div>
+    <canvas id="graphCanvas" width="800" height="320"></canvas>
+    <div style="margin-top:12px;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;">
+      <div class="stat-badge" style="background:#eef2ff;color:#4338ca;border:1px solid #c7d2fe;">$\Delta =$ <span id="deltaText">1</span></div>
+      <div class="stat-badge" style="background:#ecfdf5;color:#047857;border:1px solid #6ee7b7;">Số nghiệm: <span id="rootsText">2</span></div>
+    </div>
+    <p id="ruleText" style="margin-top:12px;font-weight:700;font-size:1rem;color:var(--amber);"></p>
+  </div>
+</div>
+
+<!-- ======== III. LUYỆN TẬP: ĐIỀN BẢNG XÉT DẤU (MỚI) ======== -->
+<div class="section-card reveal">
+  <h2 class="section-title"><i class="fa-solid fa-table-cells"></i> III. Hoạt động: Điền Bảng Xét Dấu</h2>
+  <p>Nhấp vào ô <strong>«?»</strong> để lần lượt chọn <span style="color:var(--success);font-weight:700;">+</span>, <span style="color:var(--danger);font-weight:700;">−</span>, hoặc <span style="color:var(--muted);font-weight:700;">0</span>. Sau đó nhấn <em>Kiểm tra</em>.</p>
+
+  <div class="stb-wrap">
+    <p style="font-size:1rem;font-weight:700;color:var(--green);margin-bottom:.5rem;">Cho tam thức: $f(x) = x^2 - x - 6$</p>
+    <p class="stb-instructions">$a = 1 > 0$; hai nghiệm là $x_1 = -2$ và $x_2 = 3$. Em hãy điền dấu của $f(x)$ vào từng khoảng.</p>
+
+    <div style="overflow-x:auto;">
+      <table class="stb-table" id="signBuilderTable">
+        <thead>
+          <tr>
+            <th style="width:70px;">$x$</th>
+            <th>$-\infty$</th>
+            <th style="background:#ecfdf5;color:var(--green);">$-2$</th>
+            <th>(−2 ; 3)</th>
+            <th style="background:#ecfdf5;color:var(--green);">$3$</th>
+            <th>$+\infty$</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="stb-hdr">$f(x)$</td>
+            <td><span class="stb-cell" data-correct="plus" onclick="cycleCell(this)">?</span></td>
+            <td class="stb-root"><span class="stb-cell zero" data-correct="zero" data-locked="1">0</span></td>
+            <td><span class="stb-cell" data-correct="minus" onclick="cycleCell(this)">?</span></td>
+            <td class="stb-root"><span class="stb-cell zero" data-correct="zero" data-locked="1">0</span></td>
+            <td><span class="stb-cell" data-correct="plus" onclick="cycleCell(this)">?</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="text-align:center;margin-top:1.2rem;">
+      <button class="btn" onclick="checkSignBuilder()">✅ Kiểm tra</button>
+      <button class="btn btn-reset" onclick="resetSignBuilder()">↺ Làm lại</button>
+      <p id="stb-feedback" style="margin-top:.8rem;font-weight:700;font-size:1rem;"></p>
+    </div>
+
+    <div class="note-box" style="margin-top:1rem;">
+      <strong>Gợi ý:</strong> $a = 1 > 0$, $\Delta > 0$ → áp dụng quy tắc <em>"trong trái, ngoài cùng"</em>:<br>
+      Trong khoảng $(-2; 3)$: $f(x)$ trái dấu $a$ → <span style="color:var(--danger);">âm (−)</span>.<br>
+      Ngoài khoảng: $f(x)$ cùng dấu $a$ → <span style="color:var(--success);">dương (+)</span>.
+    </div>
+  </div>
+</div>
+
+<!-- ======== IV. KÉO THẢ (GIỮ NGUYÊN) ======== -->
+<div class="section-card reveal">
+  <h2 class="section-title"><i class="fa-solid fa-puzzle-piece"></i> IV. Thử thách Kéo - Thả</h2>
+  <p>Dựa vào định lí về dấu, kéo thẻ kết luận và thả vào điều kiện tương ứng.</p>
+  <div class="dnd-wrapper" id="dnd-container">
+    <div class="dnd-row">
+      <span>1. Điều kiện $\Delta < 0$ và $a > 0$</span>
+      <span class="drop-zone" data-answer="f(x) > 0, ∀x"></span>
+    </div>
+    <div class="dnd-row">
+      <span>2. Điều kiện $\Delta < 0$ và $a < 0$</span>
+      <span class="drop-zone" data-answer="f(x) < 0, ∀x"></span>
+    </div>
+    <div class="dnd-row">
+      <span>3. Điều kiện $\Delta > 0$</span>
+      <span class="drop-zone" data-answer="Trong trái, ngoài cùng"></span>
+    </div>
+    <div class="dnd-row">
+      <span>4. Để $f(x) \ge 0$ với mọi $x \in \mathbb{R}$ thì cần điều kiện gì?</span>
+      <span class="drop-zone" data-answer="Δ ≤ 0, a > 0"></span>
+    </div>
+    <div class="drag-pool" id="drag-pool">
+      <div class="draggable-item" draggable="true" data-val="f(x) > 0, ∀x">$f(x) > 0, \forall x$</div>
+      <div class="draggable-item" draggable="true" data-val="Trong trái, ngoài cùng">Trong trái, ngoài cùng</div>
+      <div class="draggable-item" draggable="true" data-val="f(x) < 0, ∀x">$f(x) < 0, \forall x$</div>
+      <div class="draggable-item" draggable="true" data-val="Δ ≤ 0, a > 0">$\Delta \le 0,\; a > 0$</div>
+    </div>
+    <div style="text-align:center;margin-top:1.3rem;">
+      <button class="btn" onclick="checkDnD()">✅ Kiểm tra kết quả</button>
+      <button class="btn btn-reset" onclick="resetDnD()">↺ Làm lại</button>
+      <p id="dnd-feedback" style="margin-top:.8rem;font-weight:700;font-size:1rem;"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ======== V. VÍ DỤ (GIỮ NGUYÊN) ======== -->
+<div class="section-card reveal">
+  <h2 class="section-title"><i class="fa-solid fa-chalkboard-user"></i> V. Các Ví dụ Phân tích Từng bước</h2>
+  <p style="margin-bottom:1rem;"><strong>Quy trình 3 bước:</strong> ① Tính $\Delta$ và tìm nghiệm &rarr; ② Xác định dấu $a$ &rarr; ③ Kết luận theo định lí.</p>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAccordion(this)">
+      <span><i class="fa-solid fa-greater-than"></i> Ví dụ 1: $\Delta > 0$ — $f(x) = -x^2 + 3x + 10$</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </div>
+    <div class="accordion-content">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Tính $\Delta$, tìm nghiệm:</strong> $\Delta = 9 + 40 = 49 > 0$.<br>Hai nghiệm: $x_1 = -2$, $x_2 = 5$.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><strong>Dấu của $a$:</strong> $a = -1 < 0$ (âm).</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><strong>Kết luận (Trong trái ngoài cùng):</strong><br>
+      • Trong $(-2;\; 5)$: trái dấu $a$ $\Rightarrow$ $f(x) > 0$.<br>
+      • Ngoài khoảng: cùng dấu $a$ $\Rightarrow$ $f(x) < 0$.</div></div>
+      <div style="overflow-x:auto;margin-top:.8rem;">
+        <table class="sign-tbl"><thead><tr><th>$x$</th><th>$-\infty$</th><th class="col-root">$-2$</th><th></th><th class="col-root">$5$</th><th>$+\infty$</th></tr></thead>
+        <tbody><tr><td class="row-hdr">$f(x)$</td><td class="s-neg">−</td><td class="col-root s-zero">0</td><td class="s-pos">+</td><td class="col-root s-zero">0</td><td class="s-neg">−</td></tr></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAccordion(this)">
+      <span><i class="fa-solid fa-equals"></i> Ví dụ 2: $\Delta = 0$ — $f(x) = 4x^2 + 4x + 1$</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </div>
+    <div class="accordion-content">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Tính $\Delta$:</strong> $\Delta = 16 - 16 = 0$. Nghiệm kép: $x_0 = -\dfrac{1}{2}$.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><strong>Dấu của $a$:</strong> $a = 4 > 0$ (dương).</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><strong>Kết luận:</strong> $f(x) \ge 0$ với mọi $x$; $f\!\left(-\dfrac{1}{2}\right) = 0$.</div></div>
+      <div style="overflow-x:auto;margin-top:.8rem;">
+        <table class="sign-tbl"><thead><tr><th>$x$</th><th>$-\infty$</th><th class="col-root">$-\frac{1}{2}$</th><th>$+\infty$</th></tr></thead>
+        <tbody><tr><td class="row-hdr">$f(x)$</td><td class="s-pos">+</td><td class="col-root s-zero">0</td><td class="s-pos">+</td></tr></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAccordion(this)">
+      <span><i class="fa-solid fa-less-than"></i> Ví dụ 3: $\Delta < 0$ — $f(x) = 2x^2 - 2x + 1$</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </div>
+    <div class="accordion-content">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Tính $\Delta$:</strong> $\Delta = 4 - 8 = -4 < 0$. Vô nghiệm.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><strong>Dấu của $a$:</strong> $a = 2 > 0$.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><strong>Kết luận:</strong> $f(x) > 0$ với mọi $x \in \mathbb{R}$.</div></div>
+      <div style="overflow-x:auto;margin-top:.8rem;">
+        <table class="sign-tbl"><thead><tr><th>$x$</th><th>$-\infty$</th><th>$+\infty$</th></tr></thead>
+        <tbody><tr><td class="row-hdr">$f(x)$</td><td colspan="2" class="s-pos">+ (toàn trục số)</td></tr></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAccordion(this)">
+      <span><i class="fa-solid fa-bridge-water"></i> Ví dụ 4: Trở lại bài toán Vòm cầu</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </div>
+    <div class="accordion-content">
+      <p>$h(x) = -0{,}006x^2 + 1{,}2x - 30$. Tìm khoảng $h(x) > 0$.</p>
+      <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Tính $\Delta$:</strong> $\Delta = (1{,}2)^2 - 4(-0{,}006)(-30) = 1{,}44 - 0{,}72 = 0{,}72 > 0$.<br>Hai nghiệm: $x_1 \approx 29$ và $x_2 \approx 171$.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><strong>Dấu của $a$:</strong> $a = -0{,}006 < 0$.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><strong>Kết luận:</strong> Trong $(29;\, 171)$: $h(x)$ trái dấu $a$ $\Rightarrow$ <strong>$h(x) > 0$</strong>.<br>Vậy vòm cầu cao hơn mặt cầu khi $x \in (29;\, 171)$.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== VI. TRẮC NGHIỆM (GIỮ NGUYÊN) ======== -->
+<div class="section-card reveal" id="quiz-section">
+  <h2 class="section-title"><i class="fa-solid fa-list-check"></i> VI. Bài tập Trắc nghiệm (10 câu)</h2>
+  <p style="margin-bottom:1.5rem;color:var(--muted);">Chọn đáp án đúng. Kết quả và giải thích hiển thị ngay sau khi em chọn.</p>
+  <div id="quiz-container"></div>
+</div>
+
+<div id="quiz-score-bar">📊 Điểm của em: <span id="score-correct">0</span> / <span id="score-total">0</span> câu đúng</div>
+
+</div><!-- /container -->
+
+<footer>
+  <h3>Học liệu Toán học Mở</h3>
+  <p>Biên soạn bởi Lê Nguyễn Hồng Linh</p>
+  <p style="margin-top:.8rem;">© Bản thiết kế tương tác theo chuẩn GDPT 2018 · Phiên bản 2.0</p>
+</footer>
+
+<script>
+/* ===== SCROLL REVEAL ===== */
+const ro=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+/* ===== 1. CANVAS PARABOLA ===== */
+function updateGraph(){
+  let a=parseFloat(document.getElementById('sliderA').value);
+  let b=parseFloat(document.getElementById('sliderB').value);
+  let c=parseFloat(document.getElementById('sliderC').value);
+  if(a===0){a=0.5;document.getElementById('sliderA').value=a;}
+  document.getElementById('valA').textContent=a;
+  document.getElementById('valB').textContent=b;
+  document.getElementById('valC').textContent=c;
+  // Build function text
+  let txt=`${a}x²`;
+  if(b!==0)txt+=` ${b>0?'+ ':'- '}${Math.abs(b)}x`;
+  if(c!==0)txt+=` ${c>0?'+ ':'- '}${Math.abs(c)}`;
+  document.getElementById('funcText').textContent=txt;
+  let delta=b*b-4*a*c;
+  document.getElementById('deltaText').textContent=delta.toFixed(2);
+  let nr=0,rule='';
+  if(delta<0){nr=0;rule=a>0?'Δ < 0, a > 0 → f(x) luôn DƯƠNG trên ℝ.':'Δ < 0, a < 0 → f(x) luôn ÂM trên ℝ.';}
+  else if(delta===0){nr=1;rule=a>0?'Δ = 0, a > 0 → f(x) ≥ 0. Chạm trục hoành tại 1 điểm.':'Δ = 0, a < 0 → f(x) ≤ 0. Chạm trục hoành tại 1 điểm.';}
+  else{nr=2;rule=a>0?'Δ > 0, a > 0 → Trong khoảng 2 nghiệm: ÂM; Ngoài: DƯƠNG. (Trong trái, ngoài cùng)':'Δ > 0, a < 0 → Trong khoảng 2 nghiệm: DƯƠNG; Ngoài: ÂM.';}
+  document.getElementById('rootsText').textContent=nr;
+  document.getElementById('ruleText').textContent=rule;
+  drawParabola(a,b,c);
+}
+
+function drawParabola(a,b,c){
+  const cv=document.getElementById('graphCanvas');
+  const ctx=cv.getContext('2d');
+  const W=cv.width,H=cv.height;
+  const sX=30,sY=14,oX=W/2,oY=H/2+40;
+  ctx.clearRect(0,0,W,H);
+  // Background grid
+  ctx.strokeStyle='#f1f5f9';ctx.lineWidth=1;
+  for(let i=-12;i<=12;i++){let px=oX+i*sX;ctx.beginPath();ctx.moveTo(px,0);ctx.lineTo(px,H);ctx.stroke();}
+  for(let j=-8;j<=10;j+=2){let py=oY-j*sY;ctx.beginPath();ctx.moveTo(0,py);ctx.lineTo(W,py);ctx.stroke();}
+  // Axes
+  ctx.strokeStyle='#94a3b8';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(0,oY);ctx.lineTo(W,oY);ctx.moveTo(oX,0);ctx.lineTo(oX,H);ctx.stroke();
+  // Ticks X
+  ctx.fillStyle='#64748b';ctx.font='11px Nunito';ctx.textAlign='center';
+  for(let i=-12;i<=12;i++){if(i===0)continue;let px=oX+i*sX;ctx.beginPath();ctx.moveTo(px,oY-4);ctx.lineTo(px,oY+4);ctx.strokeStyle='#94a3b8';ctx.lineWidth=1.5;ctx.stroke();if(i%3===0)ctx.fillText(i,px,oY+16);}
+  // Ticks Y
+  ctx.textAlign='right';
+  for(let j=-10;j<=15;j++){if(j===0||j%5!==0)continue;let py=oY-j*sY;ctx.beginPath();ctx.moveTo(oX-4,py);ctx.lineTo(oX+4,py);ctx.stroke();ctx.fillText(j,oX-8,py+4);}
+  // Origin label
+  ctx.fillStyle='#334155';ctx.textAlign='left';ctx.fillText('O',oX+5,oY+15);
+  // Compute path
+  let pts=[];
+  for(let px=0;px<=W;px+=2){let x=(px-oX)/sX,y=a*x*x+b*x+c,py=oY-y*sY;pts.push({px,py,y});}
+  // Draw colored segments
+  for(let i=0;i<pts.length-1;i++){
+    ctx.beginPath();ctx.moveTo(pts[i].px,pts[i].py);ctx.lineTo(pts[i+1].px,pts[i+1].py);
+    ctx.lineWidth=3;ctx.strokeStyle=pts[i].y>0?'#10b981':'#ef4444';ctx.stroke();
+  }
+  // Mark roots
+  let delta=b*b-4*a*c;
+  if(delta>=0){
+    let x1=(-b-Math.sqrt(delta))/(2*a),x2=(-b+Math.sqrt(delta))/(2*a);
+    [x1,x2].forEach(rx=>{
+      let rpx=oX+rx*sX;
+      ctx.beginPath();ctx.arc(rpx,oY,6,0,2*Math.PI);ctx.fillStyle='#0f172a';ctx.fill();
+      ctx.fillStyle='#334155';ctx.font='bold 12px Nunito';ctx.textAlign='center';
+      ctx.fillText(rx.toFixed(1),rpx,oY+22);
+    });
+  }
+  // Axis labels
+  ctx.fillStyle='#334155';ctx.font='italic 13px Merriweather';
+  ctx.textAlign='center';ctx.fillText('x',W-12,oY-8);
+  ctx.textAlign='left';ctx.fillText('y',oX+8,14);
+}
+
+window.addEventListener('load',updateGraph);
+
+/* ===== 2. SIGN TABLE BUILDER ===== */
+const STB_STATES=['plus','minus','zero'];
+const STB_TEXT={plus:'+',minus:'−',zero:'0'};
+function cycleCell(el){
+  if(el.dataset.locked)return;
+  const cur=STB_STATES.findIndex(s=>el.classList.contains(s));
+  const next=STB_STATES[(cur+1)%STB_STATES.length];
+  STB_STATES.forEach(s=>el.classList.remove(s));
+  el.classList.add(next);
+  el.textContent=STB_TEXT[next];
+}
+function checkSignBuilder(){
+  const cells=document.querySelectorAll('.stb-cell:not([data-locked])');
+  let ok=0;
+  cells.forEach(c=>{
+    const correct=c.dataset.correct;
+    const current=STB_STATES.find(s=>c.classList.contains(s));
+    if(current===correct){c.style.outline='2px solid var(--success)';ok++;}
+    else{c.style.outline='2px solid var(--danger)';}
+  });
+  const fb=document.getElementById('stb-feedback');
+  if(ok===cells.length){fb.textContent='🎉 Hoàn toàn chính xác! Em đã điền đúng toàn bộ bảng xét dấu.';fb.style.color='var(--success)';}
+  else{fb.textContent=`⚠️ Đúng ${ok}/${cells.length} ô. Ô viền đỏ cần xem lại.`;fb.style.color='var(--danger)';}
+}
+function resetSignBuilder(){
+  document.querySelectorAll('.stb-cell:not([data-locked])').forEach(c=>{
+    STB_STATES.forEach(s=>c.classList.remove(s));c.textContent='?';c.style.outline='';
+  });
+  document.getElementById('stb-feedback').textContent='';
+}
+
+/* ===== 3. ACCORDION ===== */
+function toggleAccordion(h){
+  const c=h.nextElementSibling,ic=h.querySelector('i.fa-chevron-down');
+  if(c.classList.contains('active')){c.classList.remove('active');ic.style.transform='rotate(0deg)';}
+  else{c.classList.add('active');ic.style.transform='rotate(180deg)';ic.style.transition='transform .3s';if(window.MathJax)MathJax.typesetPromise([c]).catch(e=>console.log(e));}
+}
+
+/* ===== 4. DRAG & DROP ===== */
+const dragPool=document.getElementById('drag-pool');
+let draggedItem=null,initialPoolHTML='';
+window.addEventListener('DOMContentLoaded',()=>{initialPoolHTML=dragPool.innerHTML;initializeDnD();});
+function initializeDnD(){
+  document.querySelectorAll('.draggable-item').forEach(item=>{
+    item.addEventListener('dragstart',function(){draggedItem=this;setTimeout(()=>this.style.opacity='.45',0);});
+    item.addEventListener('dragend',function(){setTimeout(()=>this.style.opacity='1',0);draggedItem=null;});
+  });
+  document.querySelectorAll('.drop-zone').forEach(zone=>{
+    const nz=zone.cloneNode(true);zone.parentNode.replaceChild(nz,zone);
+    nz.addEventListener('dragover',e=>{e.preventDefault();nz.classList.add('drag-over');});
+    nz.addEventListener('dragleave',()=>nz.classList.remove('drag-over'));
+    nz.addEventListener('drop',function(e){
+      e.preventDefault();this.classList.remove('drag-over');
+      if(draggedItem){
+        if(this.children.length>0){const old=this.children[0];old.classList.remove('in-zone');dragPool.appendChild(old);}
+        draggedItem.parentNode.removeChild(draggedItem);this.appendChild(draggedItem);draggedItem.classList.add('in-zone');
+        this.childNodes.forEach(n=>{if(n.nodeType===3)n.remove();});
+        if(window.MathJax)MathJax.typesetPromise([this]).catch(e=>console.log(e));
+      }
+    });
+  });
+  dragPool.addEventListener('dragover',e=>e.preventDefault());
+  dragPool.addEventListener('drop',function(e){e.preventDefault();if(draggedItem){draggedItem.parentNode.removeChild(draggedItem);this.appendChild(draggedItem);draggedItem.classList.remove('in-zone');}});
+}
+function checkDnD(){
+  let ok=0;
+  document.querySelectorAll('.drop-zone').forEach(zone=>{
+    const ans=zone.getAttribute('data-answer');
+    if(zone.children.length>0){const val=zone.children[0].getAttribute('data-val');if(val===ans){zone.style.borderColor='var(--success)';zone.style.backgroundColor='#d1fae5';ok++;}else{zone.style.borderColor='var(--danger)';zone.style.backgroundColor='#fee2e2';}}
+    else{zone.style.borderColor='var(--danger)';zone.style.backgroundColor='#fee2e2';}
+  });
+  const total=document.querySelectorAll('.drop-zone').length;
+  const fb=document.getElementById('dnd-feedback');
+  if(ok===total){fb.textContent='🎉 Tuyệt vời! Em đã ghép đúng tất cả.';fb.style.color='var(--success)';}
+  else{fb.textContent=`⚠️ Em ghép đúng ${ok}/${total}. Xem lại ô màu đỏ nhé.`;fb.style.color='var(--danger)';}
+}
+function resetDnD(){
+  dragPool.innerHTML=initialPoolHTML;
+  document.querySelectorAll('.drop-zone').forEach(z=>{z.innerHTML='';z.style.borderColor='var(--amber)';z.style.backgroundColor='#e2e8f0';});
+  document.getElementById('dnd-feedback').textContent='';
+  initializeDnD();
+  if(window.MathJax)MathJax.typesetPromise([dragPool]).catch(e=>console.log(e));
+}
+
+/* ===== 5. QUIZ ===== */
+const quizData=[
+  {q:"Biểu thức nào sau đây là một tam thức bậc hai?",options:["$f(x)=2x-3$","$f(x)=x^3-x^2+1$","$f(x)=4x^2+3x+1$","$f(x)=\\frac{1}{x^2}+x$"],correct:2,explain:"Tam thức bậc hai có dạng $f(x)=ax^2+bx+c$ với $a\\ne 0$. Đáp án C thỏa mãn."},
+  {q:"Cho $f(x)=ax^2+bx+c\\;(a\\ne 0)$ có $\\Delta<0$. Khẳng định nào ĐÚNG?",options:["$f(x)$ luôn dương với mọi $x$.","$f(x)$ luôn cùng dấu với $a$ với mọi $x\\in\\mathbb{R}$.","$f(x)$ đổi dấu trên $\\mathbb{R}$.","$f(x)$ có hai nghiệm phân biệt."],correct:1,explain:"Khi $\\Delta<0$, $f(x)$ vô nghiệm và luôn cùng dấu với hệ số $a$ với mọi $x$."},
+  {q:"Quy tắc 'Trong trái, ngoài cùng' áp dụng khi nào?",options:["$\\Delta<0$","$\\Delta=0$","$\\Delta>0$","Mọi trường hợp"],correct:2,explain:"Quy tắc này chỉ dùng khi $\\Delta>0$ (tam thức có 2 nghiệm phân biệt $x_1<x_2$)."},
+  {q:"Cho $f(x)=x^2-4x+4$. Dấu của $f(x)$ là:",options:["$f(x)>0,\\forall x\\in\\mathbb{R}$","$f(x)\\ge 0,\\forall x\\in\\mathbb{R}$","$f(x)<0,\\forall x\\in\\mathbb{R}$","Trong âm, ngoài dương"],correct:1,explain:"$f(x)=(x-2)^2$, $\\Delta=0$, $a=1>0$. Do đó $f(x)\\ge 0$ mọi $x$, bằng 0 khi $x=2$."},
+  {q:"Tam thức $f(x)=-x^2+5x-6$ nhận giá trị DƯƠNG trong khoảng nào?",options:["$(2;3)$","$(-\\infty;2)\\cup(3;+\\infty)$","$(-2;-3)$","$(0;5)$"],correct:0,explain:"Nghiệm: $x_1=2, x_2=3$; $a=-1<0$. Trong $(2;3)$: trái dấu $a$ → dương."},
+  {q:"Tam thức nào sau đây luôn DƯƠNG với mọi $x\\in\\mathbb{R}$?",options:["$x^2-2x+1$","$-x^2+2x-5$","$x^2+x+1$","$x^2-4$"],correct:2,explain:"$x^2+x+1$: $\\Delta=1-4=-3<0$, $a=1>0$ → $f(x)>0$ mọi $x$. (Lưu ý: $x^2-2x+1=(x-1)^2\\ge 0$, không luôn dương.)"},
+  {q:"Xác định $m$ để $(m-1)x^2+2x+3$ là tam thức bậc hai?",options:["$m>1$","$m=1$","$m\\ne 1$","$m\\in\\mathbb{R}$"],correct:2,explain:"Tam thức bậc hai khi hệ số của $x^2$ khác 0: $m-1\\ne 0\\Leftrightarrow m\\ne 1$."},
+  {q:"Để $f(x)=ax^2+bx+c\\;(a\\ne 0)$ luôn ÂM với mọi $x$, điều kiện cần và đủ là:",options:["$\\Delta<0,a>0$","$\\Delta\\le 0,a<0$","$\\Delta<0,a<0$","$\\Delta>0,a<0$"],correct:2,explain:"$f(x)<0$ mọi $x$ $\\Leftrightarrow$ $\\Delta<0$ (vô nghiệm) và $a<0$ (parabol úp xuống dưới trục $Ox$)."},
+  {q:"Parabol nằm hoàn toàn phía trên trục $Ox$ thì tam thức có tính chất gì?",options:["$\\Delta>0,a>0$","$\\Delta<0,a>0$","$\\Delta=0,a>0$","$\\Delta<0,a<0$"],correct:1,explain:"Nằm trên $Ox$ hoàn toàn $\\Leftrightarrow$ $f(x)>0$ mọi $x$ $\\Leftrightarrow$ $\\Delta<0$ và $a>0$."},
+  {q:"Vòm cầu $h(x)=-0{,}006x^2+1{,}2x-30$ có $h(x)=0$ tại $x_1\\approx 29$ và $x_2\\approx 171$. Vòm cao hơn mặt cầu ($h(x)>0$) trên khoảng nào?",options:["$(-\\infty;29)$","$(171;+\\infty)$","$(29;171)$","$(0;29)$"],correct:2,explain:"$a=-0{,}006<0$; $h(x)>0$ trái dấu $a$ → trong khoảng $(x_1;x_2)=(29;171)$."}
+];
+
+let sC=0,sA=0;
+const qCont=document.getElementById('quiz-container');
+quizData.forEach((item,idx)=>{
+  const qDiv=document.createElement('div');qDiv.className='quiz-question';
+  const qT=document.createElement('div');qT.className='quiz-question-text';
+  qT.innerHTML=`<span style="color:var(--amber);margin-right:6px;font-size:.9rem;">Câu ${idx+1}/10</span>${item.q}`;
+  qDiv.appendChild(qT);
+  const og=document.createElement('div');og.className='quiz-options';
+  const exDiv=document.createElement('div');exDiv.className='quiz-explanation';
+  exDiv.innerHTML=`<strong>💡 Giải thích:</strong> ${item.explain}`;
+  item.options.forEach((opt,oi)=>{
+    const btn=document.createElement('div');btn.className='quiz-option';
+    btn.innerHTML=`<div class="opt-label">${String.fromCharCode(65+oi)}</div><span>${opt}</span>`;
+    btn.addEventListener('click',function(){
+      if(this.classList.contains('disabled'))return;
+      og.querySelectorAll('.quiz-option').forEach(b=>b.classList.add('disabled'));
+      sA++;
+      if(oi===item.correct){this.classList.add('correct');exDiv.style.borderLeftColor='var(--success)';sC++;}
+      else{this.classList.add('wrong');og.querySelectorAll('.quiz-option')[item.correct].classList.add('correct');exDiv.style.borderLeftColor='var(--danger)';}
+      exDiv.style.display='block';
+      if(window.MathJax)MathJax.typesetPromise([exDiv]).catch(e=>console.log(e));
+      const bar=document.getElementById('quiz-score-bar');
+      document.getElementById('score-correct').textContent=sC;
+      document.getElementById('score-total').textContent=sA;
+      bar.style.display='block';
+      bar.style.background=sC===sA?'linear-gradient(90deg,var(--green),var(--green-light))':'linear-gradient(90deg,var(--amber),var(--warn))';
+    });
+    og.appendChild(btn);
+  });
+  qDiv.appendChild(og);qDiv.appendChild(exDiv);qCont.appendChild(qDiv);
+});
+
+window.addEventListener('load',()=>{if(window.MathJax)MathJax.typesetPromise().catch(e=>console.log(e));});
+</script>
+</body>
+</html>
